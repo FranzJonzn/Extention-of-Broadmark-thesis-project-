@@ -10,8 +10,8 @@ namespace mn {
 	const std::string	outputFileFormat;
 
 	/// default address for standalone benchmarks
-	std::string	CDBenchmarkSettings::_inputBaseAddr("D:\\SKOL_ARBETE\\Kurser\\ar_3\\Vt\\Ex_Jobb\\BVH_SR\\BVH-based-Collision-Detection-Scheme\\result\\Assets\\");
-	std::string	CDBenchmarkSettings::_outputBaseAddr("D:\\SKOL_ARBETE\\Kurser\\ar_3\\Vt\\Ex_Jobb\\BVH_SR\\BVH-based-Collision-Detection-Scheme\\result\\ExpResults\\standaloneCD\\gtx1060\\");
+//	std::string	CDBenchmarkSettings::_inputBaseAddr("D:\\SKOL_ARBETE\\Kurser\\ar_3\\Vt\\Ex_Jobb\\BVH_SR\\BVH-based-Collision-Detection-Scheme\\result\\Assets\\");
+//	std::string	CDBenchmarkSettings::_outputBaseAddr("D:\\SKOL_ARBETE\\Kurser\\ar_3\\Vt\\Ex_Jobb\\BVH_SR\\BVH-based-Collision-Detection-Scheme\\result\\ExpResults\\standaloneCD\\gtx1060\\");
 //	std::string	CDBenchmarkSettings::_inputBaseAddr("C:\\Mine\\Assets\\");
 //	std::string	CDBenchmarkSettings::_outputBaseAddr("C:\\Mine\\ExpResults\\standaloneCD\\gtx1060\\");
 	//std::string	CDBenchmarkSettings::_inputBaseAddr("E:\\data\\wxl-data\\");
@@ -59,7 +59,7 @@ namespace mn {
 		//Benchmark{ 0, 210, "princess.plys\\princess%d.ply", "princess-40k","%s\\%s.txt",{ CDSchemeType::REFIT_ONLY_FRONT, "refit_only" } },
 
 		//Benchmark{ 0, 94, "cloth_ball.plys\\cloth_ball%d.ply", "clothball-92k","%s\\%s.txt",{ CDSchemeType::STATIC_MANDATORY, "static_mandatory" } },
-		Benchmark{ 1, 500, "funnel.plys\\%03d.ply", "funnel-18k","%s\\%s.txt",{ CDSchemeType::STATIC_MANDATORY, "static_mandatory" } },
+	//	Benchmark{ 1, 500, "funnel.plys\\%03d.ply", "funnel-18k","%s\\%s.txt",{ CDSchemeType::STATIC_MANDATORY, "static_mandatory" } },
 		//Benchmark{ 0, 706, "flamenco5\\flamenco5.%d.ply", "flamenco-49k","%s\\%s.txt",{ CDSchemeType::STATIC_MANDATORY, "static_mandatory" } },
 		//Benchmark{ 0, 210, "princess.plys\\princess%d.ply", "princess-40k","%s\\%s.txt",{ CDSchemeType::STATIC_MANDATORY, "static_mandatory" } },
 

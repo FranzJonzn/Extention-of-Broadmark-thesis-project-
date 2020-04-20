@@ -37,13 +37,11 @@ namespace mn {
 		BenchmarkLogic* TheLogic;
 
 		// for CD benchmark testing
-		Scene								_scene;
-		LBvhKernelRegister					_kLBvhKernelRegister;
-		BvttFrontKernelRegister				_kFrontKernelRegister;
-		std::unique_ptr<LBvh<ModelType::FixedDeformableType>>	
-											_bvh;
-		std::unique_ptr<BvttFront<BvttFrontType::LooseIntraType>>
-											_fl;
+		Scene															_scene;
+		LBvhKernelRegister												_kLBvhKernelRegister;
+		BvttFrontKernelRegister											_kFrontKernelRegister;
+		std::unique_ptr<LBvh<ModelType::RigidType>>						_bvh;
+		std::unique_ptr<BvttFront<BvttFrontType::LooseIntraType>>		_fl;
 	};
 
 }
