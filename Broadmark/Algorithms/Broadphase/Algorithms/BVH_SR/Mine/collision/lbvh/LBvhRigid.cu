@@ -25,6 +25,9 @@ namespace mn {
 		checkCudaErrors(cudaMalloc((void**)&d_vertices, sizeof(PointType)*config.primSize*3));
 		checkCudaErrors(cudaMalloc((void**)&d_faces, sizeof(int3)*config.primSize));
 		checkCudaErrors(cudaMalloc((void**)&d_bv, sizeof(BOX)));
+		checkCudaErrors(cudaMalloc((void**)&d_aabb, sizeof(Aabb)*config.primSize));// broadmarkIntegration (primSize = 150000)
+
+
 
 		checkThrustErrors(
 		d_primMap.resize(config.primSize);
@@ -59,6 +62,19 @@ namespace mn {
 		}
 	}
 
+	// broadmarkIntegration
+	void LBvhRigid::maintain(LBvhRigidMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings) {
+		/// 0: rebuild 1: refit
+		updatePrimData(fdata, settings);
+		switch (scheme) {
+			case LBvhRigidMaintenance::BUILD: build(); break;
+			case LBvhRigidMaintenance::REFIT: refit(); break;
+		default: break;
+		}
+	}
+
+
+
 #if MACRO_VERSION
 	void LBvhRigid::maintain(LBvhRigidMaintenance scheme, const ARCSimSceneData& pdata) {
 		_primSize = pdata.fsize;
@@ -73,11 +89,21 @@ namespace mn {
 	}
 #endif
 
+
 	void LBvhRigid::updatePrimData(const SceneData& pdata) {
 		_primSize = pdata.fids.size();
-		checkCudaErrors(cudaMemcpy(d_faces, pdata.fids.data(), sizeof(int3)*pdata.fids.size(), cudaMemcpyHostToDevice));
-		checkCudaErrors(cudaMemcpy(d_vertices, pdata.pos.data(), sizeof(PointType)*pdata.pos.size(), cudaMemcpyHostToDevice));
+		checkCudaErrors(cudaMemcpy(d_faces   , pdata.fids.data(), sizeof(int3)     *pdata.fids.size(), cudaMemcpyHostToDevice));
+		checkCudaErrors(cudaMemcpy(d_vertices, pdata.pos.data() , sizeof(PointType)*pdata.pos.size() , cudaMemcpyHostToDevice));
 	}
+
+	// broadmarkIntegration
+	void LBvhRigid::updatePrimData(const SceneFrame& fdata, const InflatedSettings& settings) {
+		_primSize = settings.m_numberOfObjects;
+		checkCudaErrors(cudaMemcpy(d_aabb, fdata.m_aabbs, sizeof(Aabb)*settings.m_numberOfObjects, cudaMemcpyHostToDevice));//kan tänka det kan bli problem här, om det blir problem så ska data() returnera första elmentet..titta på att imitera det.
+
+	}
+
+
 	void LBvhRigid::reorderPrims() {
 		Logger::tick<TimerType::GPU>();
 		checkThrustErrors(thrust::sequence(getDevicePtr(d_vals), getDevicePtr(d_vals) + _primSize));
@@ -117,6 +143,9 @@ namespace mn {
 #endif
 		checkCudaErrors(cudaMemcpy(&bv, d_bv, sizeof(BOX), cudaMemcpyDeviceToHost));
 
+
+
+
 		//Mortom cod (mc) används för att avgöra hur trädet ska traverseras
 		// se https://devblogs.nvidia.com/thinking-parallel-part-iii-tree-construction-gpu/
 		// för bättre förklaring.
@@ -127,6 +156,8 @@ namespace mn {
 			configuredLaunch({ "CalcMCs", _primSize }, calcMCs,
 				_primSize, d_faces, d_vertices, bv, getRawPtr(d_keys32));
 #endif
+
+
 
 		reorderPrims();
 

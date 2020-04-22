@@ -3,7 +3,11 @@
 
 #include <thrust/device_vector.h>
 #include "setting\BvhSettings.h"
+
 #include "world\scene.h"
+#include "Core\Scene.h"	  //broadmarkIntegration
+#include "Core\Settings.h"//broadmarkIntegration
+
 #include "BvhExtNode.h"
 #include "BvhIntNode.h"
 #include "LBvhKernels.cuh"
@@ -24,28 +28,34 @@ namespace mn {
 		LBvhRigid(LBvhBuildConfig&& config);
 		~LBvhRigid();
 		void	maintain(LBvhRigidMaintenance scheme, const SceneData& pdata);
+
+		void	maintain(LBvhRigidMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings); // broadmarkIntegration
+
 #if MACRO_VERSION
 		void	maintain(LBvhRigidMaintenance scheme, const ARCSimSceneData& pdata);
 #endif
 
-		uint		getPrimNodeSize() { return _primSize; }
-		uint		getExtNodeSize() { return _extSize; }
-		uint		getIntNodeSize() { return _intSize; }
-		BvhPrimitiveArray cprim() { return _lvs.getPrimitiveArray(); }
-		BvhExtNodeArray	clvs() { return _lvs; }
-		BvhIntNodeArray	ctks() { return _tks; }
+		uint				getPrimNodeSize() { return _primSize;				 }
+		uint				getExtNodeSize()  { return _extSize;				 }
+		uint				getIntNodeSize()  { return _intSize;				 }
+		BvhPrimitiveArray   cprim()			  { return _lvs.getPrimitiveArray(); }
+		BvhExtNodeArray		clvs()			  { return _lvs;					 }
+		BvhIntNodeArray		ctks()			  { return _tks;					 }
 	private:
 
 		void	build();
 		void	refit();
 
-		void	updatePrimData(const SceneData& pdata);
+		void	updatePrimData(const SceneData& pdata); // ta bort om jag får mit att fungera 
+		void	updatePrimData(const SceneFrame& fdata, const InflatedSettings& settings);// broadmarkIntegration
 		void	reorderPrims();
 		void	reorderIntNodes();
 
 		/// pre-formated input data
 		int3*								d_faces;
 		PointType*							d_vertices;
+		Aabb*								d_aabb;// broadmarkIntegration
+
 #if MACRO_VERSION
 		uint3*								d_facesARCSim;
 		g_box*								d_bxsARCSim;

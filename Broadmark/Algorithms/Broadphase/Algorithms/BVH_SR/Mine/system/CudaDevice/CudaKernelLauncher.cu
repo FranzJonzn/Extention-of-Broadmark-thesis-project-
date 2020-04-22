@@ -52,7 +52,9 @@ namespace mn {
 	}
 
 	template <typename... Arguments>
-	void configuredLaunch(LaunchInput instr, void(*f)(Arguments...), Arguments... args) {
+	void configuredLaunch(LaunchInput instr, void(*f)(Arguments...), Arguments... args)
+	
+	{
 		ExecutionPolicy p = CudaDevice::getInstance()->launchConfig(instr.name(), instr.threads());
 		if (p.getSharedMemBytes() == 0) {
 			Logger::tick<TimerType::GPU>();

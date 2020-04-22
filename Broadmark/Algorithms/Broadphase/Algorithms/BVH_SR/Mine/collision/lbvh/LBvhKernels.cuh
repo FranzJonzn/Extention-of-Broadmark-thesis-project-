@@ -21,7 +21,12 @@ namespace mn {
 	__global__ void calcMCs(int size, int3 *_faces, PointType *_vertices, BOX scene, uint* codes);
 	__global__ void calcMC64s(int size, int3* _faces, PointType* _vertices, BOX* scene, uint64* codes);
 	__global__ void copyBackCodes(int size, uint64* _primcodes, uint* _codes);	///< deprecated
+
 	__global__ void buildPrimitives(int size, BvhPrimitiveCompletePort _prims, int *_primMap, int3 *_faces, PointType *_vertices);
+	__global__ void buildPrimitives(int size, BvhPrimitiveCompletePort _prims, int *_primMap, int3 *_faces, PointType *_vertices); // broadmark
+
+
+
 	__global__ void buildIntNodes(int size, uint *_depths, BvhExtNodeCompletePort _lvs, BvhIntNodeCompletePort _tks);
 	__global__ void calcIntNodeOrders(int size, BvhIntNodeCompletePort _tks, int *_lcas, uint *_depths, uint *_offsets, int *_tkMap);
 	__global__ void updateBvhExtNodeLinks(int size, const int *_mapTable,  int* _lcas, int* _pars);

@@ -150,6 +150,78 @@ namespace mn {
 			return std::make_pair(bvhOpt, frontOpt);
 		}
 
+
+
+
+
+
+		/// used in broadmark benchmark
+		std::pair<LBvhRigidMaintenance, BvttFrontLooseIntraMaintenance> b_maintainScheme() const {
+			LBvhRigidMaintenance bvhOpt;
+			BvttFrontLooseIntraMaintenance frontOpt;
+			switch (exp.schemeOpt.type) {
+			case CDSchemeType::GENERATE:
+				bvhOpt = LBvhRigidMaintenance::BUILD;
+				frontOpt = BvttFrontLooseIntraMaintenance::PURE_BVH_CD;
+				break;
+			case CDSchemeType::FRONT_GENERATE:
+				bvhOpt = LBvhRigidMaintenance::BUILD;
+				frontOpt = BvttFrontLooseIntraMaintenance::GENERATE;
+				break;
+			case CDSchemeType::STATIC_MANDATORY: ///< bvh cycle should sync with front cycle
+				if (CDBenchmarkSettings::enableDivergentMark()) {
+					bvhOpt = (frameid - exp.stIdx) % BvhSettings::mandatoryRebuildCycle() ? LBvhRigidMaintenance::REFIT : LBvhRigidMaintenance::BUILD;
+					int frame = (frameid - exp.stIdx) % BvttFrontSettings::mandatoryRebuildCycle();
+					if (frame == 0)
+						frontOpt = frameid == exp.stIdx ? BvttFrontLooseIntraMaintenance::GENERATE : BvttFrontLooseIntraMaintenance::UPDATE;
+					else if (frame == BvttFrontSettings::mandatoryRebuildCycle() - 1)
+						frontOpt = BvttFrontLooseIntraMaintenance::REORDER;
+					else
+						frontOpt = BvttFrontLooseIntraMaintenance::KEEP;
+
+					if (bvhOpt == LBvhRigidMaintenance::BUILD)
+						frontOpt = BvttFrontLooseIntraMaintenance::GENERATE;
+					if ((frameid - exp.stIdx + 1) % BvhSettings::mandatoryRebuildCycle() == 0)
+						frontOpt = BvttFrontLooseIntraMaintenance::KEEP;
+					break;
+				}
+				else {
+					bvhOpt = (frameid - exp.stIdx) % BvhSettings::mandatoryRebuildCycle() ? LBvhRigidMaintenance::REFIT : LBvhRigidMaintenance::BUILD;
+					switch ((frameid - exp.stIdx) % BvttFrontSettings::mandatoryRebuildCycle()) {
+					case 0: frontOpt = frameid == exp.stIdx ? BvttFrontLooseIntraMaintenance::GENERATE : BvttFrontLooseIntraMaintenance::UPDATE; break;
+					default: frontOpt = BvttFrontLooseIntraMaintenance::KEEP;
+					}
+					if (bvhOpt == LBvhRigidMaintenance::BUILD)
+						frontOpt = BvttFrontLooseIntraMaintenance::GENERATE;
+					break;
+				}
+			case CDSchemeType::REFIT_ONLY_FRONT: ///< bvh cycle should sync with front cycle
+				if (CDBenchmarkSettings::enableDivergentMark()) {
+					bvhOpt = (frameid - exp.stIdx) ? LBvhRigidMaintenance::REFIT : LBvhRigidMaintenance::BUILD;
+					int frame = (frameid - exp.stIdx) % BvttFrontSettings::mandatoryRebuildCycle();
+					if (frame == 0)
+						frontOpt = frameid == exp.stIdx ? BvttFrontLooseIntraMaintenance::GENERATE : BvttFrontLooseIntraMaintenance::UPDATE;
+					else if (frame == BvttFrontSettings::mandatoryRebuildCycle() - 1)
+						frontOpt = BvttFrontLooseIntraMaintenance::REORDER;
+					else
+						frontOpt = BvttFrontLooseIntraMaintenance::KEEP;
+				}
+				else {
+					bvhOpt = (frameid - exp.stIdx) ? LBvhRigidMaintenance::REFIT : LBvhRigidMaintenance::BUILD;
+					switch ((frameid - exp.stIdx) % BvttFrontSettings::mandatoryRebuildCycle()) {
+					case 0: frontOpt = frameid == exp.stIdx ? BvttFrontLooseIntraMaintenance::GENERATE : BvttFrontLooseIntraMaintenance::UPDATE; break;
+					default: frontOpt = BvttFrontLooseIntraMaintenance::KEEP;
+					}
+					break;
+				}
+			default:
+				__assume(false);
+				//__builtin_unreachable();
+			}
+			return std::make_pair(bvhOpt, frontOpt);
+		}
+
+
 	private:
 		Benchmark	exp;
 		int			benchmarkid{ -1 };
