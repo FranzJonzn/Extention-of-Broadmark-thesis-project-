@@ -98,8 +98,7 @@
     <ClCompile Include="Broadphase\Algorithms\BVH_SR\Mine\entry_cudaproject.cpp" />
     <ClCompile Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\AppBase.cpp" />
     <ClCompile Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\Main.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\CudaProject\CudaProjectModuleRegister.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\BVH_SR\Mine\world\Scene.cpp" />
+    <ClCompile Include="Broadphase\Algorithms\BVH_SR\Mine\setting\CDBenchmarkSettings.cpp" />
     <ClCompile Include="Broadphase\Algorithms\GPU\Bullet3GPUAlgorithms.cpp" />
     <ClCompile Include="Broadphase\Algorithms\Grid\Grid.cpp" />
     <ClCompile Include="Broadphase\Algorithms\Tracy\Tracy_Parallel.cpp" />
@@ -166,7 +165,6 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhRigid.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\AppBase.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\Main.h" />
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\CudaProject\CudaProjectModuleRegister.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\setting\BvhSettings.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\setting\BvttFrontSettings.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\setting\CDBenchmarkConfiguration.hpp" />
@@ -183,7 +181,6 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\ModelReader.hpp" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\Timer.hpp" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\Utils.h" />
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\world\Scene.h" />
     <ClInclude Include="Broadphase\Algorithms\DBVT\DBVT.h" />
     <ClInclude Include="Broadphase\Algorithms\GPU\Bullet3GPUAlgorithms.h" />
     <ClInclude Include="Broadphase\Algorithms\Grid\Grid.h" />
@@ -367,8 +364,6 @@
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhRestructureKernels.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhRigid.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhUpdateKernels.cu" />
-    <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\narrow_phase\narrow_phase.cu" />
-    <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\narrow_phase\narrow_phase.cuh" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\system\CudaDevice\CudaDevice.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\system\CudaDevice\CudaKernelLauncher.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaDeviceUtils.cu" />

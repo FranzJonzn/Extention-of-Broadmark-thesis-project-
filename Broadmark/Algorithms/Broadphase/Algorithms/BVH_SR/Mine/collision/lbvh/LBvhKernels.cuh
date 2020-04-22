@@ -23,7 +23,7 @@ namespace mn {
 	__global__ void copyBackCodes(int size, uint64* _primcodes, uint* _codes);	///< deprecated
 
 	__global__ void buildPrimitives(int size, BvhPrimitiveCompletePort _prims, int *_primMap, int3 *_faces, PointType *_vertices);
-	__global__ void buildPrimitives(int size, BvhPrimitiveCompletePort _prims, int *_primMap, int3 *_faces, PointType *_vertices); // broadmark
+	//__global__ void buildPrimitives(int size, BvhPrimitiveCompletePort _prims, int *_primMap, int3 *_faces, PointType *_vertices); // broadmark
 
 
 
