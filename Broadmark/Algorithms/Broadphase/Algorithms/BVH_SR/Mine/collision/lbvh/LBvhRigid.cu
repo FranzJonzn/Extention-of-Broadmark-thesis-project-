@@ -53,8 +53,8 @@ namespace mn {
 		/// 0: rebuild 1: refit
 		updatePrimData(pdata);
 		switch (scheme) {
-		case LBvhRigidMaintenance::BUILD: build(); break;
-		case LBvhRigidMaintenance::REFIT: refit(); break;
+			case LBvhRigidMaintenance::BUILD: build(); break;
+			case LBvhRigidMaintenance::REFIT: refit(); break;
 		default: break;
 		}
 	}
@@ -107,7 +107,7 @@ namespace mn {
 	void LBvhRigid::build() {
 		/// calculate scene bounding box
 		BOX	bv{};
-		checkCudaErrors(cudaMemcpy(d_bv, &bv, sizeof(BOX), cudaMemcpyHostToDevice));
+		checkCudaErrors(cudaMemcpy(d_bv, &bv, sizeof(BOX), cudaMemcpyHostToDevice)); // allokerar minne 
 #if MACRO_VERSION
 			configuredLaunch({ "CalcBVARCSim", _primSize }, calcMaxBVARCSim,
 				_primSize, d_bxsARCSim, d_bv);
@@ -117,6 +117,9 @@ namespace mn {
 #endif
 		checkCudaErrors(cudaMemcpy(&bv, d_bv, sizeof(BOX), cudaMemcpyDeviceToHost));
 
+		//Mortom cod (mc) används för att avgöra hur trädet ska traverseras
+		// se https://devblogs.nvidia.com/thinking-parallel-part-iii-tree-construction-gpu/
+		// för bättre förklaring.
 #if MACRO_VERSION
 			configuredLaunch({ "CalcMCsARCSim", _primSize }, calcMCsARCSim,
 				_primSize, d_bxsARCSim, bv, getRawPtr(d_keys32));
@@ -129,11 +132,23 @@ namespace mn {
 
 		/// build primitives
 #if MACRO_VERSION
-			configuredLaunch({ "BuildPrimsARCSim", _primSize }, buildPrimitivesARCSim,
-				_primSize, _lvs.getPrimitiveArray().portobj<0>(), getRawPtr(d_primMap), d_facesARCSim, d_bxsARCSim);
+			configuredLaunch(
+							{ "BuildPrimsARCSim", _primSize }, 
+							buildPrimitivesARCSim,
+							_primSize, 
+							_lvs.getPrimitiveArray().portobj<0>(), 
+							getRawPtr(d_primMap), 
+							d_facesARCSim, 
+							d_bxsARCSim);
 #else
-			configuredLaunch({ "BuildPrims", _primSize }, buildPrimitives,
-				_primSize, _lvs.getPrimitiveArray().portobj<0>(), getRawPtr(d_primMap), d_faces, d_vertices);
+			configuredLaunch(
+							{ "BuildPrims", _primSize }, 
+							buildPrimitives,
+							_primSize, 
+							_lvs.getPrimitiveArray().portobj<0>(), 
+							getRawPtr(d_primMap), 
+							d_faces, 
+							d_vertices);
 #endif
 
 		/// build external nodes
@@ -141,8 +156,13 @@ namespace mn {
 		_lvs.calcSplitMetrics(_extSize);
 		/// build internal nodes
 		_unsortedTks.clearIntNodes(_intSize);
-		configuredLaunch({ "BuildIntNodes", _extSize }, buildIntNodes,
-			_extSize, getRawPtr(d_count), _lvs.portobj<0>(), _unsortedTks.portobj<0>());
+		configuredLaunch(
+			{ "BuildIntNodes", _extSize }, 
+			buildIntNodes,
+			_extSize, 
+			getRawPtr(d_count),
+			_lvs.portobj<0>(), 
+			_unsortedTks.portobj<0>());
 
 Logger::recordSection<TimerType::GPU>("construct_bvh");
 

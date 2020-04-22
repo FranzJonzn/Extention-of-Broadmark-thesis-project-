@@ -50,7 +50,7 @@ namespace mn {
 		int primSize{ BvhSettings::prim_size() };
 		int extSize{ BvhSettings::ext_node_size() };
 		int intSize{ BvhSettings::int_node_size() };
-		ModelType type{ ModelType::FixedDeformableType };
+		ModelType type{ ModelType::RigidType };
 	};
 }
 

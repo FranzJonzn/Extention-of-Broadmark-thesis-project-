@@ -14,9 +14,9 @@
 namespace mn {
 
 	struct SceneData {
-		int						offset = 0;
-		std::vector<PointType>	pos;
-		std::vector<int3>		fids;
+		int						offset = 0; // offcet till positionen där värdena är lagrade i mesh structuren 
+		std::vector<PointType>	pos;		// meshc vertecis 
+		std::vector<int3>		fids;		// mesh faces (består av tre stycken pos)  (int3 = (x,y,z))
 	};
 
 	class Scene {

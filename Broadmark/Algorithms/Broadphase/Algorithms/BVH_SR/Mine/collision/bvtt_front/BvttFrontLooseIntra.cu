@@ -70,7 +70,7 @@ namespace mn {
 		_pBvh->restrLog().setUpdateTag(false);
 		static bool first = true;
 		/**	
-		 *	\note simplified version, adopt bvtt front opt according to bvh opt. Not robust. See supplementary file for more details.
+		 *	\note simplified version, adopt bvtt front opt according to bvh opt. Not robust. See supplementary file for more WEFdetails.
 		 */
 		if (CDBenchmarkSettings::enableRestr()) {
 			/// front maintenance override

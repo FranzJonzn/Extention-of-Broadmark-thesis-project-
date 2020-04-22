@@ -30,8 +30,11 @@ namespace mn {
 				_kFormatedData.pos.emplace_back(MakePoint<ExtentType>::p(scene->mMeshes[i]->mVertices[j].x, scene->mMeshes[i]->mVertices[j].y, scene->mMeshes[i]->mVertices[j].z));
 			}
 			for (int j = 0; j < scene->mMeshes[i]->mNumFaces; j++) {
-				_kFormatedData.fids.emplace_back(make_int3(_kFormatedData.offset + scene->mMeshes[i]->mFaces[j].mIndices[0],
-					_kFormatedData.offset + scene->mMeshes[i]->mFaces[j].mIndices[1], _kFormatedData.offset + scene->mMeshes[i]->mFaces[j].mIndices[2]));
+				_kFormatedData.fids.emplace_back(
+					make_int3(
+						_kFormatedData.offset + scene->mMeshes[i]->mFaces[j].mIndices[0],
+						_kFormatedData.offset + scene->mMeshes[i]->mFaces[j].mIndices[1], 
+						_kFormatedData.offset + scene->mMeshes[i]->mFaces[j].mIndices[2]));
 			}
 			_kFormatedData.offset += scene->mMeshes[i]->mNumVertices;
 		}

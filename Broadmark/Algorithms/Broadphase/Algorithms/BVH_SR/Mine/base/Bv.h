@@ -10,7 +10,7 @@ namespace mn {
 	class AABB {
 	public:
 		PointType	_min, _max;
-
+		
 		__host__ __device__ AABB() { empty<ExtentType>(); }
 		__host__ __device__ AABB(const AABB& b)  { _min = b._min; _max = b._max; }
 		__host__ __device__ AABB(AABB&& b)  { _min = b._min; _max = b._max; }
