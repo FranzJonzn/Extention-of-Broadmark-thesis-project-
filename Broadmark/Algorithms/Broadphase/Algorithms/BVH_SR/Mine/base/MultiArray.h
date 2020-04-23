@@ -70,24 +70,24 @@ namespace mn {
 	}
 	template <typename T, uchar _total>
 	uint MultiArray<T, _total>::cs(uchar relID) {
-		assert(relID < _span);
-		return size(_offset + relID);
+		assert(relID < MultiObject::_span);
+		return size(MultiObject::_offset + relID);
 	}
 	template <typename T, uchar _total>
 	uint MultiArray<T, _total>::ns(uchar relID) {
-		assert(relID < _span);
-		return size((_offset + _span) % _total + relID);
+		assert(relID < MultiObject::_span);
+		return size((MultiObject::_offset + MultiObject::_span) % _total + relID);
 	}
 
 	/// device access
 	template <typename T, uchar _total>
-	T** MultiArray<T, _total>::cbufs() { return cdp(0); }
+	T** MultiArray<T, _total>::cbufs() { return MultiObject::cdp(0); }
 	template <typename T, uchar _total>
-	T** MultiArray<T, _total>::nbufs() { return ndp(0); }
+	T** MultiArray<T, _total>::nbufs() { return MultiObject::ndp(0); }
 	template <typename T, uchar _total>
-	T* MultiArray<T, _total>::cbuf(uchar relID) { return _devAddrs[_offset + relID]; }
+	T* MultiArray<T, _total>::cbuf(uchar relID) { return _devAddrs[MultiObject::_offset + relID]; }
 	template <typename T, uchar _total>
-	T* MultiArray<T, _total>::nbuf(uchar relID) { return _devAddrs[(_offset + _span) % _total + relID]; }
+	T* MultiArray<T, _total>::nbuf(uchar relID) { return _devAddrs[(MultiObject::_offset + MultiObject::_span) % _total + relID]; }
 	
 
 	template <typename T, uchar _total>
@@ -97,18 +97,18 @@ namespace mn {
 	}
 	template <typename T, uchar _total>
 	uint* MultiArray<T, _total>::csize(uchar relID) {
-		assert(relID < _span);
-		return dsize(_offset + relID);
+		assert(relID < MultiObject::_span);
+		return dsize(MultiObject::_offset + relID);
 	}
 	template <typename T, uchar _total>
 	uint* MultiArray<T, _total>::nsize(uchar relID) {
-		assert(relID < _span);
-		return dsize((_offset + _span) % _total + relID);
+		assert(relID < MultiObject::_span);
+		return dsize((MultiObject::_offset + MultiObject::_span) % _total + relID);
 	}
 	template <typename T, uchar _total>
-	uint* MultiArray<T, _total>::csizes() { return dsize(_offset); }
+	uint* MultiArray<T, _total>::csizes() { return dsize(MultiObject::_offset); }
 	template <typename T, uchar _total>
-	uint* MultiArray<T, _total>::nsizes() { return dsize((_offset + _span) % _total); }
+	uint* MultiArray<T, _total>::nsizes() { return dsize((MultiObject::_offset + MultiObject::_span) % _total); }
 
 	/**
 	* \brief
@@ -118,15 +118,15 @@ namespace mn {
 	*/
 	template <typename T, uchar _total>
 	void MultiArray<T, _total>::initBufs(uint* elemNums, uchar span) {
-		_span = span;
+		MultiObject::_span = span;
 		h_lens = new uint[_total];
-		_bufSizes = new uint[_span];
-		memcpy_s(_bufSizes, sizeof(uint) * _span, elemNums, sizeof(uint) * _span);
+		_bufSizes = new uint[MultiObject::_span];
+		memcpy_s(_bufSizes, sizeof(uint) * MultiObject::_span, elemNums, sizeof(uint) * MultiObject::_span);
 
 		checkCudaErrors(cudaMalloc((void**)&d_lens, sizeof(uint)*_total));
 		for (int i = 0; i < _total; i++)
-			checkCudaErrors(cudaMalloc((void**)&_devAddrs[i], sizeof(T)* elemNums[i % _span]));
-		checkCudaErrors(cudaMemcpy(d_objs, _devAddrs.data(), sizeof(T*) * _total, cudaMemcpyHostToDevice));
+			checkCudaErrors(cudaMalloc((void**)&_devAddrs[i], sizeof(T)* elemNums[i % MultiObject::_span]));
+		checkCudaErrors(cudaMemcpy(MultiObject::d_objs, _devAddrs.data(), sizeof(T*) * _total, cudaMemcpyHostToDevice));
 	}
 
 	template <typename T, uchar _total>
@@ -145,10 +145,10 @@ namespace mn {
 	*/
 	template <typename T, uchar _total>
 	void MultiArray<T, _total>::resetNextSizes() {
-		if (_offset + _span != _total)
-			checkCudaErrors(cudaMemset(d_lens + _offset + _span, 0, sizeof(uint) * _span));
+		if (MultiObject::_offset + MultiObject::_span != _total)
+			checkCudaErrors(cudaMemset(d_lens + MultiObject::_offset + MultiObject::_span, 0, sizeof(uint) * MultiObject::_span));
 		else
-			checkCudaErrors(cudaMemset(d_lens, 0, sizeof(uint) * _span));
+			checkCudaErrors(cudaMemset(d_lens, 0, sizeof(uint) * MultiObject::_span));
 	}
 }
 

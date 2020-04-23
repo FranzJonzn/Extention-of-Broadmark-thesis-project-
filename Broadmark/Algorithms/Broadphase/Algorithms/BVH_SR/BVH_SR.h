@@ -17,6 +17,8 @@
 #include "collision\lbvh\LBvh.h"
 #include "collision\bvtt_front\BVTTFront.h"
 
+#include "base\Singleton.h"
+
 class BVH_SR : public BaseAlgorithm<Object, SimpleCache> {
 private:
 

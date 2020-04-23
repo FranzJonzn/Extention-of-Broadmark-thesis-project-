@@ -2,8 +2,9 @@
 
 #pragma once
 
-
+#define NOMINMAX
 #include <Windows.h>
+#undef NOMINMAX
 #include "Core/Results.h"
 
 
