@@ -15,7 +15,7 @@ struct Aabb {
 		m_min(min), m_max(max) {}
 
 	Vec3 Center() const {
-		return (m_min + m_max) / 2.0f;
+		return (m_min + m_max)*0.5f;// 2.0f; << liten optimering
 	}
 	Vec3 Size() const {
 		return m_max - m_min;

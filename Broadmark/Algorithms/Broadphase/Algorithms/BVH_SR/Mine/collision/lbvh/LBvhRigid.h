@@ -28,8 +28,7 @@ namespace mn {
 		LBvhRigid(LBvhBuildConfig&& config);
 		~LBvhRigid();
 		void	maintain(LBvhRigidMaintenance scheme, const SceneData& pdata);
-
-		void	maintain(LBvhRigidMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings); // broadmarkIntegration
+		void	maintain_BroadMarkEdition(LBvhRigidMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings); // broadmarkIntegration
 
 #if MACRO_VERSION
 		void	maintain(LBvhRigidMaintenance scheme, const ARCSimSceneData& pdata);
@@ -44,10 +43,12 @@ namespace mn {
 	private:
 
 		void	build();
+		void	build_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
 		void	refit();
+		void	refit_BroadMarkEdition();// broadmarkIntegration
 
-		void	updatePrimData(const SceneData& pdata); // ta bort om jag får mit att fungera 
-		void	updatePrimData(const SceneFrame& fdata, const InflatedSettings& settings);// broadmarkIntegration
+		void	updatePrimData(const SceneData& pdata); 
+		void	updatePrimData_BroadMarkEdition(const SceneFrame& fdata, const InflatedSettings& settings);// broadmarkIntegration
 		void	reorderPrims();
 		void	reorderIntNodes();
 

@@ -232,9 +232,17 @@ Logger::recordSection<TimerType::GPU>("broad_phase_quality_check");
 		_fronts.resetNextSizes();
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
-		configuredLaunch({ "GenLooseIntraFrontsWithLog", (int)_pBvh->getPrimNodeSize() - 1 }, genLooseIntraFrontsWithLog,
-			_pBvh->getPrimNodeSize(), _pBvh->clvs().portobj<0>(), _pBvh->ctks().portobj<0>(), 
-			_fronts.nsizes(), _fronts.nbufs(), _log.portobj<0>(), d_cpNum, getRawPtr(d_cpRes));
+		configuredLaunch(
+			{ "GenLooseIntraFrontsWithLog",	(int)_pBvh->getPrimNodeSize() - 1 }, 
+			genLooseIntraFrontsWithLog,
+			_pBvh->getPrimNodeSize(), 
+			_pBvh->clvs().portobj<0>(), 
+			_pBvh->ctks().portobj<0>(), 
+			_fronts.nsizes(), 
+			_fronts.nbufs(), 
+			_log.portobj<0>(), 
+			d_cpNum, 
+			getRawPtr(d_cpRes));
 
 		_fronts.slide();
 

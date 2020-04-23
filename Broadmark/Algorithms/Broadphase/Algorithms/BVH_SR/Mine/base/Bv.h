@@ -13,6 +13,11 @@ namespace mn {
 		
 		__host__ __device__ AABB() { empty<ExtentType>(); }
 		__host__ __device__ AABB(const AABB& b)  { _min = b._min; _max = b._max; }
+		//BroadMarkIntegration
+		__host__ __device__ AABB(const Aabb& b) { 
+			_min = { b.m_min[0], b.m_min[1], b.m_min[2] }; 
+			_max = { b.m_max[0], b.m_max[1], b.m_max[2] }; 
+		}
 		__host__ __device__ AABB(AABB&& b)  { _min = b._min; _max = b._max; }
 		__host__ __device__ AABB(const ExtentType &minx, const ExtentType &miny, const ExtentType &minz,
 			const ExtentType &maxx, const ExtentType &maxy, const ExtentType &maxz) {
@@ -45,8 +50,8 @@ namespace mn {
 		}
 		__host__ __device__ bool contains(const PointType &v) const  {
 			return v.x <= _max.x && v.x >= _min.x &&
-				v.y <= _max.y && v.y >= _min.y &&
-				v.z <= _max.z && v.z >= _min.z;
+				   v.y <= _max.y && v.y >= _min.y &&
+				   v.z <= _max.z && v.z >= _min.z;
 		}
 		__host__ __device__ ExtentType merges(const AABB &a, const AABB &b, ExtentType *qualityMetric) {
 			_min = MakePoint<ExtentType>::p(::fmin(a._min.x, b._min.x), ::fmin(a._min.y, b._min.y), ::fmin(a._min.z, b._min.z));

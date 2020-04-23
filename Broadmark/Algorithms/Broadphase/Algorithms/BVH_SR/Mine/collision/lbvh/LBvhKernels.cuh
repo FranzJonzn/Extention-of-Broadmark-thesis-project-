@@ -6,6 +6,7 @@
 #include "collision\lbvh\BvhIntNode.h"
 #include "collision\lbvh\BvhExtNode.h"
 #include "collision\auxiliary\BvhRestrLog.h"
+#include "Core\Math\Aabb.h"
 
 namespace mn {
 
@@ -19,11 +20,12 @@ namespace mn {
 	
 	__global__ void calcMaxBV(int size, const int3 *_faces, const PointType *_vertices, BOX* _bv);
 	__global__ void calcMCs(int size, int3 *_faces, PointType *_vertices, BOX scene, uint* codes);
+	__global__ void calcMCs_BroadMarkEdition(int size, Aabb *_Aabb, BOX scene, uint* codes);/// broadmarkIntegration
 	__global__ void calcMC64s(int size, int3* _faces, PointType* _vertices, BOX* scene, uint64* codes);
 	__global__ void copyBackCodes(int size, uint64* _primcodes, uint* _codes);	///< deprecated
 
 	__global__ void buildPrimitives(int size, BvhPrimitiveCompletePort _prims, int *_primMap, int3 *_faces, PointType *_vertices);
-	//__global__ void buildPrimitives(int size, BvhPrimitiveCompletePort _prims, int *_primMap, int3 *_faces, PointType *_vertices); // broadmark
+	__global__ void buildPrimitives_BroadMarkEdition(int size, BvhPrimitiveCompletePort _prims, int *_primMap, Aabb *_Aabb); /// broadmarkIntegration
 
 
 
@@ -59,6 +61,33 @@ namespace mn {
 	__global__ void checkRestrTrunkMap(int numRtIntNode, const int* _restrQueue, const int* _tkMap, const int * _restrIntMark, int *_rtIntCount);
 	__global__ void checkPrimmap(int size, int* _primmap, int* _cnt);
 	__global__ void checkBVHIntegrity(int size, BvhExtNodeCompletePort _leaves, BvhIntNodeCompletePort _trunks, int *tag);
+
+
+
+///==================================================================================================================================================================
+/// broadmarkIntegration
+///==================================================================================================================================================================
+
+		/// Building Kernels
+	__global__ void calcMCs_BroadMarkEdition(int size, Aabb *_Aabb, BOX scene, uint* codes);
+
+
+	__global__ void buildPrimitives_BroadMarkEdition(int size, BvhPrimitiveCompletePort _prims, int *_primMap, Aabb *_Aabb); 
+
+
+
+
+	/// Updating Kernels
+	__global__ void refitExtNode_BroadMarkEdition(int primsize, BvhExtNodeCompletePort _lvs, int* _primMap, Aabb* _Aabb);
+
+	/// Restructure Kernels
+
+	/// Debug
+
+
+
+
+
 
 }
 

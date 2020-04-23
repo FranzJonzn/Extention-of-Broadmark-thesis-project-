@@ -129,4 +129,21 @@ namespace mn {
 		}
 	}
 
+
+
+
+///==================================================================================================================================================================
+/// broadmarkIntegration
+///==================================================================================================================================================================
+
+	__global__ void refitExtNode_BroadMarkEdition(int primsize, BvhExtNodeCompletePort _lvs, int* _primMap, Aabb* _Aabb) {
+		int idx = blockIdx.x * blockDim.x + threadIdx.x;
+		if (idx >= primsize) return;
+		auto &_prims = _lvs.refPrimPort();
+		auto v = _Aabb[idx];
+		BOX bv(v);
+		int newIdx = _primMap[idx];
+		_prims.setBV(newIdx, bv);
+		_lvs.setBV(newIdx, bv);
+	}
 }
