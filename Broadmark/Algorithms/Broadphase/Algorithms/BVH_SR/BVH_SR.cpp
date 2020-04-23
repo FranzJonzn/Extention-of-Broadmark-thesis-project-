@@ -7,6 +7,12 @@ bool mn::ModuleRegister::s_bInitializeRegistered = mn::ModuleRegister::RegisterI
 bool mn::ModuleRegister::s_bTerminateRegistered  = mn::ModuleRegister::RegisterTerminate();
 
 BVH_SR::BVH_SR(){
+
+
+
+
+
+
 	mn::Main::Initialize();
 	BVH_SR::TheCudaDevice	= mn::CudaDevice::getInstance();
 	BVH_SR::TheLogic		= mn::BenchmarkLogic::getInstance();
@@ -41,7 +47,7 @@ void BVH_SR::UpdateObjects(const SceneFrame& frameData) {
 
 	auto maintainOpts = BVH_SR::TheLogic->b_maintainScheme();
 
-	BVH_SR::_bvh->maintain(maintainOpts.first, frameData, m_settings);
+	BVH_SR::_bvh->maintain_BroadMarkEdition(maintainOpts.first, frameData, m_settings);
 	BVH_SR::_fl->maintain(maintainOpts.second);
 
 
