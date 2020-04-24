@@ -13,6 +13,7 @@
 #define TIMER_H
 
 #include <stdlib.h>
+#include <cstdio>
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #define WIN32_LEAN_AND_MEAN
