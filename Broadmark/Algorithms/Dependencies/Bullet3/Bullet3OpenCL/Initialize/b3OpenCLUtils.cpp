@@ -41,7 +41,9 @@ bool gDebugSkipLoadingBinary = false;
 #define B3_MAX_CL_DEVICES 16 //who needs 16 devices?
 
 #ifdef _WIN32
-#include <windows.h>
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
 #endif
 
 #include <assert.h>

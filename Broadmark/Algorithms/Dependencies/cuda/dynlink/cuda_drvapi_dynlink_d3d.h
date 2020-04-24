@@ -16,7 +16,9 @@
 #pragma warning(disable: 4312)
 
 #if defined (CUDA_INIT_D3D9) || defined(CUDA_INIT_D3D10) || defined(CUDA_INIT_D3D11)
+#define NOMINMAX
 #include <Windows.h>
+#undef NOMINMAX
 #include <mmsystem.h>
 #endif
 

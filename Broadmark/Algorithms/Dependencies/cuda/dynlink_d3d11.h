@@ -21,7 +21,9 @@
 #define _DYNLINK_D3D11_H_
 
 // Standard Windows includes
-#include <windows.h>
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
 #include <initguid.h>
 #include <assert.h>
 #include <wchar.h>

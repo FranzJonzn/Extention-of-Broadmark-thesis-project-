@@ -58,7 +58,9 @@ class StopWatchInterface
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 // includes, system
 #define WINDOWS_LEAN_AND_MEAN
-#include <windows.h>
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
 #undef min
 #undef max
 

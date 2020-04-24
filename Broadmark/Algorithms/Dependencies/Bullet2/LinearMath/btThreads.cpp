@@ -107,7 +107,9 @@ void btSpinMutex::unlock()
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <windows.h>
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
 #include <intrin.h>
 
 #define THREAD_LOCAL_STATIC __declspec(thread) static

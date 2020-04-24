@@ -120,7 +120,9 @@ void display_matrix(
 #if !defined(WIN32_LEAN_AND_MEAN)
 #define WIN32_LEAN_AND_MEAN
 #endif
-#include <windows.h>
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
 double second (void)
 {
     LARGE_INTEGER t;

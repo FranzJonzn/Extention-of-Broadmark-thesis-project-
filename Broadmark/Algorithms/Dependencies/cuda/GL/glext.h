@@ -53,7 +53,9 @@ extern "C" {
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64) && !defined(APIENTRY) && !defined(__CYGWIN__) && !defined(__SCITECH_SNAP__)
 #define WIN32_LEAN_AND_MEAN 1
-#include <windows.h>
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
 #endif
 
 #ifndef APIENTRY

@@ -41,7 +41,9 @@
 #ifdef _XBOX
 #include <Xtl.h>
 #else  //_XBOX
-#include <windows.h>
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
 
 #if WINVER < 0x0602
 #define GetTickCount64 GetTickCount

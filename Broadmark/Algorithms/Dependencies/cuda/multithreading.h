@@ -17,7 +17,9 @@
 
 //Windows threads.
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-#include <windows.h>
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
 
 typedef HANDLE CUTThread;
 typedef unsigned(WINAPI *CUT_THREADROUTINE)(void *);

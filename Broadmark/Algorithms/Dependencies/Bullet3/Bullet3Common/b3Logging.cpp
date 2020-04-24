@@ -19,7 +19,9 @@ subject to the following restrictions:
 #include <stdarg.h>
 
 #ifdef _WIN32
-#include <windows.h>
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
 #endif //_WIN32
 
 
