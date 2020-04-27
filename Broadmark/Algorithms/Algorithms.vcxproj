@@ -142,7 +142,6 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\BvhIntNode.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\BvhPrimitiveNode.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvh.h" />
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhFixedDeformable.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhRigid.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\AppBase.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\Main.h" />
@@ -269,9 +268,6 @@
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaDeviceUtils.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaKernelUtils.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaKernelUtils.cuh" />
-  </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhFixedDeformable.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

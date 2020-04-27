@@ -8,11 +8,6 @@ bool mn::ModuleRegister::s_bTerminateRegistered  = mn::ModuleRegister::RegisterT
 
 BVH_SR::BVH_SR(){
 
-
-
-
-
-
 	mn::Main::Initialize();
 	BVH_SR::TheCudaDevice	= mn::CudaDevice::getInstance();
 	BVH_SR::TheLogic		= mn::BenchmarkLogic::getInstance();

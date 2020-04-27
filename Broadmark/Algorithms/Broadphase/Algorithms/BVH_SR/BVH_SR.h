@@ -24,10 +24,8 @@ private:
 
 private:
 	/// systems (initialized)
-	mn::CudaDevice*	
-		TheCudaDevice;
-	mn::BenchmarkLogic* 
-		TheLogic;
+	mn::CudaDevice*			TheCudaDevice;
+	mn::BenchmarkLogic*		TheLogic;
 
 
 	mn::LBvhKernelRegister											  _kLBvhKernelRegister;

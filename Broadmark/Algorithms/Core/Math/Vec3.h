@@ -57,6 +57,7 @@ public:
 
 	Vec3 Clamp01() const {
 		return {
+			//Ändradet detta från std::clamp för skiten fungerade bara inte
 			boost::algorithm::clamp(m_data[0], 0.0f, 1.0f),
 			boost::algorithm::clamp(m_data[1], 0.0f, 1.0f),
 			boost::algorithm::clamp(m_data[2], 0.0f, 1.0f) 
