@@ -60,7 +60,7 @@ public:
 		return {
 			std::clamp(m_data[0], 0.0f, 1.0f),
 			std::clamp(m_data[1], 0.0f, 1.0f),
-			std::clamp(m_data[2], 0.0f, 1.0f)
+			std::clamp(m_data[2], 0.0f, 1.0f) 
 		};
 	}
 
