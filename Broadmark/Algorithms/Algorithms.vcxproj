@@ -118,6 +118,7 @@
     <ClCompile Include="Broadphase\Algorithms\KD\KD_Update.cpp" />
     <ClCompile Include="Broadphase\Algorithms\KD\KD_Validation.cpp" />
     <ClCompile Include="Tests\SimdTest.cpp" />
+    <ClInclude Include="..\..\..\BVH_SR\BVH-based-Collision-Detection-Scheme\Source\Project\Mine\system\Log\Logger.hpp" />
     <ClInclude Include="Broadphase\Algorithms\BaseAlgorithm.h" />
     <ClInclude Include="Broadphase\Algorithms\BF\BF.h" />
     <ClInclude Include="Broadphase\Algorithms\BF\BF_Base.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\BvhIntNode.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\BvhPrimitiveNode.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvh.h" />
+    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhFixedDeformable.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhRigid.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\AppBase.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\Main.h" />
@@ -151,6 +153,7 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\setting\CDBenchmarkSettings.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\CudaDevice\CudaDevice.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\Logic\BenchmarkLogic.hpp" />
+    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\Log\Logger.hpp" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaDeviceUtils.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaExecutionPolicy.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaHostUtils.h" />
@@ -266,6 +269,9 @@
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaDeviceUtils.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaKernelUtils.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaKernelUtils.cuh" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhFixedDeformable.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

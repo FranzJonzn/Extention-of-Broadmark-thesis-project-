@@ -8,7 +8,7 @@
 
 
 namespace mn {
-	::atomicCAS
+
 	using uint = unsigned int;
 	using uint64 = unsigned long long int;
 
