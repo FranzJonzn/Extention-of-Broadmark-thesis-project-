@@ -17,7 +17,7 @@
 //#define CUDA_INIT_OPENGL
 
 #include <stdio.h>
-#include "cuda_drvapi_dynlink.h"
+#include "Dependencies\cuda\dynlink\cuda_drvapi_dynlink.h"
 
 tcuInit                               *_cuInit;
 tcuDriverGetVersion                   *cuDriverGetVersion;
