@@ -1,7 +1,6 @@
 #pragma once
 
-
-
+#include <boost/algorithm/clamp.hpp>
 #include "Macros.h"
 #include "Core/Math/Axis.h"
 #include "Dependencies/json.hpp"
@@ -58,9 +57,9 @@ public:
 
 	Vec3 Clamp01() const {
 		return {
-			std::clamp(m_data[0], 0.0f, 1.0f),
-			std::clamp(m_data[1], 0.0f, 1.0f),
-			std::clamp(m_data[2], 0.0f, 1.0f) 
+			boost::algorithm::clamp(m_data[0], 0.0f, 1.0f),
+			boost::algorithm::clamp(m_data[1], 0.0f, 1.0f),
+			boost::algorithm::clamp(m_data[2], 0.0f, 1.0f) 
 		};
 	}
 
