@@ -36,7 +36,7 @@ namespace mn {
 		BvttFrontKernelRegister() {
 			/// three factors considered: 1\blocksize 2\cachePreference 3\tailEffect
 			CudaDevice* device = CudaDevice::getInstance();
-			device->registerKernel("FilterCnts", filterCnts, cudaFuncCachePreferL1, false);	
+			device->registerKernel("FilterCnts"        , filterCnts        , cudaFuncCachePreferL1, false);	
 			device->registerKernel("FilterIntFrontCnts", filterIntFrontCnts, cudaFuncCachePreferL1, false);
 			device->registerKernel("FilterExtFrontCnts", filterExtFrontCnts, cudaFuncCachePreferL1, false);
 

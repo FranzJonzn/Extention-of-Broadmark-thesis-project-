@@ -93,12 +93,15 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\cuda;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>cudart.lib;cudadevrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -171,7 +174,9 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\setting\CDBenchmarkSettings.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\CudaDevice\CudaDevice.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\Logic\BenchmarkLogic.hpp" />
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\Log\Logger.hpp" />
+    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\Log\Logger.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaDeviceUtils.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaExecutionPolicy.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\CudaHostUtils.h" />
@@ -362,7 +367,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\auxiliary\BvhRestrLog.cu" />
-    <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\auxiliary\FlOrderLog.cu" />
+    <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\auxiliary\FlOrderLog.cu">
+      <FileType>Document</FileType>
+    </CudaCompile>
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvhCDKernels.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontGenerateKernels.cu" />
     <None Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontKeepKernels.cu" />
