@@ -9,7 +9,7 @@
 #include "setting\CDBenchmarkSettings.h"
 
 #include <thrust/execution_policy.h>
-#include "collision/narrow_phase/narrow_phase.cuh"
+//#include "collision/narrow_phase/narrow_phase.cuh"
 
 namespace mn {
 

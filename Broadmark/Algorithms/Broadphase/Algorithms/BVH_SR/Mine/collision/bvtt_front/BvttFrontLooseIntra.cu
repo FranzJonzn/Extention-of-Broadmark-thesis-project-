@@ -9,7 +9,7 @@
 #include "setting\CDBenchmarkSettings.h"
 
 #include <thrust\execution_policy.h>
-#include "collision\narrow_phase\narrow_phase.cuh"
+//#include "collision\narrow_phase\narrow_phase.cuh"
 
 namespace mn {
 
@@ -126,7 +126,7 @@ namespace mn {
 	}
 
 	void BvttFrontLooseIntra::proximityQuery() {
-		if (CDBenchmarkSettings::includeNarrowPhase()) {
+		/*if (CDBenchmarkSettings::includeNarrowPhase()) {
 			checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
 			checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
 			configuredLaunch({ "SimpleNarrowPhase", _cpNum }, simpleNarrowPhase,
@@ -134,7 +134,7 @@ namespace mn {
 
 			Logger::recordSection<TimerType::GPU>("narrow_phase");
 
-		}
+		}*/
 	}
 
 	void BvttFrontLooseIntra::reorderFronts() {

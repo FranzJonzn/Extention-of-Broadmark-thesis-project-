@@ -1,10 +1,16 @@
 #ifndef __BV_H_
 #define __BV_H_
 
+
+
+
+
 #include "utility\Meta.h"
 #include <cuda_runtime.h>
 #include "Core\Math\Aabb.h"
 #include <cfloat>
+
+
 
 namespace mn {
 
