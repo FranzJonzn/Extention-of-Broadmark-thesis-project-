@@ -1,5 +1,8 @@
 #include "BVH_SR.h"
 
+///==================================================================================================================================================================
+/// broadmarkIntegration
+///==================================================================================================================================================================
 
 
 
@@ -37,7 +40,6 @@ BVH_SR::BVH_SR(){
 		mn::BvttFrontSettings::ext_front_size(), mn::BvttFrontSettings::int_front_size(),
 		mn::BvhSettings::ext_node_size(), mn::BvhSettings::int_node_size()
 		));
-
 	printf("End GPU memory allocations\n");
 
 	initalized				= true;

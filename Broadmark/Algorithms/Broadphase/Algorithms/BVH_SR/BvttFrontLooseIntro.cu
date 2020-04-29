@@ -1,5 +1,5 @@
-#include "BvttFrontLooseInter.h"
-#include "BvttFrontLooseKernels.cuh"
+#include "BvttFrontLooseIntro.h"
+#include "Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseKernels.cuh"
 #include "collision\lbvh\LBvh.h"
 #include "utility\CudaHostUtils.h"
 #include "utility\CudaThrustUtils.hpp"
@@ -11,15 +11,21 @@
 #include <thrust/execution_policy.h>
 //#include "collision/narrow_phase/narrow_phase.cuh"
 
+
+
+///==================================================================================================================================================================
+/// broadmarkIntegration
+///==================================================================================================================================================================
+
+
 namespace mn {
 
-	BvttFrontLooseInter::BvttFrontLooseInter(BvttFrontInterBuildConfig<LBvh<ModelType::FixedDeformableType>, LBvh<ModelType::RigidType>> config) {
-		TheCudaDevice			= CudaDevice::getInstance();
-		_pFixedDeformableBvh	= config.pbvha;
-		_pRigidBvh				= config.pbvhb;
+	BvttFrontLooseIntro::BvttFrontLooseIntro(BvttFrontIntroBuildConfig<LBvh<ModelType::RigidType>> config) {
+		TheCudaDevice	= CudaDevice::getInstance();
+		_pRigidBvh		= config.pbvh;
 		std::array<uint, 2>	sizeConfig;
-		sizeConfig[0]			= config.intFrontSize;
-		sizeConfig[1]			= config.extFrontSize;
+		sizeConfig[0]	= config.intFrontSize;
+		sizeConfig[1]	= config.extFrontSize;
 		_fronts.initBufs(sizeConfig.data(), (uchar)sizeConfig.size());
 		_log.setup(config.intNodeSize, config.extNodeSize, config.intFrontSize, config.extFrontSize);
 
@@ -34,16 +40,15 @@ namespace mn {
 		reportMemory();
 	}
 
-	BvttFrontLooseInter::~BvttFrontLooseInter() {
+	BvttFrontLooseIntro::~BvttFrontLooseIntro() {
 		checkCudaErrors(cudaFree(d_actualCpNum));
 		checkCudaErrors(cudaFree(d_cpNum));
 		_log.cleanup();
 		_fronts.destroyBufs();
-		_pFixedDeformableBvh = nullptr;
 		_pRigidBvh = nullptr;
 	}
 
-	void BvttFrontLooseInter::inspectResults() {
+	void BvttFrontLooseIntro::inspectResults() {
 		_fronts.retrieveSizes();
 		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
 		checkCudaErrors(cudaMemcpy(&_actualCpNum, d_actualCpNum, sizeof(int), cudaMemcpyDeviceToHost));
@@ -56,13 +61,13 @@ namespace mn {
 		Logger::message(str);
 	}
 
-	void BvttFrontLooseInter::applyCpResults(uint* _idx, uint2* _front) {
-		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
-		checkCudaErrors(cudaMemcpy(_idx, d_cpNum, sizeof(uint), cudaMemcpyDeviceToDevice));
-		checkCudaErrors(cudaMemcpy(_front, getRawPtr(d_cpRes), sizeof(uint2) * _cpNum, cudaMemcpyDeviceToDevice));
+	void BvttFrontLooseIntro::applyCpResults(uint* _idx, uint2* _front) {
+		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum           , sizeof(int)			  , cudaMemcpyDeviceToHost  ));
+		checkCudaErrors(cudaMemcpy(_idx   , d_cpNum           , sizeof(uint)		  , cudaMemcpyDeviceToDevice));
+		checkCudaErrors(cudaMemcpy(_front , getRawPtr(d_cpRes), sizeof(uint2) * _cpNum, cudaMemcpyDeviceToDevice));
 	}
 
-	void BvttFrontLooseInter::maintain(BvttFrontLooseInterMaintenance scheme) {
+	void BvttFrontLooseIntro::maintain(BvttFrontLooseInterMaintenance scheme) {
 		/**
 		 *	\note simplified version, adopt
 		 */
@@ -93,18 +98,18 @@ namespace mn {
 			case BvttFrontLooseInterMaintenance::REORDER:	  Logger::message("balance front. " ); balance();	  break;
 			case BvttFrontLooseInterMaintenance::KEEP:		  Logger::message("preserve front. "); keep();		  break;
 
-		default: break;
+			default: break;
 		}
 		inspectResults();
 	}
 
-	void BvttFrontLooseInter::reorderFronts() {
+	void BvttFrontLooseIntro::reorderFronts() {
 		Logger::tick<TimerType::GPU>();
 		_log.prepare(_pFixedDeformableBvh->getExtNodeSize());
 		Logger::tock<TimerType::GPU>("prepare_ordering_calc_offset");
 		_log.clear(_pFixedDeformableBvh->getExtNodeSize());
 		_fronts.retrieveSizes();
-		checkCudaErrors(cudaMemcpy(_fronts.nsizes(), _fronts.csizes(), sizeof(uint)* 2, cudaMemcpyDeviceToDevice));
+		checkCudaErrors(cudaMemcpy(_fronts.nsizes(), _fronts.csizes(), sizeof(uint) * 2, cudaMemcpyDeviceToDevice));
 
 		uint2 osizes = make_uint2(_fronts.cs(0), _fronts.cs(1));
 		configuredLaunch({ "PureReorderLooseFrontsWithLog", (int)osizes.x + (int)osizes.y }, pureReorderLooseFrontsWithLog,
@@ -115,7 +120,7 @@ namespace mn {
 		_fronts.slide();
 	}
 
-	void BvttFrontLooseInter::separateFronts() {
+	void BvttFrontLooseIntro::separateFronts() {
 		/// compact valid front nodes
 		_log.preserveCnts(_pFixedDeformableBvh->getExtNodeSize());
 		configuredLaunch({ "FilterIntFrontCnts", (int)_pFixedDeformableBvh->getIntNodeSize() }, filterIntFrontCnts,
@@ -156,23 +161,23 @@ namespace mn {
 		_fronts.slide();
 	}
 
-	void BvttFrontLooseInter::generate() {
+	void BvttFrontLooseIntro::generate() {
 		_log.clear(_pFixedDeformableBvh->getExtNodeSize());
 		_fronts.resetNextSizes();
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
 		configuredLaunch(
-						{ "GenLooseInterFrontsWithLog", (int)_pRigidBvh->getPrimNodeSize() - 1 }, 
-						genLooseInterFrontsWithLog,
-							_pRigidBvh->getPrimNodeSize(), 
-							_pRigidBvh->cprim().portobj<0>(), 
-							_pFixedDeformableBvh->clvs().portobj<0>(), 
-							_pFixedDeformableBvh->ctks().portobj<0>(),
-							_fronts.nsizes(), 
-							_fronts.nbufs(), 
-							_log.portobj<0>(), 
-							d_cpNum, 
-							getRawPtr(d_cpRes));
+			{ "GenLooseInterFrontsWithLog", (int)_pRigidBvh->getPrimNodeSize() - 1 },
+			genLooseInterFrontsWithLog,
+			_pRigidBvh->getPrimNodeSize(),
+			_pRigidBvh->cprim().portobj<0>(),
+			_pFixedDeformableBvh->clvs().portobj<0>(),
+			_pFixedDeformableBvh->ctks().portobj<0>(),
+			_fronts.nsizes(),
+			_fronts.nbufs(),
+			_log.portobj<0>(),
+			d_cpNum,
+			getRawPtr(d_cpRes));
 
 		_fronts.slide();
 
@@ -186,7 +191,7 @@ namespace mn {
 		_restructured = false;
 	}
 
-	void BvttFrontLooseInter::pruneSprout() {
+	void BvttFrontLooseIntro::pruneSprout() {
 		_log.clear(_pFixedDeformableBvh->getExtNodeSize());
 		_fronts.retrieveSizes();
 		_fronts.resetNextSizes();
@@ -196,32 +201,32 @@ namespace mn {
 
 		osize = _fronts.cs(0);
 		configuredLaunch(
-						{ "MaintainIntLooseInterFrontsWithLog", (int)osize }, 
-						maintainIntLooseInterFrontsWithLog,
-							_pRigidBvh->cprim().portobj<0>(), 
-							_pFixedDeformableBvh->clvs().portobj<0>(), 
-							_pFixedDeformableBvh->ctks().portobj<0>(), 
-							osize, 
-							(const int2*)_fronts.cbuf(0),
-							_log.portobj<0>(), 
-							_fronts.nsizes(), 
-							_fronts.nbufs(), 
-							d_cpNum, 
-							getRawPtr(d_cpRes));
+			{ "MaintainIntLooseInterFrontsWithLog", (int)osize },
+			maintainIntLooseInterFrontsWithLog,
+			_pRigidBvh->cprim().portobj<0>(),
+			_pFixedDeformableBvh->clvs().portobj<0>(),
+			_pFixedDeformableBvh->ctks().portobj<0>(),
+			osize,
+			(const int2*)_fronts.cbuf(0),
+			_log.portobj<0>(),
+			_fronts.nsizes(),
+			_fronts.nbufs(),
+			d_cpNum,
+			getRawPtr(d_cpRes));
 		osize = _fronts.cs(1);
 		configuredLaunch(
-						{ "MaintainExtLooseInterFrontsWithLog", (int)osize }, 
-							maintainExtLooseInterFrontsWithLog,
-								_pRigidBvh->cprim().portobj<0>(), 
-								_pFixedDeformableBvh->clvs().portobj<0>(), 
-								_pFixedDeformableBvh->ctks().portobj<0>(), 
-								osize, 
-								(const int2*)_fronts.cbuf(1),
-								_log.portobj<0>(), 
-								_fronts.nsizes(), 
-								_fronts.nbufs(), 
-								d_cpNum, 
-								getRawPtr(d_cpRes));
+			{ "MaintainExtLooseInterFrontsWithLog", (int)osize },
+			maintainExtLooseInterFrontsWithLog,
+			_pRigidBvh->cprim().portobj<0>(),
+			_pFixedDeformableBvh->clvs().portobj<0>(),
+			_pFixedDeformableBvh->ctks().portobj<0>(),
+			osize,
+			(const int2*)_fronts.cbuf(1),
+			_log.portobj<0>(),
+			_fronts.nsizes(),
+			_fronts.nbufs(),
+			d_cpNum,
+			getRawPtr(d_cpRes));
 
 		_fronts.slide();
 
@@ -233,14 +238,14 @@ namespace mn {
 		checkThrustErrors(thrust::copy(getDevicePtr(d_cpRes), getDevicePtr(d_cpRes) + _cpNum, getDevicePtr(d_orderedCdpairs)));
 	}
 
-	void BvttFrontLooseInter::balance() {
+	void BvttFrontLooseIntro::balance() {
 		_log.prepare(_pFixedDeformableBvh->getExtNodeSize());
 		_log.clear(_pFixedDeformableBvh->getExtNodeSize());
 		_fronts.retrieveSizes();
 		_fronts.resetNextSizes();
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
-		checkCudaErrors(cudaMemcpy(_fronts.nsizes(), _fronts.csizes(), sizeof(uint)* 2, cudaMemcpyDeviceToDevice));
+		checkCudaErrors(cudaMemcpy(_fronts.nsizes(), _fronts.csizes(), sizeof(uint) * 2, cudaMemcpyDeviceToDevice));
 
 		uint osize = _fronts.cs(0);
 		configuredLaunch({ "ReorderIntLooseInterFrontsWithLog", (int)osize }, reorderIntLooseInterFrontsWithLog,
@@ -252,14 +257,14 @@ namespace mn {
 		//	_log.portobj<0>(), _fronts.nbuf(1), d_cpNum, getRawPtr(d_cpRes));
 		checkCudaErrors(cudaMemcpy(_fronts.nbuf(1), _fronts.cbuf(1), sizeof(int2)* osize, cudaMemcpyDeviceToDevice));
 		configuredLaunch(
-						{ "KeepExtLooseInterFronts", (int)osize }, 
-						keepExtLooseInterFronts,
-							_pRigidBvh->cprim().portobj<0>(), 
-							_pFixedDeformableBvh->clvs().portobj<0>(), 
-							osize, 
-							(const int2*)_fronts.cbuf(1), 
-							d_cpNum, 
-							getRawPtr(d_cpRes));
+			{ "KeepExtLooseInterFronts", (int)osize },
+			keepExtLooseInterFronts,
+			_pRigidBvh->cprim().portobj<0>(),
+			_pFixedDeformableBvh->clvs().portobj<0>(),
+			osize,
+			(const int2*)_fronts.cbuf(1),
+			d_cpNum,
+			getRawPtr(d_cpRes));
 
 		_fronts.slide();
 
@@ -269,7 +274,7 @@ namespace mn {
 		Logger::recordSection<TimerType::GPU>("broad_phase_cd_balance");
 	}
 
-	void BvttFrontLooseInter::keep() {
+	void BvttFrontLooseIntro::keep() {
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
 		uint osize = _fronts.cs(0);
@@ -285,7 +290,7 @@ namespace mn {
 		Logger::recordSection<TimerType::GPU>("broad_phase_cd_preserve");
 	}
 
-	void BvttFrontLooseInter::restructure() {
+	void BvttFrontLooseIntro::restructure() {
 		/// prune is disabled in front restructuring
 		separateFronts();
 
@@ -313,16 +318,16 @@ namespace mn {
 		// int fronts & ext fronts
 		if (osizes.x - _numValidFrontNodes[0] > 0)
 			configuredLaunch({ "RestructureIntLooseInterFrontWithLog", (int)osizes.x - _numValidFrontNodes[0] }, restructureIntLooseInterFrontWithLog,
-			_pRigidBvh->cprim().portobj<0>(), _pFixedDeformableBvh->clvs().portobj<0>(), _pFixedDeformableBvh->ctks().portobj<0>(),
-			osizes.x - _numValidFrontNodes[0], (const int2*)_fronts.cbuf(0) + _numValidFrontNodes[0],
-			_log.portobj<0>(),
-			_fronts.nsizes(), _fronts.nbufs(), d_cpNum, getRawPtr(d_cpRes));
+				_pRigidBvh->cprim().portobj<0>(), _pFixedDeformableBvh->clvs().portobj<0>(), _pFixedDeformableBvh->ctks().portobj<0>(),
+				osizes.x - _numValidFrontNodes[0], (const int2*)_fronts.cbuf(0) + _numValidFrontNodes[0],
+				_log.portobj<0>(),
+				_fronts.nsizes(), _fronts.nbufs(), d_cpNum, getRawPtr(d_cpRes));
 		if (osizes.y - _numValidFrontNodes[1] > 0)
 			configuredLaunch({ "RestructureExtLooseInterFrontWithLog", (int)osizes.y - _numValidFrontNodes[1] }, restructureExtLooseInterFrontWithLog,
-			_pRigidBvh->cprim().portobj<0>(), _pFixedDeformableBvh->clvs().portobj<0>(), _pFixedDeformableBvh->ctks().portobj<0>(),
-			osizes.y - _numValidFrontNodes[1], (const int2*)_fronts.cbuf(1) + _numValidFrontNodes[1],
-			_log.portobj<0>(), (const int*)_pFixedDeformableBvh->restrLog().getRestrBvhRoot(),
-			_fronts.nsizes(), _fronts.nbufs(), d_cpNum, getRawPtr(d_cpRes));
+				_pRigidBvh->cprim().portobj<0>(), _pFixedDeformableBvh->clvs().portobj<0>(), _pFixedDeformableBvh->ctks().portobj<0>(),
+				osizes.y - _numValidFrontNodes[1], (const int2*)_fronts.cbuf(1) + _numValidFrontNodes[1],
+				_log.portobj<0>(), (const int*)_pFixedDeformableBvh->restrLog().getRestrBvhRoot(),
+				_fronts.nsizes(), _fronts.nbufs(), d_cpNum, getRawPtr(d_cpRes));
 
 		_fronts.slide();
 		reorderFronts();
@@ -353,7 +358,7 @@ namespace mn {
 		_restructured = true;
 	}
 
-	void BvttFrontLooseInter::pureBvhCd() {
+	void BvttFrontLooseIntro::pureBvhCd() {
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
 		configuredLaunch({ "PureBvhInterCD", (int)_pRigidBvh->getPrimNodeSize() - 1 }, pureBvhInterCD,
