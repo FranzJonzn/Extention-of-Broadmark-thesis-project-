@@ -14,12 +14,12 @@
 namespace mn {
 
 	BvttFrontLooseInter::BvttFrontLooseInter(BvttFrontInterBuildConfig<LBvh<ModelType::FixedDeformableType>, LBvh<ModelType::RigidType>> config) {
-		TheCudaDevice = CudaDevice::getInstance();
-		_pFixedDeformableBvh = config.pbvha;
-		_pRigidBvh = config.pbvhb;
+		TheCudaDevice			= CudaDevice::getInstance();
+		_pFixedDeformableBvh	= config.pbvha;
+		_pRigidBvh				= config.pbvhb;
 		std::array<uint, 2>	sizeConfig;
-		sizeConfig[0] = config.intFrontSize;
-		sizeConfig[1] = config.extFrontSize;
+		sizeConfig[0]			= config.intFrontSize;
+		sizeConfig[1]			= config.extFrontSize;
 		_fronts.initBufs(sizeConfig.data(), (uchar)sizeConfig.size());
 		_log.setup(config.intNodeSize, config.extNodeSize, config.intFrontSize, config.extFrontSize);
 
@@ -86,12 +86,12 @@ namespace mn {
 		}
 
 		switch (scheme) {
-		case BvttFrontLooseInterMaintenance::PURE_BVH_CD: Logger::message("pure bvhcd. "); pureBvhCd(); break;
-			/// front based methods
-		case BvttFrontLooseInterMaintenance::GENERATE: Logger::message("generate front. "); generate(); break;
-		case BvttFrontLooseInterMaintenance::UPDATE: Logger::message("update front. "); pruneSprout(); break;
-		case BvttFrontLooseInterMaintenance::REORDER: Logger::message("balance front. "); balance(); break;
-		case BvttFrontLooseInterMaintenance::KEEP: Logger::message("preserve front. "); keep(); break;
+			case BvttFrontLooseInterMaintenance::PURE_BVH_CD: Logger::message("pure bvhcd. "    ); pureBvhCd();   break;
+				/// front based methods
+			case BvttFrontLooseInterMaintenance::GENERATE:	  Logger::message("generate front. "); generate();    break;
+			case BvttFrontLooseInterMaintenance::UPDATE:	  Logger::message("update front. "  ); pruneSprout(); break;
+			case BvttFrontLooseInterMaintenance::REORDER:	  Logger::message("balance front. " ); balance();	  break;
+			case BvttFrontLooseInterMaintenance::KEEP:		  Logger::message("preserve front. "); keep();		  break;
 
 		default: break;
 		}
@@ -222,8 +222,15 @@ namespace mn {
 		//	_pRigidBvh->cprim().portobj<0>(),_pFixedDeformableBvh->clvs().portobj<0>(), osize, _fronts.cbuf(1),
 		//	_log.portobj<0>(), _fronts.nbuf(1), d_cpNum, getRawPtr(d_cpRes));
 		checkCudaErrors(cudaMemcpy(_fronts.nbuf(1), _fronts.cbuf(1), sizeof(int2)* osize, cudaMemcpyDeviceToDevice));
-		configuredLaunch({ "KeepExtLooseInterFronts", (int)osize }, keepExtLooseInterFronts,
-			_pRigidBvh->cprim().portobj<0>(), _pFixedDeformableBvh->clvs().portobj<0>(), osize, (const int2*)_fronts.cbuf(1), d_cpNum, getRawPtr(d_cpRes));
+		configuredLaunch(
+						{ "KeepExtLooseInterFronts", (int)osize }, 
+						keepExtLooseInterFronts,
+							_pRigidBvh->cprim().portobj<0>(), 
+							_pFixedDeformableBvh->clvs().portobj<0>(), 
+							osize, 
+							(const int2*)_fronts.cbuf(1), 
+							d_cpNum, 
+							getRawPtr(d_cpRes));
 
 		_fronts.slide();
 

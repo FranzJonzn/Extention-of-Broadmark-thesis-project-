@@ -30,7 +30,7 @@ private:
 
 	mn::LBvhKernelRegister											  _kLBvhKernelRegister;
 	mn::BvttFrontKernelRegister								          _kFrontKernelRegister;
-	std::unique_ptr<mn::LBvh<mn::ModelType::RigidType>>				  _bvh;
+	std::unique_ptr<mn::LBvh<mn::ModelType::FixedDeformableType>>	  _bvh;
 	std::unique_ptr<mn::BvttFront<mn::BvttFrontType::LooseIntraType>> _fl;
 	bool 
 		initalized = false;

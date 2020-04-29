@@ -77,7 +77,7 @@ namespace mn {
 			if (_pBvh->bvhOptTag() == 2) {		///< build
 				Logger::message("build front(in restr). ");
 				generate(); 
-				proximityQuery();
+				//proximityQuery();
 				inspectResults();
 				return;
 			} 
@@ -112,30 +112,30 @@ namespace mn {
 		}
 
 		switch (scheme) {
-		case BvttFrontLooseIntraMaintenance::PURE_BVH_CD: Logger::message("pure bvhcd. "); pureBvhCd(); proximityQuery(); break;
-		/// front based methods
-		case BvttFrontLooseIntraMaintenance::GENERATE: Logger::message("generate front. "); generate(); proximityQuery(); break;
-		case BvttFrontLooseIntraMaintenance::UPDATE: Logger::message("update front. "); pruneSprout(); proximityQuery(); break;
-		case BvttFrontLooseIntraMaintenance::REORDER: Logger::message("balance front. "); balance(); proximityQuery(); break;
-		case BvttFrontLooseIntraMaintenance::KEEP: Logger::message("preserve front. "); keep(); proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::PURE_BVH_CD: Logger::message("pure bvhcd. "    ); pureBvhCd();   //proximityQuery(); break;
+			/// front based methods																				  //
+			case BvttFrontLooseIntraMaintenance::GENERATE:	  Logger::message("generate front. "); generate();    //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::UPDATE:	  Logger::message("update front. "  ); pruneSprout(); //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::REORDER:	  Logger::message("balance front. " ); balance();     //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::KEEP:		  Logger::message("preserve front. "); keep();        //proximityQuery(); break;
 
-		default: break;
+			default: break;
 		}
 		inspectResults();
 		first = false;
 	}
 
-	void BvttFrontLooseIntra::proximityQuery() {
-		/*if (CDBenchmarkSettings::includeNarrowPhase()) {
-			checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
-			checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
-			configuredLaunch({ "SimpleNarrowPhase", _cpNum }, simpleNarrowPhase,
-				(uint)_cpNum, getRawPtr(d_orderedCdpairs), _pBvh->getFaces(), _pBvh->getVertices(), d_actualCpNum);
+	//void BvttFrontLooseIntra::proximityQuery() {
+	//	/*if (CDBenchmarkSettings::includeNarrowPhase()) {
+	//		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
+	//		checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
+	//		configuredLaunch({ "SimpleNarrowPhase", _cpNum }, simpleNarrowPhase,
+	//			(uint)_cpNum, getRawPtr(d_orderedCdpairs), _pBvh->getFaces(), _pBvh->getVertices(), d_actualCpNum);
 
-			Logger::recordSection<TimerType::GPU>("narrow_phase");
+	//		Logger::recordSection<TimerType::GPU>("narrow_phase");
 
-		}*/
-	}
+	//	}*/
+	//}
 
 	void BvttFrontLooseIntra::reorderFronts() {
 		Logger::tick<TimerType::GPU>();

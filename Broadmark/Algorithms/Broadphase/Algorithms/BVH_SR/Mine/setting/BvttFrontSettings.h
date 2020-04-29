@@ -12,21 +12,21 @@
 
 namespace mn {
 
-	using uint = unsigned int;
+	using uint  = unsigned int;
 	using uchar = unsigned char;
 
 	enum struct BvttFrontType { LooseInterType, LooseIntraType, BvttFrontTypeNum };
 
 	class BvttFrontSettings {				///< static (pre-defined) setting
 	public:
-		static  int ext_front_size() { return _maxExtFrontSize; }
-		static  int int_front_size() { return _maxIntFrontSize; }
-		static  int collision_pair_num() { return _maxCollisionPairNum; }
+		static  int ext_front_size()		{ return _maxExtFrontSize; }
+		static  int int_front_size()		{ return _maxIntFrontSize; }
+		static  int collision_pair_num()	{ return _maxCollisionPairNum; }
 		static  int mandatoryRebuildCycle() { return _mandatoryRebuildCycle; }
 
 	private:
 		/// only allow access to static methods
-		BvttFrontSettings() = delete;
+		BvttFrontSettings()  = delete;
 		~BvttFrontSettings() = delete;
 
 		//static const int	_maxExtFrontSize = 33554432;	//(1 << 25)
@@ -52,26 +52,26 @@ namespace mn {
 	template<typename Bvh>
 	struct BvttFrontIntraBuildConfig {
 		Bvh* pbvh{ nullptr };
-		BvttFrontType type{ BvttFrontType::LooseIntraType };
-		int extFrontSize{ BvttFrontSettings::ext_front_size() };
-		int intFrontSize{ BvttFrontSettings::int_front_size() };
-		int cpNum{ BvttFrontSettings::collision_pair_num() };
-		int extNodeSize{ BvhSettings::ext_node_size() };
-		int intNodeSize{ BvhSettings::int_node_size() };
+		BvttFrontType type{ BvttFrontType::LooseIntraType           };
+		int extFrontSize  { BvttFrontSettings::ext_front_size()     };
+		int intFrontSize  { BvttFrontSettings::int_front_size()     };
+		int cpNum         { BvttFrontSettings::collision_pair_num() };
+		int extNodeSize   { BvhSettings::ext_node_size()            };
+		int intNodeSize   { BvhSettings::int_node_size()            };
 		BvttFrontIntraBuildConfig(Bvh* bvh, BvttFrontType type, int extSize, int intSize, int enNum, int inNum) :
 			pbvh(bvh), type(type), extFrontSize(extSize), intFrontSize(intSize), extNodeSize(enNum), intNodeSize(inNum) {}
 	};
 
 	template<typename BvhA, typename BvhB>
 	struct BvttFrontInterBuildConfig {
-		BvhA* pbvha{ nullptr };	///< should directly be primitive
-		BvhB* pbvhb{ nullptr };
-		BvttFrontType type{ BvttFrontType::LooseInterType };
-		int extFrontSize{ BvttFrontSettings::ext_front_size() };
-		int intFrontSize{ BvttFrontSettings::int_front_size() };
-		int cpNum{ BvttFrontSettings::collision_pair_num() };
-		int extNodeSize{ BvhSettings::ext_node_size() };
-		int intNodeSize{ BvhSettings::int_node_size() };
+		BvhA* pbvha		  { nullptr };	///< should directly be primitive
+		BvhB* pbvhb		  { nullptr };
+		BvttFrontType type{ BvttFrontType::LooseInterType			};
+		int extFrontSize  { BvttFrontSettings::ext_front_size()		};
+		int intFrontSize  { BvttFrontSettings::int_front_size()		};
+		int cpNum         { BvttFrontSettings::collision_pair_num() };
+		int extNodeSize   { BvhSettings::ext_node_size()			};
+		int intNodeSize   { BvhSettings::int_node_size()			};
 		BvttFrontInterBuildConfig(BvhA* a, BvhB* b, BvttFrontType type, int extSize, int intSize, int enNum, int inNum) :
 			pbvha(a), pbvhb(b), type(type), extFrontSize(extSize), intFrontSize(intSize), extNodeSize(enNum), intNodeSize(inNum) {}
 	};

@@ -34,20 +34,20 @@ namespace mn {
 		void	maintain(LBvhFixedDeformableMaintenance scheme, const ARCSimSceneData& pdata);
 #endif
 
-		BvhPrimitiveArray&	cprim() { return cbvh().lvs().getPrimitiveArray(); }
-		BvhExtNodeArray&	clvs() { return cbvh().lvs(); }
-		BvhIntNodeArray&	ctks() { return cbvh().tks(); }
-		int*	getPrevLbds() { return getRawPtr(d_prevLbds); }
-		int*	getPrevRbds() { return getRawPtr(d_prevRbds); }
-		BvhRestrLog&	restrLog() { return _restrLog; }
-		bool	logUpdated() const { return _restrLog.getUpdateTag(); }
-		int 	bvhOptTag() const { return _restrLog.getBvhOptTag(); }
-		uint	getExtNodeSize() { return cbvh().extSize(); }
-		uint	getIntNodeSize() { return cbvh().intSize(); }
-		uint	getPrimNodeSize() { return cbvh().primSize(); }
-		int*	getPrimMap() { return getRawPtr(d_primMap); }
-		const int3*	getFaces() const { return d_faces; }
-		const PointType*	getVertices() const { return d_vertices; }
+		BvhPrimitiveArray&	cprim()				   { return cbvh().lvs().getPrimitiveArray(); }
+		BvhExtNodeArray&	clvs()				   { return cbvh().lvs(); }
+		BvhIntNodeArray&	ctks()				   { return cbvh().tks(); }
+		int*				getPrevLbds()		   { return getRawPtr(d_prevLbds); }
+		int*				getPrevRbds()		   { return getRawPtr(d_prevRbds); }
+		BvhRestrLog&		restrLog()			   { return _restrLog; }
+		bool				logUpdated()     const { return _restrLog.getUpdateTag(); }
+		int 				bvhOptTag()		 const { return _restrLog.getBvhOptTag(); }
+		uint				getExtNodeSize()       { return cbvh().extSize(); }
+		uint				getIntNodeSize()       { return cbvh().intSize(); }
+		uint				getPrimNodeSize()      { return cbvh().primSize(); }
+		int*				getPrimMap()           { return getRawPtr(d_primMap); }
+		const int3*			getFaces()       const { return d_faces; }
+		const PointType*	getVertices()    const { return d_vertices; }
 
 	private:
 		class	Bvh {
