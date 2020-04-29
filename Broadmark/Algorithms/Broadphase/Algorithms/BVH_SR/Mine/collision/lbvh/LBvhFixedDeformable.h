@@ -5,6 +5,10 @@
 
 #include "setting\BvhSettings.h"
 #include "world\scene.h"
+#include "Core\Scene.h"	  //broadmarkIntegration
+#include "Core\Settings.h"//broadmarkIntegration
+
+
 #include "BvhExtNode.h"
 #include "BvhIntNode.h"
 #include "LBvhKernels.cuh"
@@ -30,6 +34,8 @@ namespace mn {
 		LBvhFixedDeformable(LBvhBuildConfig&& config);
 		~LBvhFixedDeformable();
 		void	maintain(LBvhFixedDeformableMaintenance scheme, const SceneData& pdata);
+		void	maintain_BroadMarkEdition(LBvhFixedDeformableMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings); // broadmarkIntegration
+
 #if MACRO_VERSION
 		void	maintain(LBvhFixedDeformableMaintenance scheme, const ARCSimSceneData& pdata);
 #endif
@@ -83,11 +89,13 @@ namespace mn {
 
 		/// main maintenance methods
 		void	build();
+		void	build_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
 		void	refit();
 		void	update();	///< gather degradation infos
 		/// 
 		bool	restructure();
 		void	updatePrimData(const SceneData& pdata);
+		void	updatePrimData_BroadMarkEdition(const SceneFrame& fdata, const InflatedSettings& settings);// broadmarkIntegration
 		void	reorderPrims();
 		void	reorderIntNodes();
 		///
@@ -97,6 +105,8 @@ namespace mn {
 		/// pre-formated input data
 		int3*								d_faces;
 		PointType*							d_vertices;
+		Aabb*								d_aabb;// broadmarkIntegration
+
 #if MACRO_VERSION
 		uint3*								d_facesARCSim;
 		g_box*								d_bxsARCSim;

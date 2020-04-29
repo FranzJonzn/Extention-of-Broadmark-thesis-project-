@@ -31,6 +31,12 @@ namespace mn {
 		checkCudaErrors(cudaMalloc((void**)&d_numRtSubtree, sizeof(int)));
 		checkCudaErrors(cudaMalloc((void**)&d_numRtIntNode, sizeof(int)));
 
+
+		/// broadmarkIntegration ===========================================================================
+		checkCudaErrors(cudaMalloc((void**)&d_aabb, sizeof(Aabb)*config.primSize));
+
+
+
 		checkThrustErrors(
 		d_primMap.resize(config.primSize);
 		d_tkMap.resize(config.intSize);
@@ -416,4 +422,91 @@ Logger::recordSection<TimerType::GPU>("restr_bvh");
 		if (tag)
 			getchar();
 	}
+
+	///==================================================================================================================================================================
+/// broadmarkIntegration
+///==================================================================================================================================================================
+
+	void LBvhFixedDeformable::maintain_BroadMarkEdition(LBvhFixedDeformableMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings) {
+		/// 0: rebuild 1: refit
+		updatePrimData_BroadMarkEdition(fdata, settings);
+		switch (scheme) {
+		case LBvhFixedDeformableMaintenance::BUILD: build_BroadMarkEdition(settings.m_worldAabb); break;
+		case LBvhFixedDeformableMaintenance::REFIT: refit_BroadMarkEdition(); break;
+		default: break;
+		}
+	}
+
+	/// Uppdaterar aabb värdena 
+	void LBvhFixedDeformable::updatePrimData_BroadMarkEdition(const SceneFrame& fdata, const InflatedSettings& settings) {
+		_primSize = settings.m_numberOfObjects;
+		checkCudaErrors(cudaMemcpy(d_aabb, fdata.m_aabbs, sizeof(Aabb)*settings.m_numberOfObjects, cudaMemcpyHostToDevice));
+
+	}
+
+	void LBvhFixedDeformable::build_BroadMarkEdition(const Aabb& worldAabb) {
+		/// uppdaterar 
+		BOX	bv(worldAabb);
+		checkCudaErrors(cudaMemcpy(&bv, d_bv, sizeof(BOX), cudaMemcpyHostToDevice));
+
+		///Mortom cod (mc) används för att avgöra hur trädet ska traverseras
+		/// se https://devblogs.nvidia.com/thinking-parallel-part-iii-tree-construction-gpu/
+		configuredLaunch({ "CalcMCs_BME", _primSize }, calcMCs_BroadMarkEdition,
+			_primSize,
+			d_aabb,
+			bv,
+			getRawPtr(d_keys32));
+		reorderPrims();
+
+		/// build primitives
+
+		configuredLaunch({ "BuildPrims_BME", _primSize }, buildPrimitives_BroadMarkEdition,
+			_primSize,
+			_lvs.getPrimitiveArray().portobj<0>(),
+			getRawPtr(d_primMap),
+			d_aabb);
+
+
+		/// build external nodes
+		_intSize = (_extSize = _lvs.buildExtNodes(_primSize)) - 1;
+		_lvs.calcSplitMetrics(_extSize);
+		/// build internal nodes
+		_unsortedTks.clearIntNodes(_intSize);
+		configuredLaunch({ "BuildIntNodes", _extSize }, buildIntNodes,
+			_extSize,
+			getRawPtr(d_count),
+			_lvs.portobj<0>(),
+			_unsortedTks.portobj<0>());
+
+		Logger::recordSection<TimerType::GPU>("construct_bvh");
+
+		/// first correct indices, then sort
+		reorderIntNodes();
+
+		Logger::recordSection<TimerType::GPU>("sort_bvh");
+
+		printf("Rigid Bvh: Primsize: %d Extsize: %d\n", _primSize, _extSize);
+	}
+
+	void LBvhRigid::refit_BroadMarkEdition() {
+		Logger::tick<TimerType::GPU>();
+		_lvs.clearExtBvs(_extSize);
+		_tks.clearIntNodes(_intSize);
+		Logger::tock<TimerType::GPU>("init_bvh_bvs");
+
+
+		configuredLaunch({ "RefitExtNode_BME", _primSize }, refitExtNode_BroadMarkEdition,
+			_primSize, _lvs.portobj<0>(), getRawPtr(d_primMap), d_aabb);
+
+
+		configuredLaunch({ "RefitIntNode", _extSize }, refitIntNode,
+			_extSize, _lvs.portobj<0>(), _tks.portobj<0>());
+
+		Logger::recordSection<TimerType::GPU>("refit_bvh");
+	}
+
+
+
+
+
 }
