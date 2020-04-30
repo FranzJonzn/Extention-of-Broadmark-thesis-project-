@@ -132,8 +132,13 @@ namespace mn {
 			configuredLaunch({ "CalcBVARCSim", cbvh().primSize() }, calcMaxBVARCSim,
 				cbvh().primSize(), d_bxsARCSim, cbvh().bv());
 #else
-			configuredLaunch({ "CalcBV", cbvh().primSize() }, calcMaxBV,
-				cbvh().primSize(), (const int3*)d_faces, (const PointType*)d_vertices, cbvh().bv());
+			configuredLaunch(
+							{ "CalcBV", cbvh().primSize() }, 
+							calcMaxBV,
+								cbvh().primSize(), 
+								(const int3*)d_faces, 
+								(const PointType*)d_vertices, 
+								cbvh().bv());
 #endif
 		checkCudaErrors(cudaMemcpy(&bv, cbvh().bv(), sizeof(BOX), cudaMemcpyDeviceToHost));
 
@@ -146,8 +151,14 @@ namespace mn {
 			configuredLaunch({ "CalcMCsARCSim", cbvh().primSize() }, calcMCsARCSim,
 				cbvh().primSize(), d_bxsARCSim, bv, getRawPtr(d_keys32));
 #else
-			configuredLaunch({ "CalcMCs", cbvh().primSize() }, calcMCs,
-				cbvh().primSize(), d_faces, d_vertices, bv, getRawPtr(d_keys32));
+			configuredLaunch(
+							{ "CalcMCs", cbvh().primSize() }, 
+							calcMCs,
+							cbvh().primSize(), 
+							d_faces, 
+							d_vertices, 
+							bv, 
+							getRawPtr(d_keys32));
 #endif
 		//configuredLaunch({ "CalcMC64s", cbvh().primSize() }, calcMC64s,
 		//	cbvh().primSize(), d_faces, d_vertices, cbvh().bv(), getRawPtr(d_keys64));
@@ -159,8 +170,14 @@ namespace mn {
 			configuredLaunch({ "BuildPrimsARCSim", cbvh().primSize() }, buildPrimitivesARCSim,
 				cbvh().primSize(), cbvh().lvs().getPrimitiveArray().portobj<0>(), getRawPtr(d_primMap), d_facesARCSim, d_bxsARCSim);
 #else
-			configuredLaunch({ "BuildPrims", cbvh().primSize() }, buildPrimitives,
-				cbvh().primSize(), cbvh().lvs().getPrimitiveArray().portobj<0>(), getRawPtr(d_primMap), d_faces, d_vertices);
+			configuredLaunch(
+							{ "BuildPrims", cbvh().primSize() }, 
+							buildPrimitives,
+								cbvh().primSize(), 
+								cbvh().lvs().getPrimitiveArray().portobj<0>(), 
+								getRawPtr(d_primMap), 
+								d_faces, 
+								d_vertices);
 #endif
 
 		/// build external nodes
@@ -204,13 +221,25 @@ Logger::recordSection<TimerType::GPU>("refit_bvh");
 
 	void LBvhFixedDeformable::update() {
 		cbvh().lvs().clearExtBvs(cbvh().extSize());
-		configuredLaunch({ "RefitExtNode", cbvh().primSize() }, refitExtNode,
-			cbvh().primSize(), cbvh().lvs().portobj<0>(), getRawPtr(d_primMap), d_faces, d_vertices);
+		configuredLaunch(
+						{ "RefitExtNode", cbvh().primSize() }, 
+						refitExtNode,
+							cbvh().primSize(), 
+							cbvh().lvs().portobj<0>(), 
+							getRawPtr(d_primMap), 
+							d_faces, 
+							d_vertices);
 
 		cbvh().tks().clearIntNodes(cbvh().intSize());
-		configuredLaunch({ "UpdateIntNode", cbvh().extSize() }, updateIntNode,
-			cbvh().extSize(), cbvh().lvs().portobj<0>(), cbvh().tks().portobj<0>(),
-			_restrLog.getExtRange(), _restrLog.getIntRange(), _restrLog.getRestrBvhRoot());
+		configuredLaunch(
+						{ "UpdateIntNode", cbvh().extSize() }, 
+						updateIntNode,
+							cbvh().extSize(), 
+							cbvh().lvs().portobj<0>(), 
+							cbvh().tks().portobj<0>(),
+							_restrLog.getExtRange(), 
+							_restrLog.getIntRange(), 
+							_restrLog.getRestrBvhRoot());
 	}
 
 	bool LBvhFixedDeformable::restructure() {
@@ -224,8 +253,14 @@ Logger::recordSection<TimerType::GPU>("refit_bvh");
 
 		// 2 preliminary mark ext nodes
 		checkThrustErrors(thrust::fill(getDevicePtr(_restrLog.getExtRange()), getDevicePtr(_restrLog.getExtRange()) + cbvh().extSize() + 1, 0));
-		configuredLaunch({ "CalibrateLeafRangeMarks", cbvh().extSize() }, calibrateLeafRangeMarks,
-			cbvh().extSize(), cbvh().tks().portobj<0>(), (const int*)_restrLog.getRestrBvhRoot(), (const int*)_restrLog.getIntMark(), _restrLog.getExtRange());
+		configuredLaunch(
+						{ "CalibrateLeafRangeMarks", cbvh().extSize() }, 
+						calibrateLeafRangeMarks,
+							cbvh().extSize(), 
+							cbvh().tks().portobj<0>(), 
+							(const int*)_restrLog.getRestrBvhRoot(), 
+							(const int*)_restrLog.getIntMark(), 
+							_restrLog.getExtRange());
 
 		// 3 calc ext node marks
 		Logger::tick<TimerType::GPU>();
@@ -236,9 +271,19 @@ Logger::recordSection<TimerType::GPU>("refit_bvh");
 		checkThrustErrors(thrust::fill(getDevicePtr(_restrLog.getExtRange()), getDevicePtr(_restrLog.getExtRange()) + cbvh().extSize() + 1, 0));
 		checkCudaErrors(cudaMemset(d_numRtSubtree, 0, sizeof(int)));
 		checkCudaErrors(cudaMemset(d_numRtIntNode, 0, sizeof(int)));
-		configuredLaunch({ "CalibrateRestrRoots", cbvh().extSize() }, calibrateRestrRoots,
-			cbvh().extSize(), cbvh().tks().portobj<0>(), (const int*)_restrLog.getRestrBvhRoot(), (const int*)_restrLog.getIntMark(), _restrLog.getExtRange(),
-			d_numRtSubtree, getRawPtr(d_sizePerSubtree), getRawPtr(d_rtSubtrees), d_numRtIntNode);
+		
+		configuredLaunch(
+						{ "CalibrateRestrRoots", cbvh().extSize() }, 
+						calibrateRestrRoots,
+							cbvh().extSize(), 
+							cbvh().tks().portobj<0>(), 
+							(const int*)_restrLog.getRestrBvhRoot(), 
+							(const int*)_restrLog.getIntMark(), 
+							_restrLog.getExtRange(),
+							d_numRtSubtree, 
+							getRawPtr(d_sizePerSubtree), 
+							getRawPtr(d_rtSubtrees), 
+							d_numRtIntNode);
 
 Logger::recordSection<TimerType::GPU>("check_bvh_restr");
 
@@ -290,17 +335,40 @@ Logger::recordSection<TimerType::GPU>("check_bvh_restr");
 
 		BOX	bv{};
 		checkCudaErrors(cudaMemcpy(cbvh().bv(), &bv, sizeof(BOX), cudaMemcpyHostToDevice));
-		configuredLaunch({ "CalcBV", cbvh().primSize() }, calcMaxBV,
-			cbvh().primSize(), (const int3 *)d_faces, (const PointType*)d_vertices, cbvh().bv());
+		configuredLaunch(
+						{ "CalcBV", cbvh().primSize() }, 
+						calcMaxBV,
+							cbvh().primSize(), 
+							(const int3 *)d_faces, 
+							(const PointType*)d_vertices, 
+							cbvh().bv());
+
+
 		checkCudaErrors(cudaMemcpy(&bv, cbvh().bv(), sizeof(BOX), cudaMemcpyDeviceToHost));
-		configuredLaunch({ "CalcRestrMCs", cbvh().primSize() }, calcRestrMCs,
-			cbvh().primSize(), (const int3 *)d_faces, (const PointType*)d_vertices, bv,
-			(const int*)_restrLog.getPrimMark(), (const int*)getRawPtr(d_primMap), getRawPtr(d_keys32));
+		configuredLaunch(
+						{ "CalcRestrMCs", cbvh().primSize() }, 
+						calcRestrMCs,
+							cbvh().primSize(), 
+							(const int3 *)d_faces, 
+							(const PointType*)d_vertices, 
+							bv,
+							(const int*)_restrLog.getPrimMark(), 
+							(const int*)getRawPtr(d_primMap), 
+							getRawPtr(d_keys32));
+
+
 
 		// 7 prepare restr keys(subtree id, morton code) and scatter map
-		configuredLaunch({ "SelectPrimitives", cbvh().primSize() }, selectPrimitives,
-			cbvh().primSize(), (const int*)_restrLog.getRestrBvhRoot(), (const int*)getRawPtr(d_gatherMap),
-			(const MCSize*)getRawPtr(d_keys32), getRawPtr(d_keys64), getRawPtr(d_taskSequence));
+		configuredLaunch(
+						{ "SelectPrimitives", cbvh().primSize() }, 
+						selectPrimitives,
+							cbvh().primSize(), 
+							(const int*)_restrLog.getRestrBvhRoot(), 
+							(const int*)getRawPtr(d_gatherMap),
+							(const MCSize*)getRawPtr(d_keys32), 
+							getRawPtr(d_keys64), 
+							getRawPtr(d_taskSequence));
+
 		checkCudaErrors(cudaMemcpy(getRawPtr(d_vals), getRawPtr(d_taskSequence), sizeof(int) * _numRtPrim, cudaMemcpyDeviceToDevice));
 		Logger::tick<TimerType::GPU>();
 		checkThrustErrors(thrust::sort_by_key(getDevicePtr(d_keys64), getDevicePtr(d_keys64) + _numRtPrim, getDevicePtr(d_vals)));
@@ -308,19 +376,36 @@ Logger::recordSection<TimerType::GPU>("check_bvh_restr");
 
 		/// 8 build external nodes upon ordered primitives(extnode-primitive structure remains intact)
 		// update primitive map
-		configuredLaunch({ "UpdatePrimMap", _numRtPrim }, updatePrimMap,
-			_numRtPrim, getRawPtr(d_taskSequence), getRawPtr(d_vals), cbvh().lvs().getPrimitiveArray().getIdx(), getRawPtr(d_primMap));
+		configuredLaunch(
+						{ "UpdatePrimMap", _numRtPrim }, 
+						updatePrimMap,
+						_numRtPrim, 
+						getRawPtr(d_taskSequence), 
+						getRawPtr(d_vals), 
+						cbvh().lvs().getPrimitiveArray().getIdx(), 
+						getRawPtr(d_primMap));
 
 		/// 9 build primitives
 		// update primitives and ext nodes
-		configuredLaunch({ "UpdatePrimAndExtNode", cbvh().primSize() }, updatePrimAndExtNode,
-			cbvh().primSize(), (const int*)_restrLog.getPrimMark(), (const int*)getRawPtr(d_primMap),
-			(const int3*)d_faces, (const PointType*)d_vertices, (const BOX *)cbvh().bv(), clvs().portobj<0>());
+		configuredLaunch(
+						{ "UpdatePrimAndExtNode", cbvh().primSize() }, 
+						updatePrimAndExtNode,
+							cbvh().primSize(), 
+							(const int*)_restrLog.getPrimMark(), 
+							(const int*)getRawPtr(d_primMap),
+							(const int3*)d_faces, 
+							(const PointType*)d_vertices, 
+							(const BOX *)cbvh().bv(), 
+							clvs().portobj<0>());
 
 		// should be faster than dealing with restr int nodes separately
 		cbvh().tks().clearIntNodes(cbvh().intSize());
-		configuredLaunch({ "RefitIntNode", cbvh().extSize() }, refitIntNode,
-			cbvh().extSize(), clvs().portobj<0>(), ctks().portobj<0>());
+		configuredLaunch(
+						{ "RefitIntNode", cbvh().extSize() }, 
+						refitIntNode,
+							cbvh().extSize(), 
+							clvs().portobj<0>(), 
+							ctks().portobj<0>());
 
 		/// 10 build internal nodes
 		//cbvh().lvs().calcRestrSplitMetrics(cbvh().extSize(), _restrLog.getRestrBvhRoot());
@@ -333,21 +418,46 @@ Logger::recordSection<TimerType::GPU>("check_bvh_restr");
 		checkCudaErrors(cudaMemset(getRawPtr(d_count), 0, sizeof(uint) * (cbvh().extSize() + 1)));	///< storing lcl-values, used for ordering
 		_unsortedTks.clearIntNodes(cbvh().intSize());
 
-		configuredLaunch({ "RestrIntNodes", _numRtExtNode }, restrIntNodes,
-			cbvh().extSize(), _numRtExtNode, (const int*)getRawPtr(d_taskSequence), (const uint*)cbvh().tks().getMarks(),
-			(const int*)_restrLog.getRestrBvhRoot(), getRawPtr(d_count), getRawPtr(d_vals), clvs().portobj<0>(), _unsortedTks.portobj<0>());
+		configuredLaunch(
+						{ "RestrIntNodes", _numRtExtNode }, 
+						restrIntNodes,
+							cbvh().extSize(), 
+							_numRtExtNode, 
+							(const int*)getRawPtr(d_taskSequence), 
+							(const uint*)cbvh().tks().getMarks(),
+							(const int*)_restrLog.getRestrBvhRoot(), 
+							getRawPtr(d_count), 
+							getRawPtr(d_vals), 
+							clvs().portobj<0>(), 
+							_unsortedTks.portobj<0>());
 		Logger::tick<TimerType::GPU>();
 		checkThrustErrors(thrust::exclusive_scan(getDevicePtr(d_count), getDevicePtr(d_count) + cbvh().extSize() + 1, getDevicePtr(d_offsetTable)));
 		Logger::tock<TimerType::GPU>("CalcRestrIntNodeSortOffsets");
 
 		/// d_taskSequence here also works as the compacted restr ext node queue
-		configuredLaunch({ "CalcRestrIntNodeOrders",  _numRtExtNode }, calcRestrIntNodeOrders,
-			_numRtExtNode, (const int*)getRawPtr(d_taskSequence), (const uint*)getRawPtr(d_count), (const uint*)getRawPtr(d_offsetTable),
-			(const int*)_restrLog.getRestrBvhRoot(), (const int*)ctks().getLbds(), (const uint*)cbvh().tks().getMarks(), 
-			(const int*)getRawPtr(d_vals), clvs().getLcas(), clvs().getPars(), _unsortedTks.portobj<0>(), getRawPtr(d_tkMap), getRawPtr(d_sequence));
-		configuredLaunch({ "ReorderRestrIntNodes",  _numRtIntNode }, reorderRestrIntNodes,
-			_numRtIntNode, (const int*)getRawPtr(d_sequence), (const int*)getRawPtr(d_tkMap),
-			_unsortedTks.portobj<0>(), ctks().portobj<0>());
+		configuredLaunch(
+						{ "CalcRestrIntNodeOrders",  _numRtExtNode }, 
+						calcRestrIntNodeOrders,
+							_numRtExtNode, 
+							(const int*)getRawPtr(d_taskSequence), 
+							(const uint*)getRawPtr(d_count), 
+							(const uint*)getRawPtr(d_offsetTable),
+							(const int*)_restrLog.getRestrBvhRoot(), 
+							(const int*)ctks().getLbds(), 
+							(const uint*)cbvh().tks().getMarks(), 
+							(const int*)getRawPtr(d_vals), 
+							clvs().getLcas(), 
+							clvs().getPars(), 
+							_unsortedTks.portobj<0>(), 
+							getRawPtr(d_tkMap), 
+							getRawPtr(d_sequence));
+		configuredLaunch(
+						{ "ReorderRestrIntNodes",  _numRtIntNode }, 
+						reorderRestrIntNodes,
+							_numRtIntNode, 
+							(const int*)getRawPtr(d_sequence), 
+							(const int*)getRawPtr(d_tkMap),
+							_unsortedTks.portobj<0>(), ctks().portobj<0>());
 
 Logger::recordSection<TimerType::GPU>("restr_bvh");
 
@@ -430,16 +540,27 @@ Logger::recordSection<TimerType::GPU>("restr_bvh");
 	void LBvhFixedDeformable::maintain_BroadMarkEdition(LBvhFixedDeformableMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings) {
 		/// 0: rebuild 1: refit
 		updatePrimData_BroadMarkEdition(fdata, settings);
+
+		_restrLog.setBvhOptTag(0);
+		if (CDBenchmarkSettings::enableRestr()) {
+			if (logUpdated()) {
+				restructure_BroadMarkEdition(settings.m_worldAabb);
+				return;
+			}
+		}
+
+
 		switch (scheme) {
-		case LBvhFixedDeformableMaintenance::BUILD: build_BroadMarkEdition(settings.m_worldAabb); break;
-		case LBvhFixedDeformableMaintenance::REFIT: refit_BroadMarkEdition(); break;
-		default: break;
+			case LBvhFixedDeformableMaintenance::BUILD:  build_BroadMarkEdition(settings.m_worldAabb); /*checkBvhValidity();*/				  break;
+			case LBvhFixedDeformableMaintenance::REFIT:  refit_BroadMarkEdition();					   /*checkBvhValidity();*/				  break;
+			case LBvhFixedDeformableMaintenance::UPDATE: update_BroadMarkEdition();                    /*restructure(); checkBvhValidity();*/ break;
+			default:																														  break;
 		}
 	}
 
 	/// Uppdaterar aabb värdena 
 	void LBvhFixedDeformable::updatePrimData_BroadMarkEdition(const SceneFrame& fdata, const InflatedSettings& settings) {
-		_primSize = settings.m_numberOfObjects;
+		cbvh().primSize() = settings.m_numberOfObjects;
 		checkCudaErrors(cudaMemcpy(d_aabb, fdata.m_aabbs, sizeof(Aabb)*settings.m_numberOfObjects, cudaMemcpyHostToDevice));
 
 	}
@@ -447,36 +568,40 @@ Logger::recordSection<TimerType::GPU>("restr_bvh");
 	void LBvhFixedDeformable::build_BroadMarkEdition(const Aabb& worldAabb) {
 		/// uppdaterar 
 		BOX	bv(worldAabb);
-		checkCudaErrors(cudaMemcpy(&bv, d_bv, sizeof(BOX), cudaMemcpyHostToDevice));
+		checkCudaErrors(cudaMemcpy(&bv, cbvh().bv(), sizeof(BOX), cudaMemcpyHostToDevice));
 
-		///Mortom cod (mc) används för att avgöra hur trädet ska traverseras
-		/// se https://devblogs.nvidia.com/thinking-parallel-part-iii-tree-construction-gpu/
-		configuredLaunch({ "CalcMCs_BME", _primSize }, calcMCs_BroadMarkEdition,
-			_primSize,
-			d_aabb,
-			bv,
-			getRawPtr(d_keys32));
+		configuredLaunch(
+						{ "CalcMCs_BME",cbvh().primSize() }, 
+						calcMCs_BroadMarkEdition,
+							cbvh().primSize(),
+							d_aabb,
+							bv,
+							getRawPtr(d_keys32));
 		reorderPrims();
 
 		/// build primitives
 
-		configuredLaunch({ "BuildPrims_BME", _primSize }, buildPrimitives_BroadMarkEdition,
-			_primSize,
-			_lvs.getPrimitiveArray().portobj<0>(),
-			getRawPtr(d_primMap),
-			d_aabb);
+		configuredLaunch(
+						{ "BuildPrims_BME", cbvh().primSize() }, 
+						buildPrimitives_BroadMarkEdition,
+							cbvh().primSize(),
+							cbvh().lvs().getPrimitiveArray().portobj<0>(),
+							getRawPtr(d_primMap),
+							d_aabb);
 
 
 		/// build external nodes
-		_intSize = (_extSize = _lvs.buildExtNodes(_primSize)) - 1;
-		_lvs.calcSplitMetrics(_extSize);
+		cbvh().intSize() = (cbvh().extSize() = cbvh().lvs().buildExtNodes(cbvh().primSize())) - 1;
+		cbvh().lvs().calcSplitMetrics(cbvh().extSize());
 		/// build internal nodes
-		_unsortedTks.clearIntNodes(_intSize);
-		configuredLaunch({ "BuildIntNodes", _extSize }, buildIntNodes,
-			_extSize,
-			getRawPtr(d_count),
-			_lvs.portobj<0>(),
-			_unsortedTks.portobj<0>());
+		_unsortedTks.clearIntNodes(cbvh().intSize());
+		configuredLaunch(
+						{ "BuildIntNodes", cbvh().extSize() }, 
+						buildIntNodes,
+							cbvh().extSize(), 
+							getRawPtr(d_count), 
+							cbvh().lvs().portobj<0>(), 
+							_unsortedTks.portobj<0>());
 
 		Logger::recordSection<TimerType::GPU>("construct_bvh");
 
@@ -485,28 +610,283 @@ Logger::recordSection<TimerType::GPU>("restr_bvh");
 
 		Logger::recordSection<TimerType::GPU>("sort_bvh");
 
-		printf("Rigid Bvh: Primsize: %d Extsize: %d\n", _primSize, _extSize);
+		printf("Primsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
 	}
+	
+	void LBvhFixedDeformable::refit_BroadMarkEdition() {
 
-	void LBvhRigid::refit_BroadMarkEdition() {
-		Logger::tick<TimerType::GPU>();
-		_lvs.clearExtBvs(_extSize);
-		_tks.clearIntNodes(_intSize);
-		Logger::tock<TimerType::GPU>("init_bvh_bvs");
+		cbvh().lvs().clearExtBvs(cbvh().extSize());
+		
+		configuredLaunch(
+						{ "RefitExtNode_BME", cbvh().primSize() }, 
+						refitExtNode_BroadMarkEdition,
+							cbvh().primSize(), 
+							cbvh().lvs().portobj<0>(), 
+							getRawPtr(d_primMap), 
+							d_aabb);
+		
+		
+		cbvh().tks().clearIntNodes(cbvh().intSize());
 
-
-		configuredLaunch({ "RefitExtNode_BME", _primSize }, refitExtNode_BroadMarkEdition,
-			_primSize, _lvs.portobj<0>(), getRawPtr(d_primMap), d_aabb);
-
-
-		configuredLaunch({ "RefitIntNode", _extSize }, refitIntNode,
-			_extSize, _lvs.portobj<0>(), _tks.portobj<0>());
+		configuredLaunch(
+						{ "RefitIntNode", cbvh().extSize() }, 
+						refitIntNode,
+							cbvh().extSize(), 
+							cbvh().lvs().portobj<0>(), 
+							cbvh().tks().portobj<0>());
 
 		Logger::recordSection<TimerType::GPU>("refit_bvh");
+
+
+
+
+		cbvh().lvs().clearExtBvs(cbvh().extSize());
+
+
+
+
+		cbvh().tks().clearIntNodes(cbvh().intSize());
+
+
+
 	}
 
+	void LBvhFixedDeformable::update_BroadMarkEdition() {
+		cbvh().lvs().clearExtBvs(cbvh().extSize());
+
+		configuredLaunch(
+						{ "RefitExtNode_BME", cbvh().primSize() },
+						refitExtNode_BroadMarkEdition,
+							cbvh().primSize(),
+							cbvh().lvs().portobj<0>(),
+							getRawPtr(d_primMap),
+							d_aabb);
+
+		cbvh().tks().clearIntNodes(cbvh().intSize());
+
+		configuredLaunch(
+						{ "UpdateIntNode", cbvh().extSize() },
+						updateIntNode,
+							cbvh().extSize(),
+							cbvh().lvs().portobj<0>(),
+							cbvh().tks().portobj<0>(),
+							_restrLog.getExtRange(),
+							_restrLog.getIntRange(),
+							_restrLog.getRestrBvhRoot());
+	}
+
+	
+	bool LBvhFixedDeformable::restructure_BroadMarkEdition(const Aabb& worldAabb) {
+		static bool lastRestr = false;
+
+		// 0 preliminary mark restr root(done in Front::checkQuality)
+		// 1 calc int node marks
+		Logger::tick<TimerType::GPU>();
+		checkThrustErrors(thrust::inclusive_scan(getDevicePtr(_restrLog.getIntRange()), getDevicePtr(_restrLog.getIntRange()) + cbvh().intSize(), getDevicePtr(_restrLog.getIntMark())));
+		Logger::tock<TimerType::GPU>("CalcIntNodeRestrMarks");
+
+		// 2 preliminary mark ext nodes
+		checkThrustErrors(thrust::fill(getDevicePtr(_restrLog.getExtRange()), getDevicePtr(_restrLog.getExtRange()) + cbvh().extSize() + 1, 0));
+		configuredLaunch(
+						{ "CalibrateLeafRangeMarks", cbvh().extSize() },
+						calibrateLeafRangeMarks,
+							cbvh().extSize(),
+							cbvh().tks().portobj<0>(),
+							(const int*)_restrLog.getRestrBvhRoot(),
+							(const int*)_restrLog.getIntMark(),
+							_restrLog.getExtRange());
+
+		// 3 calc ext node marks
+		Logger::tick<TimerType::GPU>();
+		checkThrustErrors(thrust::inclusive_scan(getDevicePtr(_restrLog.getExtRange()), getDevicePtr(_restrLog.getExtRange()) + cbvh().extSize() + 1, getDevicePtr(_restrLog.getExtMark())));
+		Logger::tock<TimerType::GPU>("CalcExtNodeRestrMarks");
+
+		// 4 mark restr root again, eliminate redundant marks
+		checkThrustErrors(thrust::fill(getDevicePtr(_restrLog.getExtRange()), getDevicePtr(_restrLog.getExtRange()) + cbvh().extSize() + 1, 0));
+		checkCudaErrors(cudaMemset(d_numRtSubtree, 0, sizeof(int)));
+		checkCudaErrors(cudaMemset(d_numRtIntNode, 0, sizeof(int)));
+
+		configuredLaunch(
+						{ "CalibrateRestrRoots", cbvh().extSize() },
+						calibrateRestrRoots,
+							cbvh().extSize(),
+							cbvh().tks().portobj<0>(),
+							(const int*)_restrLog.getRestrBvhRoot(),
+							(const int*)_restrLog.getIntMark(),
+							_restrLog.getExtRange(),
+							d_numRtSubtree,
+							getRawPtr(d_sizePerSubtree),
+							getRawPtr(d_rtSubtrees),
+							d_numRtIntNode);
+
+		Logger::recordSection<TimerType::GPU>("check_bvh_restr");
+
+		// check the extent of the degeneration according to the number of subtree
+		checkCudaErrors(cudaMemcpy(&_numRtSubtree, d_numRtSubtree, sizeof(int), cudaMemcpyDeviceToHost));
+		checkCudaErrors(cudaMemcpy(&_numRtIntNode, d_numRtIntNode, sizeof(int), cudaMemcpyDeviceToHost));
+
+		std::string	str;
+		/// restr threshold is user defined
+		int			opt = _numRtIntNode > (cbvh().intSize() >> 1);
+		if (opt) { ///< restructure couldn't handle this much degeneration efficiently
+			str = string_format("%d subtrees and %d (%d) internal nodes need restructuring. build\n", _numRtSubtree, _numRtIntNode, cbvh().intSize());
+			std::cout << str << '\n';
+			Logger::message(str);
+
+			build_BroadMarkEdition(worldAabb);
+			// should notify the fronts to be reconstructed
+			_restrLog.setBvhOptTag(2);
+			lastRestr = false;
+			return false;
+		}
+		opt = _numRtIntNode < (cbvh().intSize() >> 3);	/// could consider the quantity of related front nodes
+		if (opt) {
+			str = string_format("%d subtrees and %d (%d) internal nodes need restructuring. refit\n", _numRtSubtree, _numRtIntNode, cbvh().intSize());
+			std::cout << str << '\n';
+			Logger::message(str);
+
+			refit();
+			_restrLog.setBvhOptTag(0);
+			lastRestr = false;
+			return false;
+		}
+
+		checkCudaErrors(cudaMemcpy(getRawPtr(d_prevLbds), ctks().getLbds(), sizeof(int) * cbvh().intSize(), cudaMemcpyDeviceToDevice));
+
+		// 5 calc restr roots
+		Logger::tick<TimerType::GPU>();
+		// plus 1 here convenient for split metric calculation
+		checkThrustErrors(thrust::inclusive_scan(getDevicePtr(_restrLog.getExtRange()), getDevicePtr(_restrLog.getExtRange()) + cbvh().extSize() + 1, getDevicePtr(_restrLog.getRestrBvhRoot())));
+		Logger::tock<TimerType::GPU>("CalcExtNodeRestrMarks");
+
+		/// reordering restr primitives
+		_numRtExtNode = _numRtPrim = _numRtIntNode + _numRtSubtree;
+		// 6 calc primitive marks(simplified version, since prim and ext node map one to one)
+		checkCudaErrors(cudaMemcpy(_restrLog.getPrimMark(), _restrLog.getExtMark(), sizeof(int) * cbvh().primSize(), cudaMemcpyDeviceToDevice));
+		Logger::tick<TimerType::GPU>();
+		checkThrustErrors(thrust::exclusive_scan(getDevicePtr(_restrLog.getPrimMark()), getDevicePtr(_restrLog.getPrimMark()) + cbvh().primSize() + 1, getDevicePtr(d_gatherMap)));
+		Logger::tock<TimerType::GPU>("CalcPrimitiveGatherMap");
+
+		BOX	bv(worldAabb);																																																		//
+		checkCudaErrors(cudaMemcpy(&bv, cbvh().bv(), sizeof(BOX), cudaMemcpyDeviceToHost));																																		//
+		
+		configuredLaunch(																																																		//
+						{ "CalcRestrMCs_BME", cbvh().primSize() },
+						calcRestrMCs_BroadMarkEdition,
+							cbvh().primSize(),
+							(const Aabb *)d_aabb,
+							bv,
+							(const int*)_restrLog.getPrimMark(),
+							(const int*)getRawPtr(d_primMap),
+							getRawPtr(d_keys32));
 
 
 
+		// 7 prepare restr keys(subtree id, morton code) and scatter map
+		configuredLaunch(
+						{ "SelectPrimitives", cbvh().primSize() },
+						selectPrimitives,
+							cbvh().primSize(),
+							(const int*)_restrLog.getRestrBvhRoot(),
+							(const int*)getRawPtr(d_gatherMap),
+							(const MCSize*)getRawPtr(d_keys32),
+							getRawPtr(d_keys64),
+							getRawPtr(d_taskSequence));
 
+		checkCudaErrors(cudaMemcpy(getRawPtr(d_vals), getRawPtr(d_taskSequence), sizeof(int) * _numRtPrim, cudaMemcpyDeviceToDevice));
+		Logger::tick<TimerType::GPU>();
+		checkThrustErrors(thrust::sort_by_key(getDevicePtr(d_keys64), getDevicePtr(d_keys64) + _numRtPrim, getDevicePtr(d_vals)));
+		Logger::tock<TimerType::GPU>("SortRestrPrimCodes");
+
+		/// 8 build external nodes upon ordered primitives(extnode-primitive structure remains intact)
+		// update primitive map
+		configuredLaunch(
+						{ "UpdatePrimMap", _numRtPrim },
+						updatePrimMap,
+							_numRtPrim,
+							getRawPtr(d_taskSequence),
+							getRawPtr(d_vals),
+							cbvh().lvs().getPrimitiveArray().getIdx(),
+							getRawPtr(d_primMap));
+
+		/// 9 build primitives
+		// update primitives and ext nodes
+		configuredLaunch(
+						{ "UpdatePrimAndExtNode", cbvh().primSize() },
+						updatePrimAndExtNode,
+							cbvh().primSize(),
+							(const int*)_restrLog.getPrimMark(),
+							(const int*)getRawPtr(d_primMap),
+							(const int3*)d_faces,
+							(const PointType*)d_vertices,
+							(const BOX *)cbvh().bv(),
+							clvs().portobj<0>());
+
+		// should be faster than dealing with restr int nodes separately
+		cbvh().tks().clearIntNodes(cbvh().intSize());
+		configuredLaunch(
+						{ "RefitIntNode", cbvh().extSize() },
+						refitIntNode,
+							cbvh().extSize(),
+							clvs().portobj<0>(),
+							ctks().portobj<0>());
+
+		/// 10 build internal nodes
+		cbvh().lvs().calcSplitMetrics(cbvh().extSize());
+
+		str = string_format("%d subtrees and %d (%d) internal nodes need restructuring. restr\n", _numRtSubtree, _numRtIntNode, cbvh().intSize());
+		std::cout << str << '\n';
+		Logger::message(str);
+
+		checkCudaErrors(cudaMemset(getRawPtr(d_count), 0, sizeof(uint) * (cbvh().extSize() + 1)));	///< storing lcl-values, used for ordering
+		_unsortedTks.clearIntNodes(cbvh().intSize());
+
+		configuredLaunch(
+						{ "RestrIntNodes", _numRtExtNode },
+						restrIntNodes,
+							cbvh().extSize(),
+							_numRtExtNode,
+							(const int*)getRawPtr(d_taskSequence),
+							(const uint*)cbvh().tks().getMarks(),
+							(const int*)_restrLog.getRestrBvhRoot(),
+							getRawPtr(d_count),
+							getRawPtr(d_vals),
+							clvs().portobj<0>(),
+							_unsortedTks.portobj<0>());
+		Logger::tick<TimerType::GPU>();
+		checkThrustErrors(thrust::exclusive_scan(getDevicePtr(d_count), getDevicePtr(d_count) + cbvh().extSize() + 1, getDevicePtr(d_offsetTable)));
+		Logger::tock<TimerType::GPU>("CalcRestrIntNodeSortOffsets");
+
+		/// d_taskSequence here also works as the compacted restr ext node queue
+		configuredLaunch(
+						{ "CalcRestrIntNodeOrders",  _numRtExtNode },
+						calcRestrIntNodeOrders,
+							_numRtExtNode,
+							(const int* )getRawPtr(d_taskSequence),
+							(const uint*)getRawPtr(d_count),
+							(const uint*)getRawPtr(d_offsetTable),
+							(const int* )_restrLog.getRestrBvhRoot(),
+							(const int* )ctks().getLbds(),
+							(const uint*)cbvh().tks().getMarks(),
+							(const int* )getRawPtr(d_vals),
+							clvs().getLcas(),
+							clvs().getPars(),
+							_unsortedTks.portobj<0>(),
+							getRawPtr(d_tkMap),
+							getRawPtr(d_sequence));
+		configuredLaunch(
+						{ "ReorderRestrIntNodes",  _numRtIntNode },
+						reorderRestrIntNodes,
+							_numRtIntNode,
+							(const int*)getRawPtr(d_sequence),
+							(const int*)getRawPtr(d_tkMap),
+							_unsortedTks.portobj<0>(), ctks().portobj<0>());
+
+		Logger::recordSection<TimerType::GPU>("restr_bvh");
+
+		_restrLog.setBvhOptTag(1);
+
+		lastRestr = true;
+		return true;
+	}
 }

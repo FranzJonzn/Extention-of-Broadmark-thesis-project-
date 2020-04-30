@@ -93,7 +93,8 @@ namespace mn {
 			device->registerKernel("RefitExtNode_BME", refitExtNode_BroadMarkEdition, cudaFuncCachePreferL1, false);
 
 			/// restructure
-
+			device->registerKernel("CalcRestrMCs_BME"        , calcRestrMCs_BroadMarkEdition        , cudaFuncCachePreferL1, false);
+			device->registerKernel("UpdatePrimAndExtNode_BME", updatePrimAndExtNode_BroadMarkEdition, cudaFuncCachePreferL1, false);
 		}
 		~LBvhKernelRegister() {}
 	};

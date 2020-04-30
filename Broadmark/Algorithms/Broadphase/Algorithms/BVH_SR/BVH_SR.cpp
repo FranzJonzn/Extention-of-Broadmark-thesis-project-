@@ -58,7 +58,7 @@ void BVH_SR::Initialize(InflatedSettings settings, const SceneFrame& frameData){
 void BVH_SR::UpdateObjects(const SceneFrame& frameData) {
 	if (!initalized) { return; }
 
-	auto maintainOpts = BVH_SR::TheLogic->b_maintainScheme();
+	auto maintainOpts = BVH_SR::TheLogic->maintainScheme();
 
 	BVH_SR::_bvh->maintain_BroadMarkEdition(maintainOpts.first, frameData, m_settings);
 	BVH_SR::_fl->maintain(maintainOpts.second);

@@ -23,11 +23,11 @@ namespace mn {
 
 		__device__ int& extrange(int i) { return ((int*)_ddAttrs[EXT_RANGE])[i]; }
 		__device__ int& intrange(int i) { return ((int*)_ddAttrs[INT_RANGE])[i]; }
-		__device__ int& extrt(int i) { return ((int*)_ddAttrs[EXT_RESTR])[i]; }
-		__device__ int& intrt(int i) { return ((int*)_ddAttrs[INT_RESTR])[i]; }
-		__device__ int& primrt(int i) { return ((int*)_ddAttrs[PRIM_RESTR])[i]; }
-		__device__ int& rtroot(int i) { return ((int*)_ddAttrs[SUBBVH_ROOT_IDS])[i]; }
-		__device__ int& islarge(int i) { return ((int*)_ddAttrs[SUBBVH_OVERSIZE])[i]; }
+		__device__ int& extrt   (int i) { return ((int*)_ddAttrs[EXT_RESTR])[i]; }
+		__device__ int& intrt   (int i) { return ((int*)_ddAttrs[INT_RESTR])[i]; }
+		__device__ int& primrt  (int i) { return ((int*)_ddAttrs[PRIM_RESTR])[i]; }
+		__device__ int& rtroot  (int i) { return ((int*)_ddAttrs[SUBBVH_ROOT_IDS])[i]; }
+		__device__ int& islarge (int i) { return ((int*)_ddAttrs[SUBBVH_OVERSIZE])[i]; }
 	private:
 		enum { EXT_RANGE, INT_RANGE, EXT_RESTR, INT_RESTR, PRIM_RESTR, SUBBVH_ROOT_IDS, SUBBVH_OVERSIZE } ;
 	};
@@ -54,16 +54,16 @@ namespace mn {
 
 		void	clear(int extSize);
 
-		void	setUpdateTag(bool tag = true) { _updated = tag; }
-		bool	getUpdateTag() const { return _updated; }
-		void	setBvhOptTag(int tag = 0) { _bvhopt = tag; }	///< 0: refit 1: restr 2: build
-		int 	getBvhOptTag() const { return _bvhopt; }
+		void	setUpdateTag(bool tag = true) { _updated = tag;  }
+		bool	getUpdateTag()          const { return _updated; }
+		void	setBvhOptTag(int tag = 0)     { _bvhopt = tag;   }	///< 0: refit 1: restr 2: build
+		int 	getBvhOptTag()          const { return _bvhopt;  }
 
-		int*	getExtRange() { return (int*)_attribs[EXT_RANGE]; }
-		int*	getExtMark() { return (int*)_attribs[EXT_RESTR]; }
-		int*	getIntRange() { return (int*)_attribs[INT_RANGE]; }
-		int*	getIntMark() { return (int*)_attribs[INT_RESTR]; }
-		int*	getPrimMark() { return (int*)_attribs[PRIM_RESTR]; }
+		int*	getExtRange()     { return (int*)_attribs[EXT_RANGE];       }
+		int*	getExtMark()      { return (int*)_attribs[EXT_RESTR];       }
+		int*	getIntRange()     { return (int*)_attribs[INT_RANGE];       }
+		int*	getIntMark()      { return (int*)_attribs[INT_RESTR];       }
+		int*	getPrimMark()     { return (int*)_attribs[PRIM_RESTR];      }
 		int*	getRestrBvhRoot() { return (int*)_attribs[SUBBVH_ROOT_IDS]; }
 
 		template<int N>

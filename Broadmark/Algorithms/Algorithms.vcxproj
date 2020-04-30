@@ -179,7 +179,9 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\auxiliary\OrderLog.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BVTTFront.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseInter.h" />
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseIntra.h" />
+    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseIntra.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\BvhBV.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\BvhExtNode.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\BvhIntNode.h" />
@@ -431,10 +433,12 @@
     <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseInter.cu">
       <FileType>Document</FileType>
     </CudaCompile>
+    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseKernels.cuh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseIntra.cu">
-      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </CudaCompile>
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseKernels.cuh" />
     <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontPruneSproutKernels.cu">
       <FileType>Document</FileType>
     </CudaCompile>

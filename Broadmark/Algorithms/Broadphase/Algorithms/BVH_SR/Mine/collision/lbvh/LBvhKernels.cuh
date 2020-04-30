@@ -75,13 +75,12 @@ namespace mn {
 
 	__global__ void buildPrimitives_BroadMarkEdition(int size, BvhPrimitiveCompletePort _prims, int *_primMap, Aabb *_Aabb); 
 
-
-
-
 	/// Updating Kernels
 	__global__ void refitExtNode_BroadMarkEdition(int primsize, BvhExtNodeCompletePort _lvs, int* _primMap, Aabb* _Aabb);
 
 	/// Restructure Kernels
+	__global__ void calcRestrMCs_BroadMarkEdition(int size, const Aabb *_Aabb, BOX scene, const int* _primRestrMarks, const int* _primmap, uint* codes);
+	__global__ void updatePrimAndExtNode_BroadMarkEdition(int primsize, const int *_primRestrMarks, const int* _primMap, const Aabb *_Aabb, const BOX* scene, BvhExtNodeCompletePort _lvs);
 
 	/// Debug
 

@@ -42,9 +42,11 @@ private:
 		initalized = false;
 
 protected:
+
+public:
 	BVH_SR();
 	~BVH_SR();
-public:
+
 	void Initialize(InflatedSettings settings, const SceneFrame& frameData) override;
 
 	void UpdateObjects(const SceneFrame& frameData) override;

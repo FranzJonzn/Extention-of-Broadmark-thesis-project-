@@ -91,9 +91,12 @@ namespace mn {
 		void	build();
 		void	build_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
 		void	refit();
+		void	refit_BroadMarkEdition();// broadmarkIntegration
 		void	update();	///< gather degradation infos
+		void	update_BroadMarkEdition();///< gather degradation infos broadmarkIntegration	
 		/// 
 		bool	restructure();
+		bool	restructure_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
 		void	updatePrimData(const SceneData& pdata);
 		void	updatePrimData_BroadMarkEdition(const SceneFrame& fdata, const InflatedSettings& settings);// broadmarkIntegration
 		void	reorderPrims();

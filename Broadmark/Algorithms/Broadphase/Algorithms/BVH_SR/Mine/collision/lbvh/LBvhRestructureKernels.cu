@@ -216,4 +216,58 @@ namespace mn {
 		_tks.setBV(newId, _unorderedTks, idx);
 	}
 
+
+	
+///==================================================================================================================================================================
+/// broadmarkIntegration
+///==================================================================================================================================================================
+
+	__global__ void calcRestrMCs_BroadMarkEdition (int size, const Aabb *_Aabb, BOX scene, const int* _primRestrMarks, const int* _primmap, uint* codes) {
+		int idx = blockIdx.x * blockDim.x + threadIdx.x;
+		if (idx >= size) return;
+
+		int pid = _primmap[idx];
+		if (_primRestrMarks[pid]) {
+			//auto v = _Aabb[idx];
+			BOX bv(_Aabb[idx]);
+			const auto c		= bv.center();
+			const auto offset	= c - scene._min;
+			codes[pid]			= morton3D(offset.x / scene.width(), offset.y / scene.height(), offset.z / scene.depth());
+		}
+
+	}
+
+
+	__global__ void updatePrimAndExtNode_BroadMarkEdition(int primsize, const int *_primRestrMarks, const int * _primMap, const Aabb *_Aabb, const BOX * scene, BvhExtNodeCompletePort _lvs) {
+		
+		int idx = blockIdx.x * blockDim.x + threadIdx.x;
+		if (idx >= primsize) return;
+		auto &_prims = _lvs.refPrimPort();
+		//auto _prims = _lvs.getPrimPort();
+		int pid = _primMap[idx];
+		//auto v = _Aabb[idx];
+		BOX bv(_Aabb[idx]);
+		
+		// primitive layer
+
+		_prims.setBV(pid, bv);
+
+
+		_lvs.setBV(pid, bv);
+
+		// restr primitive
+		if (_primRestrMarks[pid]) { 
+			//_prims.vida(pid) = _faces[idx].x;
+			//_prims.vidb(pid) = _faces[idx].y;
+			//_prims.vidc(pid) = _faces[idx].z;
+
+			const auto c		= bv.center();
+			const auto offset	= c - scene->_min;
+			_prims.mtcode(pid) = morton3D(offset.x / scene->width(), offset.y / scene->height(), offset.z / scene->depth());
+		}
+	}
+
+
+
+
 }

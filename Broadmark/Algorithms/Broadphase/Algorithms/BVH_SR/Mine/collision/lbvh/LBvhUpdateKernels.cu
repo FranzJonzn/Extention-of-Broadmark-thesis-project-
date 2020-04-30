@@ -140,8 +140,8 @@ namespace mn {
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
 		if (idx >= primsize) return;
 		auto &_prims = _lvs.refPrimPort();
-		auto v = _Aabb[idx];
-		BOX bv(v);
+		//auto v = _Aabb[idx];
+		BOX bv(_Aabb[idx]);
 		int newIdx = _primMap[idx];
 		_prims.setBV(newIdx, bv);
 		_lvs.setBV(newIdx, bv);

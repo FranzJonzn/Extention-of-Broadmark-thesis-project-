@@ -60,7 +60,7 @@ namespace mn {
 		switch (scheme) {
 			case LBvhRigidMaintenance::BUILD: build(); break;
 			case LBvhRigidMaintenance::REFIT: refit(); break;
-		default: break;
+		default:									   break;
 		}
 	}
 
@@ -213,8 +213,8 @@ Logger::recordSection<TimerType::GPU>("refit_bvh");
 		updatePrimData_BroadMarkEdition(fdata, settings);
 		switch (scheme) {
 			case LBvhRigidMaintenance::BUILD: build_BroadMarkEdition(settings.m_worldAabb); break;
-			case LBvhRigidMaintenance::REFIT: refit_BroadMarkEdition(); break;
-		default: break;
+			case LBvhRigidMaintenance::REFIT: refit_BroadMarkEdition();						break;
+		default:																			break;
 		}
 	}
 	
@@ -232,20 +232,24 @@ Logger::recordSection<TimerType::GPU>("refit_bvh");
 
 		///Mortom cod (mc) används för att avgöra hur trädet ska traverseras
 		/// se https://devblogs.nvidia.com/thinking-parallel-part-iii-tree-construction-gpu/
-		configuredLaunch({ "CalcMCs_BME", _primSize }, calcMCs_BroadMarkEdition,
-																			    _primSize, 
-																			    d_aabb, 
-																			    bv, 
-																			    getRawPtr(d_keys32));
+		configuredLaunch(
+						{ "CalcMCs_BME", _primSize }, 
+						calcMCs_BroadMarkEdition,
+							_primSize, 
+							d_aabb, 
+							bv, 
+							getRawPtr(d_keys32));
 		reorderPrims();
 
 		/// build primitives
 
-		configuredLaunch({ "BuildPrims_BME", _primSize }, buildPrimitives_BroadMarkEdition,
-																						   _primSize,
-																						   _lvs.getPrimitiveArray().portobj<0>(),
-																						   getRawPtr(d_primMap),
-																						   d_aabb);
+		configuredLaunch(
+						{ "BuildPrims_BME", _primSize }, 
+						buildPrimitives_BroadMarkEdition,
+							_primSize,
+							_lvs.getPrimitiveArray().portobj<0>(),
+							getRawPtr(d_primMap),
+							d_aabb);
 
 
 		/// build external nodes
@@ -276,12 +280,21 @@ Logger::recordSection<TimerType::GPU>("refit_bvh");
 		Logger::tock<TimerType::GPU>("init_bvh_bvs");
 
 
-		configuredLaunch({ "RefitExtNode_BME", _primSize }, refitExtNode_BroadMarkEdition,
-			_primSize, _lvs.portobj<0>(), getRawPtr(d_primMap), d_aabb);
+		configuredLaunch(
+						{ "RefitExtNode_BME", _primSize }, 
+						refitExtNode_BroadMarkEdition,
+							_primSize, 
+							_lvs.portobj<0>(), 
+							getRawPtr(d_primMap), 
+							d_aabb);
 
 
-		configuredLaunch({ "RefitIntNode", _extSize }, refitIntNode,
-			_extSize, _lvs.portobj<0>(), _tks.portobj<0>());
+		configuredLaunch(
+						{ "RefitIntNode", _extSize }, 
+						refitIntNode,
+							_extSize, 
+							_lvs.portobj<0>(), 
+							_tks.portobj<0>());
 
 		Logger::recordSection<TimerType::GPU>("refit_bvh");
 	}
