@@ -43,6 +43,7 @@ public:
 class GPU_Grid : public Bullet3GPUAlgorithm {
 public:
 	GPU_Grid() {
+
 		m_algorithm = new b3GpuGridBroadphase(sClContext, sClDevice, sClQueue);
 	}
 };

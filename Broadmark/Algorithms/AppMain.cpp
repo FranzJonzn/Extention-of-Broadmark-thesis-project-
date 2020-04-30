@@ -7,7 +7,7 @@
 #include "Core\Settings.h"
 #include <iostream>
 #include <iomanip>
-
+#include "Broadphase/Algorithms/BVH_SR/BVH_SR.h"
 
 
 // This is the main entry point of the Broadmark system
@@ -24,7 +24,7 @@
 
 
 // Algorithm that will be used in Release mode
-#define DEBUG_ALGORITHM "GPU_SAP"
+#define DEBUG_ALGORITHM "BVH_SR"//"GPU_SAP"
 
 // Algorithm that will be used to double-check the algorithms
 #if DEBUG
@@ -51,11 +51,16 @@ double weightedExponentialMovingAverage(double current, double average) {
 // parameter, which has the algorithm, scene and parameters that should be used.
 // In sequence, it sets everything up and runs the algorithms, measuring them
 void execute(const Settings& settings) {
-	Scene scene(settings.m_inputScene.c_str());
+	
 
+	Scene scene(settings.m_inputScene.c_str());
+	
 	// A 'inflated' scene has some scene specific data fed into it.
 	const InflatedSettings inflatedSettings(settings, scene.GetHeader());
-	std::unique_ptr<BroadphaseInterface> algorithm = Algorithms::Create(inflatedSettings.m_algorithm.c_str());
+
+	std::cout << "Startar här\n";
+
+	std::unique_ptr<BroadphaseInterface> algorithm =  Algorithms::Create(inflatedSettings.m_algorithm.c_str());
 	std::unique_ptr<BroadphaseInterface> validation = Algorithms::Create(VALIDATION_ALGORITHM);
 
 	if (algorithm == nullptr) {
@@ -67,7 +72,7 @@ void execute(const Settings& settings) {
 	}
 
 	std::cout << "Algorithm: " << inflatedSettings.m_algorithm_prettyName << '\n';
-	std::cout << "Scene: " << inflatedSettings.m_inputScene << '\n';
+	std::cout << "Scene: "     << inflatedSettings.m_inputScene << '\n';
 
 	// Reading the 'first frame', which has the initial AABBs of objects
 	// Although we measure the time taken to initialize algorithms, we only
@@ -175,20 +180,20 @@ void main_release(const char* path) {
 }
 // Used in 'release' mode when no or invalid arguments are passed
 void main_help() {
-	const std::vector<const char*> algorithms = Algorithms::EnumerateAlgorithms();
-
-	std::cout << "Ygor Reboucas Serpa (2018)\n";
-	std::cout << "\n";
-	std::cout << "To run a simulation, pass as a simple command line argument a json-file with the simulation settings.\n";
-	std::cout << "For reference, refer to the 'Settings.h' file or to any example json in the docs\n";
-	std::cout << "In the following, we list all available algorithms\n";
-	for (const char* algorithm : algorithms) {
-		std::cout << "\t" << algorithm << "\n";
-	}
-
-	std::cout << "\n";
-	std::cout << "Alternatively, if you wish to run all unit tests, use the -tests command\n";
-	std::cout << "\n\n\n";
+	//const std::vector<const char*> algorithms = Algorithms::EnumerateAlgorithms();
+	//
+	//std::cout << "Ygor Reboucas Serpa (2018)\n";
+	//std::cout << "\n";
+	//std::cout << "To run a simulation, pass as a simple command line argument a json-file with the simulation settings.\n";
+	//std::cout << "For reference, refer to the 'Settings.h' file or to any example json in the docs\n";
+	//std::cout << "In the following, we list all available algorithms\n";
+	//for (const char* algorithm : algorithms) {
+	//	std::cout << "\t" << algorithm << "\n";
+	//}
+	//
+	//std::cout << "\n";
+	//std::cout << "Alternatively, if you wish to run all unit tests, use the -tests command\n";
+	//std::cout << "\n\n\n";
 }
 
 

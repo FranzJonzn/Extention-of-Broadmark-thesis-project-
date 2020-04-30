@@ -16,10 +16,10 @@ from shutil import rmtree
 
 
 batch_run_name = "TEST/" # use this to name this testing session. If blank, a auto-generated timestamped name will be used
-broadmark_bin = "D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/Broadmark-master/Broadmark/bin64/Broadmark_Release_x64.exe"
-scenes_folder = "C:/Users/Franz/Desktop/ny3"#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/Simulations/Sim/Recordings_AABBs/"
-output_folder = ""#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/_Resultat/"
-algorithms = ["KD", "CGAL"]#["KD", "CGAL", "GPU_Grid"]
+broadmark_bin = "D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/_EX_JOBB_Broadmark_REPO/Builds/003/Broadmark_Release_x64.exe"
+scenes_folder = "C:/Users/Franz/Desktop/i2"#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/Simulations/Sim/Recordings_AABBs/"
+output_folder = "C:/Users/Franz/Desktop/TEST_1"#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/_Resultat/"
+algorithms = ["BVH_SR"]#["KD", "CGAL", "GPU_Grid"]
 #algorithms = ["SAP", "SAP_AVX_Parallel", "DBVT F", "DBVT D", "Tracy", "Tracy_Parallel", "CGAL", "Grid_3D", "Grid_3D_SAP", "Grid_3D_Parallel", "Grid_3D_SAP_Parallel", "KD", "GPU_Grid", "GPU_LBVH", "GPU_SAP"]
 additionalProperty = ""
 additionaPropertyValues = []

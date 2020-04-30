@@ -10,3 +10,4 @@
 // two solutions or if you are having a hard time compiling them
 #define USE_CGAL true
 #define USE_GPU true
+//#define DEBUG false

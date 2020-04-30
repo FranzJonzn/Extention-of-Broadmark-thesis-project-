@@ -49,7 +49,7 @@ Bullet3GPUAlgorithm::Bullet3GPUAlgorithm() {
 	}
 
 	m_algorithm = nullptr;
-	m_pairs = new b3AlignedObjectb3Int4Array();
+	m_pairs     = new b3AlignedObjectb3Int4Array();
 }
 Bullet3GPUAlgorithm::~Bullet3GPUAlgorithm() {
 	delete m_algorithm;

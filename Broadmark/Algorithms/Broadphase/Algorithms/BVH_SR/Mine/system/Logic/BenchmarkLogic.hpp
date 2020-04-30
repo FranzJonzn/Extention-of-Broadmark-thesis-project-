@@ -13,46 +13,46 @@ namespace mn {
 		BenchmarkLogic() {}
 		~BenchmarkLogic() {}
 
-//		bool next() {
-//			if (cnt - 1 > 0) {
-//				--cnt;
-//				++frameid;
-//
-//				std::pair<std::string, std::string> pair = CDBenchmarkSettings::file_name(benchmarkid, frameid);
-//				inputFile = pair.first;
-//				outputFile = pair.second;
-//				benchmarkFinished = false;
-//				return true;
-//			}
-//			if (benchmarkid + 1 < CDBenchmarkSettings::benchmarkNum()) {	///< next benchmark
-//				++benchmarkid;
-//				exp = CDBenchmarkSettings::benchmark(benchmarkid);
-//				frameid = exp.stIdx;
-//				cnt = exp.len;
-//
-//				std::pair<std::string, std::string> pair = CDBenchmarkSettings::file_name(benchmarkid, frameid);
-//				inputFile			= pair.first;
-//				prevOutputFile		= outputFile;
-//				outputFile			= pair.second;
-//				benchmarkFinished	= true;
-//				return true;
-//			}
-//			prevOutputFile = outputFile;
-//			inputFile = outputFile = std::string();
-//			if (!prevOutputFile.empty())
-//				benchmarkFinished = true;
-//			else
-//				benchmarkFinished = false;
-//			return false;
-//		}
+		/*bool next() {
+			if (cnt - 1 > 0) {
+				--cnt;
+				++frameid;
+
+				std::pair<std::string, std::string> pair = CDBenchmarkSettings::file_name(benchmarkid, frameid);
+				inputFile = pair.first;
+				outputFile = pair.second;
+				benchmarkFinished = false;
+				return true;
+			}
+			if (benchmarkid + 1 < CDBenchmarkSettings::benchmarkNum()) {	///< next benchmark
+				++benchmarkid;
+				exp = CDBenchmarkSettings::benchmark(benchmarkid);
+				frameid = exp.stIdx;
+				cnt = exp.len;
+
+				std::pair<std::string, std::string> pair = CDBenchmarkSettings::file_name(benchmarkid, frameid);
+				inputFile			= pair.first;
+				prevOutputFile		= outputFile;
+				outputFile			= pair.second;
+				benchmarkFinished	= true;
+				return true;
+			}
+			prevOutputFile = outputFile;
+			inputFile = outputFile = std::string();
+			if (!prevOutputFile.empty())
+				benchmarkFinished = true;
+			else
+				benchmarkFinished = false;
+			return false;
+		}
 		
 		
-//		const std::string& currentInputFile() const { return inputFile; }
-//		const std::string& currentOutputFile() const { return outputFile; }
-//		const std::string& previousOutputFile() const { return prevOutputFile; }
-//		int currentFrameId() const { return frameid; }
-//		int currentBenchmarkId() const { return benchmarkid; }
-//		bool isBenchmarkFinished() const { return benchmarkFinished; }
+		const std::string& currentInputFile() const { return inputFile; }
+		const std::string& currentOutputFile() const { return outputFile; }
+		const std::string& previousOutputFile() const { return prevOutputFile; }
+		int currentFrameId() const { return frameid; }
+		int currentBenchmarkId() const { return benchmarkid; }
+		bool isBenchmarkFinished() const { return benchmarkFinished; }*/
 
 		/// used in ARCSim version
 		std::pair<LBvhFixedDeformableMaintenance, BvttFrontLooseIntraMaintenance> getSchemeOpt(int frameid, int schemeid = 0) const {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Broadphase/Algorithms/BaseAlgorithm.h"
+#include "Broadphase\Algorithms\BaseAlgorithm.h"
 #include "Broadphase\OverlapChaches\SimpleCache.h"
 
 
@@ -26,7 +26,30 @@
 
 
 class BVH_SR : public BaseAlgorithm<Object, SimpleCache> {
-private:
+
+public:
+	BVH_SR() {
+		std::cout << "fsdfsdfaaaaaaaadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\n";
+		if (!initalized) {
+
+			std::cout << "BVH_SR_S";
+			mn::Main::Initialize();
+			BVH_SR::TheCudaDevice = mn::CudaDevice::getInstance();
+			BVH_SR::TheLogic = mn::BenchmarkLogic::getInstance();
+
+
+
+			initalized = true;
+			std::cout << "BVH_SR_E";
+		}
+	}
+	virtual ~BVH_SR();
+	static bool	initalized;
+	void Initialize(InflatedSettings settings, const SceneFrame& frameData) override;
+
+	void UpdateObjects(const SceneFrame& frameData) override;
+
+	void SearchOverlaps() override;
 
 private:
 	/// systems (initialized)
@@ -38,18 +61,8 @@ private:
 	mn::BvttFrontKernelRegister								          _kFrontKernelRegister;
 	std::unique_ptr<mn::LBvh<mn::ModelType::FixedDeformableType>>	  _bvh;
 	std::unique_ptr<mn::BvttFront<mn::BvttFrontType::LooseIntraType>> _fl;
-	bool 
-		initalized = false;
 
-protected:
 
-public:
-	BVH_SR();
-	~BVH_SR();
 
-	void Initialize(InflatedSettings settings, const SceneFrame& frameData) override;
 
-	void UpdateObjects(const SceneFrame& frameData) override;
-
-	void SearchOverlaps() override;
 };

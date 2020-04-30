@@ -47,17 +47,17 @@ public:
 
 	InflatedSettings() = default;
 	InflatedSettings(const Settings& settings, const SceneHeader& header) {
-		this->m_inputScene = settings.m_inputScene;
-		this->m_outputLog = settings.m_outputLog;
-		this->m_algorithm = settings.m_algorithm;
+		this->m_inputScene			 = settings.m_inputScene;
+		this->m_outputLog			 = settings.m_outputLog;
+		this->m_algorithm			 = settings.m_algorithm;
 		this->m_algorithm_prettyName = settings.m_algorithm_prettyName;
 
-		this->m_margin = settings.m_margin;
-		this->m_numThreads = settings.m_numThreads;
-		this->m_Grid_ObjectsPerCell = settings.m_Grid_ObjectsPerCell;
+		this->m_margin               = settings.m_margin;
+		this->m_numThreads           = settings.m_numThreads;
+		this->m_Grid_ObjectsPerCell  = settings.m_Grid_ObjectsPerCell;
 		this->m_Tracy_ObjectsPerCell = settings.m_Tracy_ObjectsPerCell;
-		this->m_KD_ObjectsPerLeaf = settings.m_KD_ObjectsPerLeaf;
-		this->m_GPUSap_KernelType = settings.m_GPUSap_KernelType;
+		this->m_KD_ObjectsPerLeaf    = settings.m_KD_ObjectsPerLeaf;
+		this->m_GPUSap_KernelType    = settings.m_GPUSap_KernelType;
 
 		this->m_numberOfObjects = header.m_numberOfObjects;
 		this->m_worldAabb = header.m_worldAabb;
