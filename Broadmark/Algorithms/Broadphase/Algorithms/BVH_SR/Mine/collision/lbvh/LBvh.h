@@ -34,7 +34,7 @@ namespace mn {
 	public:
 		LBvhKernelRegister() {
 			CudaDevice* device = CudaDevice::getInstance();
-
+			device->startup();								// <-BroadMarkIntegration (fickdet inte att fungera annars);
 
 			/// components
 			device->registerKernel("GatherBVs"                   , gatherBVs                   , cudaFuncCachePreferL1, false);

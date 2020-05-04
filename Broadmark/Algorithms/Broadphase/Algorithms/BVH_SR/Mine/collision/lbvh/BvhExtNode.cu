@@ -75,7 +75,7 @@ namespace mn {
 		//recordLaunch("CollapsePrimitives", (primsize + 255) / 256, 256, 0, collapsePrimitives,
 		configuredLaunch({ "CollapsePrimitives", primsize }, collapsePrimitives,
 			primsize, portobj<0>(), extIds);
-		//printf("Collapsing %d primitives into %d leaves\n", primsize, extSize);
+		//printf("BVH_SR: \t Collapsing %d primitives into %d leaves\n", primsize, extSize);
 		return extSize;
 	}
 
@@ -130,7 +130,7 @@ namespace mn {
 		if (idx >= extsize) return;
 		_metrics[idx] = idx != extsize - 1 ? 32 - __clz(_codes[idx] ^ _codes[idx + 1]) : 33;
 		//if (idx < 10)
-		//	printf("%d-ext node: split metric %d\n", idx, _lvs.metric(idx));
+		//	printf("BVH_SR: \t %d-ext node: split metric %d\n", idx, _lvs.metric(idx));
 	}
 
 	__global__ void calcExtNodeRestrSplitMetrics(int extsize, const int *_leafRestrRoots, const MCSize *_codes, int *_metrics) {

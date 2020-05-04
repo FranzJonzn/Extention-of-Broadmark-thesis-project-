@@ -12,7 +12,7 @@ namespace mn {
 	using uint = unsigned int;
 	using uint64 = unsigned long long int;
 
-#define PRINT_BOX_INFO(idx, box) printf("%d: %.3f, %.3f, %.3f ~ %.3f, %.3f, %.3f\n", idx, (box)._min.x, (box)._min.y, (box)._min.z, (box)._max.x, (box)._max.y, (box)._max.z); 
+#define PRINT_BOX_INFO(idx, box) printf("BVH_SR: \t %d: %.3f, %.3f, %.3f ~ %.3f, %.3f, %.3f\n", idx, (box)._min.x, (box)._min.y, (box)._min.z, (box)._max.x, (box)._max.y, (box)._max.z); 
 #define WARP_SIZE 32
 
 	inline __device__ double dabs(double a) { return a < 0 ? -a : a; }

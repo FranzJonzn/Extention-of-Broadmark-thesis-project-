@@ -7,21 +7,21 @@ namespace mn {
 	__global__ void checkArray(int size, uint* arr) {
 		int idx = blockDim.x * blockIdx.x + threadIdx.x;
 		if (idx >= size) return;
-		printf("%d: %x\n", idx, arr[idx]);
+		printf("BVH_SR: \t %d: %x\n", idx, arr[idx]);
 	}
 
 	__global__ void checkSame(int size, int* A, int* B) {
 		int idx = blockDim.x * blockIdx.x + threadIdx.x;
 		if (idx >= size) return;
 		if (A[idx] != B[idx])
-			printf("A[%d](%d) - B[%d](%d) not same!\n", idx, A[idx], idx, B[idx]);
+			printf("BVH_SR: \t A[%d](%d) - B[%d](%d) not same!\n", idx, A[idx], idx, B[idx]);
 	}
 
 	__global__ void checkLink(int size, int* A, int* B) {
 		int idx = blockDim.x * blockIdx.x + threadIdx.x;
 		if (idx >= size) return;
 		if (B[A[idx]] != idx)
-			printf("%d-th A-B link failed!\n", idx);
+			printf("BVH_SR: \t %d-th A-B link failed!\n", idx);
 	}
 
 	/// incoherent access, thus poor performance
@@ -54,7 +54,7 @@ namespace mn {
 		int idx = blockDim.x * blockIdx.x + threadIdx.x;
 		if (idx >= size) return;
 		if (idx < 10)
-			printf("%d-th prim: code(%x) tri-id(%d: %d, %d, %d) \n", idx, prims.mtcode(idx),
+			printf("BVH_SR: \t %d-th prim: code(%x) tri-id(%d: %d, %d, %d) \n", idx, prims.mtcode(idx),
 				prims.idx(idx), prims.vida(idx), prims.vidb(idx), prims.vidc(idx));
 	}
 	__global__ void checkBV(BOX* bv) {
@@ -64,7 +64,7 @@ namespace mn {
 		int idx = blockDim.x * blockIdx.x + threadIdx.x;
 		if (idx >= size) return;
 		if (idx < 10)
-			printf("%d-th input: tri (%d: %.3f, %.3f, %.3f) (%d: %.3f, %.3f, %.3f) (%d: %.3f, %.3f, %.3f)\n", idx,
+			printf("BVH_SR: \t %d-th input: tri (%d: %.3f, %.3f, %.3f) (%d: %.3f, %.3f, %.3f) (%d: %.3f, %.3f, %.3f)\n", idx,
 				d_faces[idx].x, d_vertices[d_faces[idx].x].x, d_vertices[d_faces[idx].x].y, d_vertices[d_faces[idx].x].z,
 				d_faces[idx].y, d_vertices[d_faces[idx].y].x, d_vertices[d_faces[idx].y].y, d_vertices[d_faces[idx].y].z,
 				d_faces[idx].z, d_vertices[d_faces[idx].z].x, d_vertices[d_faces[idx].z].y, d_vertices[d_faces[idx].z].z);

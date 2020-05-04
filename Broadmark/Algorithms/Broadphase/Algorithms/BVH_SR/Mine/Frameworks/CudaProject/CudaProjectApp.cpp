@@ -14,7 +14,7 @@ namespace mn {
 		AppBase::TheApplication = app = new SimpleApp;
 		app->TheCudaDevice      = CudaDevice::getInstance();
 		app->TheLogic           = BenchmarkLogic::getInstance();
-		printf("* Finishing App initialization!\n");
+		printf("BVH_SR: \t * Finishing App initialization!\n");
 	}
 
 	int SimpleApp::Run(int iQuantity, char** apcArguments) {
@@ -24,15 +24,15 @@ namespace mn {
 
 	int SimpleApp::Main(int iQuantity, char** apcArguments) {
 		reportMemory();
-		printf("Begin allocating memory for BVH\n");
+		printf("BVH_SR: \t Begin allocating memory for BVH\n");
 		_bvh = std::make_unique<LBvh<ModelType::FixedDeformableType>>(LBvhBuildConfig{});
-		printf("Begin allocating memory for BVTT fronts\n");
+		printf("BVH_SR: \t Begin allocating memory for BVTT fronts\n");
 		_fl = std::make_unique<BvttFront<BvttFrontType::LooseIntraType>>(mn::BvttFrontIntraBuildConfig<mn::LBvh<mn::ModelType::FixedDeformableType>>(
 			 _bvh.get(), BvttFrontType::LooseIntraType,
 				BvttFrontSettings::ext_front_size(), BvttFrontSettings::int_front_size(),
 				BvhSettings::ext_node_size(), BvhSettings::int_node_size() 
 		));
-		printf("End GPU memory allocations\n");
+		printf("BVH_SR: \t End GPU memory allocations\n");
 
 		// Main loop
 		while (true) {

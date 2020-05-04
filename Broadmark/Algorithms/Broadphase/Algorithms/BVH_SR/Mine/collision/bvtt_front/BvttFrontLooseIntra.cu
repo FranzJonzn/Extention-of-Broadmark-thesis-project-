@@ -54,7 +54,7 @@ namespace mn {
 
 		std::string str = string_format("front (%d, %d) cpNum %d actualCpNum %d", _fronts.cs(0), _fronts.cs(1), _cpNum, _actualCpNum);
 		if (_fronts.cs(0) >= BvttFrontSettings::int_front_size() || _fronts.cs(1) >= BvttFrontSettings::ext_front_size() || _cpNum >= BvttFrontSettings::collision_pair_num()) {
-			printf("exceed front length! %d, %d  %d\n", _fronts.cs(0), _fronts.cs(1), _cpNum);
+			printf("BVH_SR: \t exceed front length! %d, %d  %d\n", _fronts.cs(0), _fronts.cs(1), _cpNum);
 		}
 		std::cout << str << '\n';
 		Logger::message(str);
@@ -91,7 +91,7 @@ namespace mn {
 				checkCudaErrors(cudaMemcpy(&_intFtNodeCnt, d_intFtNodeCnt, sizeof(int), cudaMemcpyDeviceToHost));
 				if ((_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y) > 0.30) {	///< front build
 					Logger::message("build front(in restr). ");
-					printf("bd front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
+					printf("BVH_SR: \t bd front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
 					//getchar();
 					generate();
 					inspectResults();
@@ -99,7 +99,7 @@ namespace mn {
 				}
 				else {			///< front restr
 					Logger::message("restructure front(in restr) ");
-					printf("rt front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
+					printf("BVH_SR: \t rt front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
 					//getchar();
 					generate(); 
 					//restructure();
@@ -205,7 +205,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_front_ordering");
 			(const int*)_pBvh->restrLog().getRestrBvhRoot(),
 			(const int*)_pBvh->clvs().getLcas(), _log.portobj<0>());
 
-		printf("\n#original front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
+		printf("BVH_SR: \t \n#original front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
 			_numValidFrontNodes[0], _numValidFrontNodes[1], osizes.x - _numValidFrontNodes[0], osizes.y - _numValidFrontNodes[1]);
 		_fronts.slide();
 	}
@@ -357,7 +357,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_prep_front_restr");
 			_pBvh->clvs().portobj<0>(), _pBvh->ctks().portobj<0>(), (uint)_numValidFrontNodes[0], (const int2*)_fronts.cbuf(0),
 			_log.portobj<0>(), _fronts.nsizes(), _fronts.nbufs(), d_cpNum, getRawPtr(d_cpRes));
 
-		printf("\n#restr front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
+		printf("BVH_SR: \t \n#restr front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
 			_numValidFrontNodes[0], _numValidFrontNodes[1], osizes.x - _numValidFrontNodes[0], osizes.y - _numValidFrontNodes[1]);
 		/// invalid parts
 		// int fronts & ext fronts, including self CD in restr subtrees

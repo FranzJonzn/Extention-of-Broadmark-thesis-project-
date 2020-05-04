@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
 	mn::Main::Terminate();
 
-	printf("Press any key to exit system.");
+	printf("BVH_SR: \t Press any key to exit system.");
 	getchar();
 	return 0;
 }

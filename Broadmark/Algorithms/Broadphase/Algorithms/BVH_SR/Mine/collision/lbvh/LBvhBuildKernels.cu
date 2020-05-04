@@ -221,23 +221,23 @@ namespace mn {
 		if (idx >= numRtIntNode) return;
 		int mappedVal = _tkMap[_restrQueue[idx]];
 		if (atomicAdd(_rtIntCount + mappedVal, 1) != 0)
-			printf("\n\t~~%d-th index(%d) mapped int index(%d) repeated\n", idx, _restrQueue[idx], mappedVal);
+			printf("BVH_SR: \t \n\t~~%d-th index(%d) mapped int index(%d) repeated\n", idx, _restrQueue[idx], mappedVal);
 		if (_restrIntMark[mappedVal] == 0)
-			printf("\n\t~~%d-th index(%d) mapped int index(%d) not requiring restructuring\n", idx, _restrQueue[idx], mappedVal);
+			printf("BVH_SR: \t \n\t~~%d-th index(%d) mapped int index(%d) not requiring restructuring\n", idx, _restrQueue[idx], mappedVal);
 	}
 	__global__ void checkPrimmap(int size, int* _primmap, int* _cnt) {
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
 		if (idx >= size) return;
 		int val;
 		if ((val = atomicAdd(&_cnt[_primmap[idx]], 1)) != 0)
-			printf("%d-th map record(%d) wrong %d\n", idx, _primmap[idx], val);
+			printf("BVH_SR: \t %d-th map record(%d) wrong %d\n", idx, _primmap[idx], val);
 	}
 	__global__ void checkBVHIntegrity(int size, BvhExtNodeCompletePort _leaves, BvhIntNodeCompletePort _trunks, int *tag) {
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
 		//if (idx >= size) return;
 		if (idx == 0)
 			if (_leaves.getlca(size) != -1) {
-				printf("wrong tail sentinel.\n");
+				printf("BVH_SR: \t wrong tail sentinel.\n");
 			}
 		for (; idx < size; idx += gridDim.x * blockDim.x) {
 			int par = _leaves.par(idx), dep = 1;
@@ -245,22 +245,22 @@ namespace mn {
 
 			if (right) {
 				if (_trunks.rc(par) != idx || (_trunks.mark(par) & 2) == 0 || _trunks.rangey(par) != idx || _leaves.lca(idx) & 1 == 0 || _leaves.lca(idx) / 2 != idx)
-					printf("leaf %d(as right child) is wrong. type:%d mark: %u par: %d\n", idx, 
+					printf("BVH_SR: \t leaf %d(as right child) is wrong. type:%d mark: %u par: %d\n", idx, 
 						   _trunks.rc(par) != idx | ((_trunks.mark(par) & 2) == 0) << 1 | (_trunks.rangey(par) != idx) << 2, _leaves.mark(idx), par),
 						atomicAdd(tag, 1);
 			}
 			else {
 				if (_trunks.lc(par) != idx || (_trunks.mark(par) & 1) == 0 || _trunks.rangex(par) != idx || _leaves.lca(idx) & 1 == 1 || _trunks.rangex(_leaves.lca(idx) / 2) != idx)
-					printf("leaf %d(as left child) is wrong. type:%d mark: %u par: %d\n", idx, 
+					printf("BVH_SR: \t leaf %d(as left child) is wrong. type:%d mark: %u par: %d\n", idx, 
 						   _trunks.lc(par) != idx | ((_trunks.mark(par) & 1) == 0) << 1 | (_trunks.rangex(par) != idx) << 2, _leaves.mark(idx), par),
 						atomicAdd(tag, 1);
 			}
 			//if (idx == 171)
-			//	printf("%d-th primitive: mark:%o\n", idx, _leaves.mark(idx));
+			//	printf("BVH_SR: \t %d-th primitive: mark:%o\n", idx, _leaves.mark(idx));
 			while (_trunks.par(par) != -1 && *tag < 30) {
 				right = _trunks.mark(par) & 4;
 				//if (par + _trunks.rangey(par) - _trunks.rangex(par) - 1 != _leaves.par(_trunks.rangey(par)))
-				//	printf("\n\nsubtree %d[%d(%d), %d(%d)] is wrong.\n\n", par,
+				//	printf("BVH_SR: \t \n\nsubtree %d[%d(%d), %d(%d)] is wrong.\n\n", par,
 				//		_trunks.rangex(par), _leaves.par(_trunks.rangex(par)), 
 				//		_trunks.rangey(par), _leaves.par(_trunks.rangey(par))), atomicAdd(tag, 1);
 
@@ -268,7 +268,7 @@ namespace mn {
 					if (_trunks.rc(_trunks.par(par)) != par || (_trunks.mark(_trunks.par(par)) & 2) == 2 || _trunks.rangey(_trunks.par(par)) != _trunks.rangey(par)
 						|| (_trunks.mark(_trunks.par(par)) & 1) == 0 && (_trunks.rangex(par) != _trunks.rangey(_trunks.lc(_trunks.par(par))) + 1)
 						|| (_trunks.mark(_trunks.par(par)) & 1) == 1 && (_trunks.rangex(_trunks.par(par)) != _trunks.lc(_trunks.par(par))))
-						printf("trunk %d(as right child) %d[%d, %d] %d[%d, %d] -> %d[%d, %d].\n", par,
+						printf("BVH_SR: \t trunk %d(as right child) %d[%d, %d] %d[%d, %d] -> %d[%d, %d].\n", par,
 							   _trunks.lc(_trunks.par(par)), _trunks.rangex(_trunks.lc(_trunks.par(par))), _trunks.rangey(_trunks.lc(_trunks.par(par))),
 							   par, _trunks.rangex(par), _trunks.rangey(par),
 							   _trunks.par(par), _trunks.rangex(_trunks.par(par)), _trunks.rangey(_trunks.par(par))), atomicAdd(tag, 1);
@@ -277,17 +277,17 @@ namespace mn {
 				//else {
 				if (_trunks.lc(_trunks.par(par)) != par || (_trunks.mark(_trunks.par(par)) & 1) == 1 || _trunks.rangex(_trunks.par(par)) != _trunks.rangex(par)
 					|| _trunks.par(par) + 1 != par)
-					printf("trunk %d(as left child) is wrong.\n", par), atomicAdd(tag, 1);
+					printf("BVH_SR: \t trunk %d(as left child) is wrong.\n", par), atomicAdd(tag, 1);
 				//}
 
 				//if (idx == 171)
-				//	printf("%d-th primitive: %d level\t %d-th node [%d, %d]\t mark:%o\n", 
+				//	printf("BVH_SR: \t %d-th primitive: %d level\t %d-th node [%d, %d]\t mark:%o\n", 
 				//		idx, dep, par, _trunks.rangex(par), _trunks.rangey(par), _trunks.mark(par));
 				++dep;
 				par = _trunks.par(par);
 			}
 			if (dep >= 32) {
-				printf("%d-th primitive depth: %d\n", idx, dep);
+				printf("BVH_SR: \t %d-th primitive depth: %d\n", idx, dep);
 			}
 		}
 	}

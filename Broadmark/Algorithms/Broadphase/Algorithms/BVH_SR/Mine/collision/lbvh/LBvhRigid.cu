@@ -181,7 +181,7 @@ Logger::recordSection<TimerType::GPU>("construct_bvh");
 
 Logger::recordSection<TimerType::GPU>("sort_bvh");
 
-		printf("Rigid Bvh: Primsize: %d Extsize: %d\n", _primSize, _extSize);
+		printf("BVH_SR: \t Rigid Bvh: Primsize: %d Extsize: %d\n", _primSize, _extSize);
 	}
 
 	void LBvhRigid::refit() {
@@ -270,7 +270,7 @@ Logger::recordSection<TimerType::GPU>("refit_bvh");
 
 		Logger::recordSection<TimerType::GPU>("sort_bvh");
 
-		printf("Rigid Bvh: Primsize: %d Extsize: %d\n", _primSize, _extSize);
+		printf("BVH_SR: \t Rigid Bvh: Primsize: %d Extsize: %d\n", _primSize, _extSize);
 	}
 
 	void LBvhRigid::refit_BroadMarkEdition() {

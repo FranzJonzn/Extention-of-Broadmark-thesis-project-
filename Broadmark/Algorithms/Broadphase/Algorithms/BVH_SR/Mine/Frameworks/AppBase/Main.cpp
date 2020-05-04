@@ -1,5 +1,7 @@
 #include "Main.h"
 
+#include "system\CudaDevice\CudaDevice.h"
+#include "system\Log\Logger.hpp"
 namespace mn {
 
 	Main::InitializerArray*	Main::s_pkInitializers = nullptr;
@@ -14,9 +16,13 @@ namespace mn {
 	}
 
 	void Main::Initialize() {
+		std::cout << "\n " << "dfdgfffffff" << " \n ";
 		if (s_pkInitializers)
-			for (int i = 0; i < s_pkInitializers->size(); i++)
+			for (int i = 0; i < s_pkInitializers->size(); i++) {
 				(*s_pkInitializers)[i]();
+
+			}
+				
 		delete s_pkInitializers;
 		s_pkInitializers = nullptr;
 	}

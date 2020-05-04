@@ -19,8 +19,49 @@ batch_run_name = "TEST/" # use this to name this testing session. If blank, a au
 broadmark_bin = "D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/_EX_JOBB_Broadmark_REPO/Broadmark/bin64/Broadmark_Release_x64.exe"
 scenes_folder = "C:/Users/Franz/Desktop/i2"#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/Simulations/Sim/Recordings_AABBs/"
 output_folder = "C:/Users/Franz/Desktop/TEST_1"#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/_Resultat/"
-algorithms = ["BVH_SR"]#["KD", "CGAL", "GPU_Grid"]
-#algorithms = ["SAP", "SAP_AVX_Parallel", "DBVT F", "DBVT D", "Tracy", "Tracy_Parallel", "CGAL", "Grid_3D", "Grid_3D_SAP", "Grid_3D_Parallel", "Grid_3D_SAP_Parallel", "KD", "GPU_Grid", "GPU_LBVH", "GPU_SAP"]
+algorithms = ["BVH_SR_STATIC_MANDATORY"]
+#BF",
+#BF_Parallel",
+#BF_SSE",
+#BF_AVX",
+#BF_SSE_Parallel",
+#BF_AVX_Parallel",
+#SAP",
+#SAP_Parallel",
+#SAP_SSE",
+#SAP_AVX",
+#SAP_SSE_Parallel",
+#SAP_AVX_Parallel",
+#CGAL",
+#AxisSweep",
+#Grid_2D",
+#Grid_2D_SAP",
+#Grid_2D_Parallel",
+#Grid_2D_SAP_Parallel",
+#Grid_3D",
+#Grid_3D_SAP",
+#Grid_3D_Parallel",
+#Grid_3D_SAP_Parallel",
+#Tracy",
+#Tracy_Parallel",
+#DBVT D",
+#DBVT F",
+#GPU_Grid",
+#GPU_LBVH",
+#GPU_SAP",
+#KD",
+#BVH_SR_STATIC_MANDATORY"
+#BVH_SR_REFIT_ONLY_FRONT"
+#BVH_SR_GENERATE"        
+
+
+
+
+
+
+
+
+
 additionalProperty = ""
 additionaPropertyValues = []
 

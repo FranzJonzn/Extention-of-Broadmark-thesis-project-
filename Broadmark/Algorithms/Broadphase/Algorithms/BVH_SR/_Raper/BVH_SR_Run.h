@@ -12,20 +12,39 @@
 #include "collision\bvtt_front\BVTTFront.h"
 #include "system\Logic\BenchmarkLogic.hpp"
 
+#include "Frameworks\CudaProject\CudaProjectModuleRegister.h"	
+#include <utility\CudaHostUtils.h>
+#include "setting\BvttFrontSettings.h"
+
 
 class BVH_SR_Run {
 
 public:
 
 
-	void Initialaze();
-	void RunFrame(const SceneFrame& frameData);
+	void Initialaze(const InflatedSettings& simulationsSettings, const mn::BroadMark_Benchmark& simulationsSettings2);
+	
+	void RunFrame(const SceneFrame& frameData, const int frameNumber);
 
 	void Terminate();
 
 	void SearchOverlaps();
 
 private:
+
+
+	std::pair<mn::LBvhFixedDeformableMaintenance, mn::BvttFrontLooseIntraMaintenance> MaintainScheme(int frameId) const;
+
+
+
+
+
+
+
+
+	InflatedSettings        settings;
+	mn::BroadMark_Benchmark    settings2; // replacement for the seting that was in BVH_SR original system
+
 	/// systems (initialized)
 	mn::CudaDevice*		TheCudaDevice;
 	mn::BenchmarkLogic* TheLogic;

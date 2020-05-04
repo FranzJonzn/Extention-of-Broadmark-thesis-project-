@@ -24,7 +24,7 @@ namespace mn {
 		if (idx >= size) return;
 		int root = _leafRestrRoots[idx];
 		if (root != INT_MAX && _intRestrMarks[root] == 1) {
-			//printf("\tadding %d-th [%d, %d] int node need restructure\n", root, _tks.rangex(root), _tks.rangey(root));
+			//printf("BVH_SR: \t \tadding %d-th [%d, %d] int node need restructure\n", root, _tks.rangex(root), _tks.rangey(root));
 			int2 range{ _tks.getrangex(root), _tks.getrangey(root) };
 			atomicAdd(_leafRestrRootMarks + idx, root);
 			atomicAdd(_leafRestrRootMarks + range.y + 1, -root);

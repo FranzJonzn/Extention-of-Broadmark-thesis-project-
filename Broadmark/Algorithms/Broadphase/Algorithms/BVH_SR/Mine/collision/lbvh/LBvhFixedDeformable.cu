@@ -107,7 +107,7 @@ namespace mn {
 			}
 		}
 
-		printf("begin lbvh maintain\n");
+		printf("BVH_SR: \t begin lbvh maintain\n");
 		switch (scheme) {
 		case LBvhFixedDeformableMaintenance::BUILD: build(); /*checkBvhValidity();*/ break;
 		case LBvhFixedDeformableMaintenance::REFIT: refit(); /*checkBvhValidity();*/ break;
@@ -197,7 +197,7 @@ Logger::recordSection<TimerType::GPU>("sort_bvh");
 
 		//_unsortedTks.scatter(cbvh().intSize(), getRawPtr(d_tkMap), cbvh().tks());
 
-		printf("Primsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
+		printf("BVH_SR: \t Primsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
 	}
 
 	void LBvhFixedDeformable::refit() {
@@ -504,7 +504,7 @@ Logger::recordSection<TimerType::GPU>("restr_bvh");
 		int invalid;
 		checkThrustErrors(invalid = thrust::count_if(thrust::device, getDevicePtr(d_keys32), getDevicePtr(d_keys32) + cbvh().primSize(), NotOne()));
 		if (invalid) {
-			printf("\n\tprimIdx has %d errors\n\n", invalid);
+			printf("BVH_SR: \t \n\tprimIdx has %d errors\n\n", invalid);
 			getchar();
 		}
 		/// prim map
@@ -513,7 +513,7 @@ Logger::recordSection<TimerType::GPU>("restr_bvh");
 			cbvh().primSize(), getRawPtr(d_primMap), (int*)getRawPtr(d_keys32));
 		checkThrustErrors(invalid = thrust::count_if(thrust::device, getDevicePtr(d_keys32), getDevicePtr(d_keys32) + cbvh().primSize(), NotOne()));
 		if (invalid) {
-			printf("\n\tprimMap has %d errors\n\n", invalid);
+			printf("BVH_SR: \t \n\tprimMap has %d errors\n\n", invalid);
 			getchar();
 		}
 		/// link
@@ -610,7 +610,7 @@ Logger::recordSection<TimerType::GPU>("restr_bvh");
 
 		Logger::recordSection<TimerType::GPU>("sort_bvh");
 
-		printf("Primsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
+		printf("BVH_SR: \t Primsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
 	}
 	
 	void LBvhFixedDeformable::refit_BroadMarkEdition() {

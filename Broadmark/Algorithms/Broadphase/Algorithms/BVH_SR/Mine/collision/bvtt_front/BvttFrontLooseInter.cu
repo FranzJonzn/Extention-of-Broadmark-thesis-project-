@@ -50,7 +50,7 @@ namespace mn {
 
 		std::string str = string_format("front (%d, %d) cpNum %d actualCpNum %d", _fronts.cs(0), _fronts.cs(1), _cpNum, _actualCpNum);
 		if (_fronts.cs(0) >= BvttFrontSettings::int_front_size() || _fronts.cs(1) >= BvttFrontSettings::ext_front_size() || _cpNum >= BvttFrontSettings::collision_pair_num()) {
-			printf("exceed front length! %d, %d  %d\n", _fronts.cs(0), _fronts.cs(1), _cpNum);
+			printf("BVH_SR: \t exceed front length! %d, %d  %d\n", _fronts.cs(0), _fronts.cs(1), _cpNum);
 		}
 		std::cout << str << '\n';
 		Logger::message(str);
@@ -151,7 +151,7 @@ namespace mn {
 			(const int*)_pFixedDeformableBvh->restrLog().getRestrBvhRoot(),
 			(const int*)_pFixedDeformableBvh->clvs().getLcas(), _log.portobj<0>());
 
-		printf("\n#original front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
+		printf("BVH_SR: \t \n#original front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
 			_numValidFrontNodes[0], _numValidFrontNodes[1], osizes.x - _numValidFrontNodes[0], osizes.y - _numValidFrontNodes[1]);
 		_fronts.slide();
 	}
@@ -307,7 +307,7 @@ namespace mn {
 			_pRigidBvh->cprim().portobj<0>(), _pFixedDeformableBvh->clvs().portobj<0>(), _pFixedDeformableBvh->ctks().portobj<0>(), (uint)_numValidFrontNodes[0], (const int2*)_fronts.cbuf(0),
 			_log.portobj<0>(), _fronts.nsizes(), _fronts.nbufs(), d_cpNum, getRawPtr(d_cpRes));
 
-		printf("\n#restr front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
+		printf("BVH_SR: \t \n#restr front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
 			_numValidFrontNodes[0], _numValidFrontNodes[1], osizes.x - _numValidFrontNodes[0], osizes.y - _numValidFrontNodes[1]);
 		/// invalid parts
 		// int fronts & ext fronts

@@ -14,10 +14,10 @@ namespace mn {
 		const std::string &inputFile = BenchmarkLogic::getInstance()->currentInputFile();
 		path inputTarget(inputFile);
 		if (!exists(inputTarget)) {
-			printf("\nFail loading frame %d [%s]\n", BenchmarkLogic::getInstance()->currentFrameId(), inputFile.c_str());		
+			printf("BVH_SR: \t \nFail loading frame %d [%s]\n", BenchmarkLogic::getInstance()->currentFrameId(), inputFile.c_str());		
 			return false;
 		}
-		printf("\nLoaded frame %d [%s]\n", BenchmarkLogic::getInstance()->currentFrameId(), inputFile.c_str());
+		printf("BVH_SR: \t \nLoaded frame %d [%s]\n", BenchmarkLogic::getInstance()->currentFrameId(), inputFile.c_str());
 		addMesh(inputFile);
 		return true;
 	}
@@ -38,7 +38,7 @@ namespace mn {
 			}
 			_kFormatedData.offset += scene->mMeshes[i]->mNumVertices;
 		}
-		printf("Loaded %d meshes\n", scene->mNumMeshes);
+		printf("BVH_SR: \t Loaded %d meshes\n", scene->mNumMeshes);
 	}
 
 	void Scene::clearMeshes() {

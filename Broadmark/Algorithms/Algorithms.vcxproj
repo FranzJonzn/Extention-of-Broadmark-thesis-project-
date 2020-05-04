@@ -201,7 +201,6 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\setting\CDBenchmarkConfiguration.hpp" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\setting\CDBenchmarkSettings.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\CudaDevice\CudaDevice.h" />
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\Logic\BenchmarkLogic.hpp" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\system\Log\Logger.hpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>

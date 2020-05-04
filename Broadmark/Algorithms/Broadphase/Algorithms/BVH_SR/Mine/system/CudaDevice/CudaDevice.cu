@@ -26,28 +26,28 @@ namespace mn {
 		int deviceCount = 0;
 		cudaError_t error_id = cudaGetDeviceCount(&deviceCount);
 		if (error_id != cudaSuccess) {
-			printf("cudaGetDeviceCount returned %d\n-> %s\n", (int)error_id, cudaGetErrorString(error_id));
-			printf("Result = FAIL\n");
+			printf("BVH_SR: \t cudaGetDeviceCount returned %d\n-> %s\n", (int)error_id, cudaGetErrorString(error_id));
+			printf("BVH_SR: \t Result = FAIL\n");
 			exit(EXIT_FAILURE);
 		}
-		if (deviceCount == 0)	printf("There are no available device(s) that support CUDA\n");
-		else					printf("Detected %d CUDA Capable device(s)\n", deviceCount);
+		if (deviceCount == 0)	printf("BVH_SR: \t There are no available device(s) that support CUDA\n");
+		else					printf("BVH_SR: \t Detected %d CUDA Capable device(s)\n", deviceCount);
 		_akDeviceProps = new cudaDeviceProp[deviceCount];
 		for (int i = 0; i < deviceCount; i++) {
 			cudaSetDevice(i);
 			cudaGetDeviceProperties(&_akDeviceProps[i], i);
 		}
 		_iDevID = findCudaDevice(0, nullptr);
-		printf("> GPU device has %d Multi-Processors, SM %d.%d compute capabilities\n",
+		printf("BVH_SR: \t > GPU device has %d Multi-Processors, SM %d.%d compute capabilities\n",
 			_akDeviceProps[_iDevID].multiProcessorCount, _akDeviceProps[_iDevID].major, 
 			_akDeviceProps[_iDevID].minor);
 
-		printf("# Finished \'CudaDevice\' initialization\n");
+		printf("BVH_SR: \t # Finished \'CudaDevice\' initialization\n");
 	}
 
 	CudaDevice::~CudaDevice() {
 		delete[] _akDeviceProps;
-		printf("# Finished \'CudaDevice\' termination\n");
+		printf("BVH_SR: \t # Finished \'CudaDevice\' termination\n");
 	}
 
 	int CudaDevice::generalGridSize(int& threadNum, int& blockSize) const { return (threadNum + blockSize - 1) / blockSize; }
@@ -87,7 +87,7 @@ namespace mn {
 		int		bs = config.maxOccBlockSize;
 		if (smemSize > 0)
 			bs = evalOptimalBlockSize(config.attribs, config.cachePreference, smemSize);
-		//printf("configurating for kernel[%s] blocksize: %d\n", kernelName.c_str(), bs);
+		//printf("BVH_SR: \t configurating for kernel[%s] blocksize: %d\n", kernelName.c_str(), bs);
 		if (config.waveFashion)
 			return{ waveGridSize(threadNum, bs), bs, smemSize, sync };
 		return{ generalGridSize(threadNum, bs), bs, smemSize, sync };
@@ -95,7 +95,7 @@ namespace mn {
 
 	void CudaDevice::registerKernel(const std::string& tag, KernelFunc f, cudaFuncCache cacheConfig, bool waveFashion) {
 		_kFuncTable.emplace(tag, KernelConfig(f, cacheConfig, waveFashion));
-		printf("Kernel[%s](%s) block size configuration: %d\n", tag.c_str(), waveFashion?"wave":"general", _kFuncTable[tag].maxOccBlockSize);
+		printf("BVH_SR: \t Kernel[%s](%s) block size configuration: %d\n", tag.c_str(), waveFashion?"wave":"general", _kFuncTable[tag].maxOccBlockSize);
 		
 	}
 	const CudaDevice::KernelConfig& CudaDevice::findKernel(const std::string& tag) {

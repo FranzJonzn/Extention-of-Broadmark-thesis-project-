@@ -23,6 +23,16 @@ namespace mn {
 		std::string		outputFileFormat;
 		Scheme			schemeOpt;
 	};
+	//BroadmarkIntegration
+	struct BroadMark_Benchmark {
+		int			stIdx, len;
+		mn::Scheme	schemeOpt; // STATIC_MANDATORY, REFIT_ONLY_FRONT, GENERATE, FRONT_GENERATE
+	};
+
+
+
+
+
 
 	class CDBenchmarkSettings {
 	public:
