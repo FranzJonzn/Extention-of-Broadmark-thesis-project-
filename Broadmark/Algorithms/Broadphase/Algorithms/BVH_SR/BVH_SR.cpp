@@ -7,28 +7,28 @@
 
 
 
-bool mn::ModuleRegister::s_bInitializeRegistered = mn::ModuleRegister::RegisterInitialize();
-bool mn::ModuleRegister::s_bTerminateRegistered  = mn::ModuleRegister::RegisterTerminate();
+//bool mn::ModuleRegister::s_bInitializeRegistered = mn::ModuleRegister::RegisterInitialize();
+//bool mn::ModuleRegister::s_bTerminateRegistered  = mn::ModuleRegister::RegisterTerminate();
 
 bool BVH_SR::initalized = false;
 
 
 
-//BVH_SR::BVH_SR(){
-//	std::cout << "fsdfsdfaaaaaaaadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\n";
-//	if (!initalized) {
-//
-//		std::cout << "BVH_SR_S";
-//		mn::Main::Initialize();
-//		BVH_SR::TheCudaDevice = mn::CudaDevice::getInstance();
-//		BVH_SR::TheLogic      = mn::BenchmarkLogic::getInstance();
-//
-//	
-//
-//		initalized = true;
-//		std::cout << "BVH_SR_E";
-//	}
-//}
+BVH_SR::BVH_SR(){
+
+	if (!initalized) {
+
+		std::cout << "BVH_SR_S";
+		mn::Main::Initialize();
+		BVH_SR::TheCudaDevice = mn::CudaDevice::getInstance();
+		BVH_SR::TheLogic      = mn::BenchmarkLogic::getInstance();
+
+	
+
+		initalized = true;
+		std::cout << "BVH_SR_E";
+	}
+}
 BVH_SR::~BVH_SR(){
 
 

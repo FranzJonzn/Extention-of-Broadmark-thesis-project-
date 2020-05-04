@@ -96,6 +96,7 @@ namespace mn {
 	void CudaDevice::registerKernel(const std::string& tag, KernelFunc f, cudaFuncCache cacheConfig, bool waveFashion) {
 		_kFuncTable.emplace(tag, KernelConfig(f, cacheConfig, waveFashion));
 		printf("Kernel[%s](%s) block size configuration: %d\n", tag.c_str(), waveFashion?"wave":"general", _kFuncTable[tag].maxOccBlockSize);
+		
 	}
 	const CudaDevice::KernelConfig& CudaDevice::findKernel(const std::string& tag) {
 		return _kFuncTable[tag];

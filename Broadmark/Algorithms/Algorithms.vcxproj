@@ -121,6 +121,9 @@
     <ClCompile Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\Main.cpp" />
     <ClCompile Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\CudaProject\CudaProjectModuleRegister.cpp" />
     <ClCompile Include="Broadphase\Algorithms\BVH_SR\Mine\setting\CDBenchmarkSettings.cpp" />
+    <ClCompile Include="Broadphase\Algorithms\BVH_SR\Header.cpp" />
+    <ClCompile Include="Broadphase\Algorithms\BVH_SR\_Raper\BVH_SR_Entry.cpp" />
+    <ClCompile Include="Broadphase\Algorithms\BVH_SR\_Raper\BVH_SR_Run.cpp" />
     <ClCompile Include="Broadphase\Algorithms\GPU\Bullet3GPUAlgorithms.cpp" />
     <ClCompile Include="Broadphase\Algorithms\Grid\Grid.cpp" />
     <ClCompile Include="Broadphase\Algorithms\Tracy\Tracy_Parallel.cpp" />
@@ -169,6 +172,7 @@
     <ClInclude Include="Broadphase\Algorithms\BF\BF_SIMD.h" />
     <ClInclude Include="Broadphase\Algorithms\BF\BF_SIMD_Parallel.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\BVH_SR.h" />
+    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Header.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\base\AggregatedAttribs.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\base\Bv.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\base\MultiArray.h" />
@@ -210,6 +214,8 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\ModelReader.hpp" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\Timer.hpp" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\Utils.h" />
+    <ClInclude Include="Broadphase\Algorithms\BVH_SR\_Raper\BVH_SR_Entry.h" />
+    <ClInclude Include="Broadphase\Algorithms\BVH_SR\_Raper\BVH_SR_Run.h" />
     <ClInclude Include="Broadphase\Algorithms\DBVT\DBVT.h" />
     <ClInclude Include="Broadphase\Algorithms\GPU\Bullet3GPUAlgorithms.h" />
     <ClInclude Include="Broadphase\Algorithms\Grid\Grid.h" />

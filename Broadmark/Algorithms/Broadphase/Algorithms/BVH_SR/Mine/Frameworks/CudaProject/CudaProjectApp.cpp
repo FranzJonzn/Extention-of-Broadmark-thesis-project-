@@ -10,10 +10,10 @@ namespace mn {
 
 	void SimpleApp::Initialize() {
 		SimpleApp* app;
-		AppBase::Run = &SimpleApp::Run;
+		AppBase::Run            = &SimpleApp::Run;
 		AppBase::TheApplication = app = new SimpleApp;
-		app->TheCudaDevice = CudaDevice::getInstance();
-		app->TheLogic = BenchmarkLogic::getInstance();
+		app->TheCudaDevice      = CudaDevice::getInstance();
+		app->TheLogic           = BenchmarkLogic::getInstance();
 		printf("* Finishing App initialization!\n");
 	}
 

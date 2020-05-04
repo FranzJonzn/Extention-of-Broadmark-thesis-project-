@@ -28,21 +28,7 @@
 class BVH_SR : public BaseAlgorithm<Object, SimpleCache> {
 
 public:
-	BVH_SR() {
-		std::cout << "fsdfsdfaaaaaaaadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\n";
-		if (!initalized) {
-
-			std::cout << "BVH_SR_S";
-			mn::Main::Initialize();
-			BVH_SR::TheCudaDevice = mn::CudaDevice::getInstance();
-			BVH_SR::TheLogic = mn::BenchmarkLogic::getInstance();
-
-
-
-			initalized = true;
-			std::cout << "BVH_SR_E";
-		}
-	}
+	BVH_SR();
 	virtual ~BVH_SR();
 	static bool	initalized;
 	void Initialize(InflatedSettings settings, const SceneFrame& frameData) override;

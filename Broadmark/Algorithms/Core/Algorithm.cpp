@@ -14,7 +14,8 @@
 #include "Broadphase/Algorithms/Misc/None.h"
 #include "Broadphase/Algorithms/Misc/Inspectors.h"
 #include "Broadphase/Algorithms/KD/KD.h"
-#include "Broadphase/Algorithms/BVH_SR/BVH_SR.h"
+#include "Broadphase/Algorithms/BVH_SR/_Raper/BVH_SR_Entry.h"
+#include "Broadphase/Algorithms/BVH_SR/Header.h"
 
 
 #define REGISTER(name, type) if (strcmp(name, algorithmName) == 0) { return std::make_unique<type>(); }
@@ -49,7 +50,8 @@ std::unique_ptr<BroadphaseInterface> Algorithms::Create(const char* algorithmNam
 	REGISTER("GPU_LBVH"            , GPU_LBVH);
 	REGISTER("GPU_SAP"             , GPU_SAP);
 	REGISTER("KD"                  , KD);
-	REGISTER("BVH_SR"              , BVH_SR); // << ny
+	REGISTER("BVH_SR"              , BVH_SR_Entry); // << ny
+	REGISTER("H"                   , Header); // << ny
 
 	// Misc algorithms used to validate the system
 	REGISTER("None", None);
@@ -91,6 +93,7 @@ std::vector<const char*> Algorithms::EnumerateAlgorithms() {
 		"GPU_SAP",
 		"KD",
 		"BVH_SR",
+		"H",
 
 		"None",
 		"TimeValidator",

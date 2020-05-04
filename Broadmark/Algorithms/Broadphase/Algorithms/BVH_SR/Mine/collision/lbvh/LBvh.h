@@ -34,6 +34,8 @@ namespace mn {
 	public:
 		LBvhKernelRegister() {
 			CudaDevice* device = CudaDevice::getInstance();
+
+
 			/// components
 			device->registerKernel("GatherBVs"                   , gatherBVs                   , cudaFuncCachePreferL1, false);
 			device->registerKernel("ScatterBVs"                  , scatterBVs                  , cudaFuncCachePreferL1, false);

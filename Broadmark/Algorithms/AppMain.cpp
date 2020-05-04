@@ -58,7 +58,7 @@ void execute(const Settings& settings) {
 	// A 'inflated' scene has some scene specific data fed into it.
 	const InflatedSettings inflatedSettings(settings, scene.GetHeader());
 
-	std::cout << "Startar här\n";
+
 
 	std::unique_ptr<BroadphaseInterface> algorithm =  Algorithms::Create(inflatedSettings.m_algorithm.c_str());
 	std::unique_ptr<BroadphaseInterface> validation = Algorithms::Create(VALIDATION_ALGORITHM);
