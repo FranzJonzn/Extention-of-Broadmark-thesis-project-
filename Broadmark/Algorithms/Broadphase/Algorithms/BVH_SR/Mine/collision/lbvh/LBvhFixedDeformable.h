@@ -33,7 +33,7 @@ namespace mn {
 		LBvhFixedDeformable() = delete;
 		LBvhFixedDeformable(LBvhBuildConfig&& config);
 		~LBvhFixedDeformable();
-		void	maintain(LBvhFixedDeformableMaintenance scheme, const SceneData& pdata);
+	//	void	maintain(LBvhFixedDeformableMaintenance scheme, const SceneData& pdata);
 		void	maintain_BroadMarkEdition(LBvhFixedDeformableMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings); // broadmarkIntegration
 
 #if MACRO_VERSION
@@ -52,8 +52,8 @@ namespace mn {
 		uint				getIntNodeSize()       { return cbvh().intSize(); }
 		uint				getPrimNodeSize()      { return cbvh().primSize(); }
 		int*				getPrimMap()           { return getRawPtr(d_primMap); }
-		const int3*			getFaces()       const { return d_faces; }
-		const PointType*	getVertices()    const { return d_vertices; }
+		//const int3*			getFaces()       const { return d_faces; }
+		//const PointType*	getVertices()    const { return d_vertices; }
 
 	private:
 		class	Bvh {
@@ -88,16 +88,16 @@ namespace mn {
 		Bvh&	cbvh() { return _bvh; }
 
 		/// main maintenance methods
-		void	build();
+	//	void	build();
 		void	build_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
-		void	refit();
+		//void	refit();
 		void	refit_BroadMarkEdition();// broadmarkIntegration
-		void	update();	///< gather degradation infos
+	//	void	update();	///< gather degradation infos
 		void	update_BroadMarkEdition();///< gather degradation infos broadmarkIntegration	
 		/// 
-		bool	restructure();
+	//	bool	restructure();
 		bool	restructure_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
-		void	updatePrimData(const SceneData& pdata);
+	//	void	updatePrimData(const SceneData& pdata);
 		void	updatePrimData_BroadMarkEdition(const SceneFrame& fdata, const InflatedSettings& settings);// broadmarkIntegration
 		void	reorderPrims();
 		void	reorderIntNodes();
@@ -106,8 +106,8 @@ namespace mn {
 		void	checkBvhValidity();
 
 		/// pre-formated input data
-		int3*								d_faces;
-		PointType*							d_vertices;
+		//int3*								d_faces;
+		//PointType*							d_vertices;
 		Aabb*								d_aabb;// broadmarkIntegration
 
 #if MACRO_VERSION
