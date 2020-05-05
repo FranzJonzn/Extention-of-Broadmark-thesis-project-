@@ -62,7 +62,7 @@ namespace mn {
 		static std::vector<Benchmark>	_benchmarks;
 		static  const bool		_enableRestr{ true };
 		static  const bool		_enableDivergentMark{ true };
-		//static  const bool		_includeNarrowPhase{ false };
+		static  const bool		_includeNarrowPhase{ false };
 
 		static	const int		_version{ MACRO_VERSION };	///< 0: standalone 1: arcsim
 	};

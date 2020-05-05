@@ -48,6 +48,9 @@ namespace mn {
 	}
 
 	void BvttFrontLooseIntra::inspectResults() {
+	
+		printf("\t inspectResults() \n ");
+		
 		_fronts.retrieveSizes();
 		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
 		checkCudaErrors(cudaMemcpy(&_actualCpNum, d_actualCpNum, sizeof(int), cudaMemcpyDeviceToHost));
@@ -61,12 +64,18 @@ namespace mn {
 	}
 
 	void BvttFrontLooseIntra::applyCpResults(uint* _idx, uint2* _front) {
+		
+		printf("\t applyCpResults() \n ");
+		
 		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
 		checkCudaErrors(cudaMemcpy(_idx, d_cpNum, sizeof(uint), cudaMemcpyDeviceToDevice));
 		checkCudaErrors(cudaMemcpy(_front, getRawPtr(d_cpRes), sizeof(uint2) * _cpNum, cudaMemcpyDeviceToDevice));
 	}
 
 	void BvttFrontLooseIntra::maintain(BvttFrontLooseIntraMaintenance scheme) {
+	
+		printf("\t maintain() \n ");
+		
 		_pBvh->restrLog().setUpdateTag(false);
 		static bool first = true;
 		/**	
@@ -84,8 +93,15 @@ namespace mn {
 			if (_pBvh->bvhOptTag() == 1) {		///< bvh restr
 				checkCudaErrors(cudaMemset(d_extFtNodeCnt, 0, sizeof(uint)));
 				checkCudaErrors(cudaMemset(d_intFtNodeCnt, 0, sizeof(uint)));
-				configuredLaunch({ "CountRestrFrontNodes", (int)_pBvh->getExtNodeSize() + (int)_pBvh->getIntNodeSize() }, countRestrFrontNodes,
-					make_uint2(_pBvh->getExtNodeSize(), _pBvh->getIntNodeSize()), _pBvh->restrLog().portobj<0>(), _log.portobj<0>(), d_intFtNodeCnt, d_extFtNodeCnt);
+				configuredLaunch(
+								{ "CountRestrFrontNodes", (int)_pBvh->getExtNodeSize() + (int)_pBvh->getIntNodeSize() }, 
+								countRestrFrontNodes,
+									make_uint2(_pBvh->getExtNodeSize(),
+									_pBvh->getIntNodeSize()), 
+									_pBvh->restrLog().portobj<0>(), 
+									_log.portobj<0>(), 
+									d_intFtNodeCnt, 
+									d_extFtNodeCnt);
 				uint2 osizes = make_uint2(_fronts.cs(0), _fronts.cs(1));
 				checkCudaErrors(cudaMemcpy(&_extFtNodeCnt, d_extFtNodeCnt, sizeof(int), cudaMemcpyDeviceToHost));
 				checkCudaErrors(cudaMemcpy(&_intFtNodeCnt, d_intFtNodeCnt, sizeof(int), cudaMemcpyDeviceToHost));
@@ -112,12 +128,12 @@ namespace mn {
 		}
 
 		switch (scheme) {
-			case BvttFrontLooseIntraMaintenance::PURE_BVH_CD: //Logger::message("pure bvhcd. "    ); pureBvhCd();   //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::PURE_BVH_CD: Logger::message("pure bvhcd. "    ); pureBvhCd();   //proximityQuery(); break;
 			/// front based methods																			  //
 			case BvttFrontLooseIntraMaintenance::GENERATE:	  Logger::message("generate front. "); generate();    //proximityQuery(); break;
-			case BvttFrontLooseIntraMaintenance::UPDATE:	  //Logger::message("update front. "  ); pruneSprout(); //proximityQuery(); break;
-			case BvttFrontLooseIntraMaintenance::REORDER:	  //Logger::message("balance front. " ); balance();     //proximityQuery(); break;
-			case BvttFrontLooseIntraMaintenance::KEEP:		  //Logger::message("preserve front. "); keep();        //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::UPDATE:	  Logger::message("update front. "  ); pruneSprout(); //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::REORDER:	  Logger::message("balance front. " ); balance();     //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::KEEP:		  Logger::message("preserve front. "); keep();        //proximityQuery(); break;
 
 			default: break;
 		}
@@ -126,6 +142,9 @@ namespace mn {
 	}
 
 	void BvttFrontLooseIntra::proximityQuery() {
+		
+		printf("\t proximityQuery() \n ");
+		
 		if (CDBenchmarkSettings::includeNarrowPhase()) {
 			checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
 			checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
@@ -142,6 +161,9 @@ namespace mn {
 	}
 
 	void BvttFrontLooseIntra::reorderFronts() {
+	
+		printf("\t reorderFronts() \n ");
+		
 		Logger::tick<TimerType::GPU>();
 		_log.prepare(_pBvh->getExtNodeSize());
 		Logger::tock<TimerType::GPU>("prepare_ordering_calc_offset");
@@ -150,8 +172,13 @@ namespace mn {
 		checkCudaErrors(cudaMemcpy(_fronts.nsizes(), _fronts.csizes(), sizeof(uint) * 2, cudaMemcpyDeviceToDevice));
 		
 		uint2 osizes = make_uint2(_fronts.cs(0), _fronts.cs(1));
-		configuredLaunch({ "PureReorderLooseFrontsWithLog", (int)osizes.x + (int)osizes.y }, pureReorderLooseFrontsWithLog,
-			osizes, _fronts.cbufs(), _fronts.nbufs(), _log.portobj<0>());
+		configuredLaunch(
+						{ "PureReorderLooseFrontsWithLog", (int)osizes.x + (int)osizes.y }, 
+						pureReorderLooseFrontsWithLog,
+							osizes, 
+							_fronts.cbufs(), 
+							_fronts.nbufs(), 
+							_log.portobj<0>());
 
 		//checkThrustErrors(thrust::copy(getDevicePtr(_fronts.cbuf(0)), getDevicePtr(_fronts.cbuf(0)) + osizes.x, getDevicePtr(_fronts.nbuf(0))));
 		//checkThrustErrors(thrust::copy(getDevicePtr(_fronts.cbuf(1)), getDevicePtr(_fronts.cbuf(1)) + osizes.y, getDevicePtr(_fronts.nbuf(1))));
@@ -174,14 +201,30 @@ Logger::recordSection<TimerType::GPU>("broad_phase_front_ordering");
 	}
 
 	void BvttFrontLooseIntra::separateFronts() {
+	
+		printf("\t separateFronts() \n ");
+		
 		/// compact valid front nodes
 		_log.preserveCnts(_pBvh->getExtNodeSize());
-		configuredLaunch({ "FilterIntFrontCnts", (int)_pBvh->getIntNodeSize() }, filterIntFrontCnts,
-			_pBvh->getIntNodeSize(), _pBvh->restrLog().getIntMark(), (const int*)_pBvh->getPrevLbds(),
-			(const int*)_pBvh->restrLog().getRestrBvhRoot(), _log.intNodeCnts(), _log.intNodeBackCnts());
-		configuredLaunch({ "FilterExtFrontCnts", (int)_pBvh->getExtNodeSize() }, filterExtFrontCnts,
-			_pBvh->getExtNodeSize(), _pBvh->restrLog().getExtMark(), (const int*)_pBvh->getPrevLbds(), 
-			(const int*)_pBvh->restrLog().getRestrBvhRoot(), _log.extNodeCnts(), _log.extNodeBackCnts(), _log.intNodeBackCnts());
+		configuredLaunch(
+						{ "FilterIntFrontCnts", (int)_pBvh->getIntNodeSize() }, 
+						filterIntFrontCnts,
+							_pBvh->getIntNodeSize(), 
+							_pBvh->restrLog().getIntMark(), 
+							(const int*)_pBvh->getPrevLbds(),
+							(const int*)_pBvh->restrLog().getRestrBvhRoot(), 
+							_log.intNodeCnts(), 
+							_log.intNodeBackCnts());
+		configuredLaunch(
+						{ "FilterExtFrontCnts", (int)_pBvh->getExtNodeSize() }, 
+						filterExtFrontCnts,
+							_pBvh->getExtNodeSize(), 
+							_pBvh->restrLog().getExtMark(), 
+							(const int*)_pBvh->getPrevLbds(), 
+							(const int*)_pBvh->restrLog().getRestrBvhRoot(), 
+							_log.extNodeCnts(), 
+							_log.extNodeBackCnts(), 
+							_log.intNodeBackCnts());
 
 		_log.prepare(_pBvh->getExtNodeSize());
 		_log.prepareBak(_pBvh->getExtNodeSize());
@@ -198,16 +241,33 @@ Logger::recordSection<TimerType::GPU>("broad_phase_front_ordering");
 
 		_fronts.retrieveSizes();
 		uint2 osizes = make_uint2(_fronts.cs(0), _fronts.cs(1));
-		configuredLaunch({ "SeparateIntLooseIntraFrontWithLog", (int)osizes.x }, separateIntLooseIntraFrontWithLog,
-			osizes.x, make_uint2(_numValidFrontNodes[0], _numValidFrontNodes[1]), (const int2*)_fronts.cbuf(0), 
-			_fronts.nsizes(), _fronts.nbufs(), (const int*)_pBvh->restrLog().getIntMark(), 
-			(const int*)_pBvh->restrLog().getRestrBvhRoot(), (const int*)_pBvh->getPrevLbds(), 
-			(const int*)_pBvh->clvs().getLcas(), _log.portobj<0>());
-		configuredLaunch({ "SeparateExtLooseIntraFrontWithLog", (int)osizes.y }, separateExtLooseIntraFrontWithLog,
-			osizes.y, make_uint2(_numValidFrontNodes[0], _numValidFrontNodes[1]), (const int2*)_fronts.cbuf(1), 
-			_fronts.nsizes(), _fronts.nbufs(), (const int*)_pBvh->restrLog().getExtMark(), 
-			(const int*)_pBvh->restrLog().getRestrBvhRoot(),
-			(const int*)_pBvh->clvs().getLcas(), _log.portobj<0>());
+
+		configuredLaunch(
+						{ "SeparateIntLooseIntraFrontWithLog", (int)osizes.x }, 
+						separateIntLooseIntraFrontWithLog,
+							osizes.x, 
+							make_uint2(_numValidFrontNodes[0], 
+							_numValidFrontNodes[1]), 
+							(const int2*)_fronts.cbuf(0), 
+							_fronts.nsizes(), 
+							_fronts.nbufs(), 
+							(const int*)_pBvh->restrLog().getIntMark(), 
+							(const int*)_pBvh->restrLog().getRestrBvhRoot(), 
+							(const int*)_pBvh->getPrevLbds(), 
+							(const int*)_pBvh->clvs().getLcas(), 
+							_log.portobj<0>());
+		configuredLaunch(
+						{ "SeparateExtLooseIntraFrontWithLog", (int)osizes.y }, 
+						separateExtLooseIntraFrontWithLog,
+							osizes.y, 
+							make_uint2(_numValidFrontNodes[0], _numValidFrontNodes[1]), 
+							(const int2*)_fronts.cbuf(1), 
+							_fronts.nsizes(), 
+							_fronts.nbufs(), 
+							(const int*)_pBvh->restrLog().getExtMark(), 
+							(const int*)_pBvh->restrLog().getRestrBvhRoot(),
+							(const int*)_pBvh->clvs().getLcas(),
+							_log.portobj<0>());
 
 		printf("BVH_SR: \t \n#original front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
 			_numValidFrontNodes[0], _numValidFrontNodes[1], osizes.x - _numValidFrontNodes[0], osizes.y - _numValidFrontNodes[1]);
@@ -215,19 +275,33 @@ Logger::recordSection<TimerType::GPU>("broad_phase_front_ordering");
 	}
 
 	void BvttFrontLooseIntra::calcSnapshot() {
-		configuredLaunch({ "FrontSnapshot", (int)_pBvh->getIntNodeSize() }, frontSnapshot,
-			_pBvh->getIntNodeSize(), _pBvh->ctks().portobj<0>(), _log.portobj<0>(), getRawPtr(d_snapshot));
+		printf("\t calcSnapshot() \n ");
+		
+		configuredLaunch(
+						{ "FrontSnapshot", (int)_pBvh->getIntNodeSize() }, 
+						frontSnapshot,
+							_pBvh->getIntNodeSize(), 
+							_pBvh->ctks().portobj<0>(), 
+							_log.portobj<0>(), 
+							getRawPtr(d_snapshot));
 Logger::recordSection<TimerType::GPU>("broad_phase_quality_gen");
 	}
 
 	void BvttFrontLooseIntra::checkQuality() {
+		printf("\t checkQuality() \n ");
+		
 		_pBvh->restrLog().clear(_pBvh->getExtNodeSize());
 
-		configuredLaunch({ "CheckFrontQuality", (int)_pBvh->getIntNodeSize() }, checkFrontQuality,
-			_pBvh->getIntNodeSize(), _pBvh->ctks().portobj<0>(), _log.portobj<0>(), getRawPtr(d_snapshot), _pBvh->restrLog().portobj<0>());
+		configuredLaunch(
+						{ "CheckFrontQuality", (int)_pBvh->getIntNodeSize() }, 
+						checkFrontQuality,
+							_pBvh->getIntNodeSize(), 
+							_pBvh->ctks().portobj<0>(), 
+							_log.portobj<0>(), 
+							getRawPtr(d_snapshot), 
+							_pBvh->restrLog().portobj<0>());
 		
 Logger::recordSection<TimerType::GPU>("broad_phase_quality_check");
-
 		_pBvh->restrLog().setUpdateTag(true);
 	}
 
@@ -275,22 +349,37 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_gen");
 		_fronts.resetNextSizes();
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
-		uint osize;
+	uint osize;
 
 		osize = _fronts.cs(0);
-		configuredLaunch({ "MaintainIntLooseIntraFrontsWithLog", (int)osize }, maintainIntLooseIntraFrontsWithLog,
-			_pBvh->clvs().portobj<0>(), _pBvh->ctks().portobj<0>(), osize, (const int2*)_fronts.cbuf(0),
-			_log.portobj<0>(), _fronts.nsizes(), _fronts.nbufs(), d_cpNum, getRawPtr(d_cpRes));
+		configuredLaunch(
+				{ "MaintainIntLooseIntraFrontsWithLog", (int)osize }, 
+				maintainIntLooseIntraFrontsWithLog,
+					_pBvh->clvs().portobj<0>(), 
+					_pBvh->ctks().portobj<0>(), osize, (const int2*)_fronts.cbuf(0),
+					_log.portobj<0>(), 
+					_fronts.nsizes(), 
+					_fronts.nbufs(), 
+					d_cpNum, getRawPtr(d_cpRes));
 		osize = _fronts.cs(1);
-		configuredLaunch({ "MaintainExtLooseIntraFrontsWithLog", (int)osize }, maintainExtLooseIntraFrontsWithLog,
-			_pBvh->clvs().portobj<0>(), _pBvh->ctks().portobj<0>(), osize, (const int2*)_fronts.cbuf(1),
-			_log.portobj<0>(), _fronts.nsizes(), _fronts.nbufs(), d_cpNum, getRawPtr(d_cpRes));
+		configuredLaunch(
+						{ "MaintainExtLooseIntraFrontsWithLog", (int)osize }, 
+						maintainExtLooseIntraFrontsWithLog,
+							_pBvh->clvs().portobj<0>(), 
+							_pBvh->ctks().portobj<0>(), 
+							osize, 
+							(const int2*)_fronts.cbuf(1),
+							_log.portobj<0>(), 
+							_fronts.nsizes(), 
+							_fronts.nbufs(), 
+							d_cpNum, 
+							getRawPtr(d_cpRes));
 
 		_fronts.slide();
 
 Logger::recordSection<TimerType::GPU>("broad_phase_cd_update");
 
-		if (CDBenchmarkSettings::enableRestr()) {
+	if (CDBenchmarkSettings::enableRestr()) {
 			checkQuality();
 		}
 

@@ -18,8 +18,16 @@ namespace mn {
 		}
 	}
 
-	__global__ void calibrateRestrRoots(int size, BvhIntNodeCompletePort _tks, const int* _leafRestrRoots, const int* _intRestrMarks,
-		int* _leafRestrRootMarks, int* _numSubtree, uint* _subtreeSizes, int* _subtrees, int* _numRtIntNode) {	/// count number of affected int nodes
+	__global__ void calibrateRestrRoots(int size, BvhIntNodeCompletePort _tks, 
+										const int* _leafRestrRoots, 
+										const int* _intRestrMarks,
+											  int* _leafRestrRootMarks, 
+										      int* _numSubtree, 
+										     uint* _subtreeSizes, 
+											  int* _subtrees, 
+											  int* _numRtIntNode) {	/// count number of affected int nodes
+		
+		printf("\n\n FRANZ: \t \d_numRtIntNode d_numRtSubtree [%d, %d] \n\n", _numRtIntNode, _numSubtree);
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
 		if (idx >= size) return;
 		int root = _leafRestrRoots[idx];
@@ -29,10 +37,11 @@ namespace mn {
 			atomicAdd(_leafRestrRootMarks + idx, root);
 			atomicAdd(_leafRestrRootMarks + range.y + 1, -root);
 			atomicAdd(_numRtIntNode, range.y - range.x);
-
-			int id = atomicAdd(_numSubtree, 1);
-			_subtrees[id] = root;
+		
+			int id            = atomicAdd(_numSubtree, 1);
+			_subtrees[id]     = root;
 			_subtreeSizes[id] = range.y - range.x + 1;
+		
 		}
 	}
 

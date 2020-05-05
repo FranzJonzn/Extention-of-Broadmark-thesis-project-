@@ -554,7 +554,7 @@ namespace mn {
 				return;
 			}
 		}
-		 //TODO Problemet är i refit_BroadMarkEdition och update_BroadMarkEdition mågte gå ienom dem
+	
 
 		switch (scheme) {
 			case LBvhFixedDeformableMaintenance::BUILD:  build_BroadMarkEdition(settings.m_worldAabb); /*checkBvhValidity();*/				  break;
@@ -730,6 +730,9 @@ namespace mn {
 							d_numRtIntNode);
 
 		Logger::recordSection<TimerType::GPU>("check_bvh_restr");
+
+
+		//TODO är problem med här, kuda försöker läsa mine utanför mines bank
 
 		// check the extent of the degeneration according to the number of subtree
 		checkCudaErrors(cudaMemcpy(&_numRtSubtree, d_numRtSubtree, sizeof(int), cudaMemcpyDeviceToHost));
