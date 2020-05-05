@@ -553,7 +553,7 @@ namespace mn {
 		switch (scheme) {
 			case LBvhFixedDeformableMaintenance::BUILD:  build_BroadMarkEdition(settings.m_worldAabb); /*checkBvhValidity();*/				  break;
 			case LBvhFixedDeformableMaintenance::REFIT:  refit_BroadMarkEdition();					   /*checkBvhValidity();*/				  break;
-			case LBvhFixedDeformableMaintenance::UPDATE: update_BroadMarkEdition();                    /*restructure(); checkBvhValidity();*/ break;
+			case LBvhFixedDeformableMaintenance::UPDATE: //update_BroadMarkEdition();                    /*restructure(); checkBvhValidity();*/ break;
 			default:																														  break;
 		}
 	}
@@ -619,33 +619,33 @@ namespace mn {
 		
 		configuredLaunch(
 						{ "RefitExtNode_BME", cbvh().primSize() }, 
-						refitExtNode_BroadMarkEdition,
+						    refitExtNode_BroadMarkEdition,
 							cbvh().primSize(), 
 							cbvh().lvs().portobj<0>(), 
 							getRawPtr(d_primMap), 
 							d_aabb);
-		
-		
-		cbvh().tks().clearIntNodes(cbvh().intSize());
-
-		configuredLaunch(
-						{ "RefitIntNode", cbvh().extSize() }, 
-						refitIntNode,
-							cbvh().extSize(), 
-							cbvh().lvs().portobj<0>(), 
-							cbvh().tks().portobj<0>());
-
-		Logger::recordSection<TimerType::GPU>("refit_bvh");
-
-
-
-
-		cbvh().lvs().clearExtBvs(cbvh().extSize());
-
-
-
-
-		cbvh().tks().clearIntNodes(cbvh().intSize());
+//		
+//		
+//		cbvh().tks().clearIntNodes(cbvh().intSize());
+//
+//		configuredLaunch(
+//						{ "RefitIntNode", cbvh().extSize() }, 
+//						refitIntNode,
+//							cbvh().extSize(), 
+//							cbvh().lvs().portobj<0>(), 
+//							cbvh().tks().portobj<0>());
+//
+//		Logger::recordSection<TimerType::GPU>("refit_bvh");
+//
+//
+//
+//
+//		cbvh().lvs().clearExtBvs(cbvh().extSize());
+//
+//
+//
+//
+//		cbvh().tks().clearIntNodes(cbvh().intSize());
 
 
 

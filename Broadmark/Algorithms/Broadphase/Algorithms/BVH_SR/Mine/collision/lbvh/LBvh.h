@@ -47,19 +47,19 @@ namespace mn {
 			device->registerKernel("CalcExtNodeRestrSplitMetrics", calcExtNodeRestrSplitMetrics, cudaFuncCachePreferL1, false);
 			device->registerKernel("ScatterIntNodes"             , scatterIntNodes             , cudaFuncCachePreferL1, false);
 
-#if MACRO_VERSION
-			device->registerKernel("CalcBVARCSim", calcMaxBVARCSim, cudaFuncCachePreferL1, false);
-			device->registerKernel("CalcMCsARCSim", calcMCsARCSim, cudaFuncCachePreferL1, false);
-			device->registerKernel("BuildPrimsARCSim", buildPrimitivesARCSim, cudaFuncCachePreferL1, false);
-			device->registerKernel("RefitExtNodeARCSim", refitExtNodeARCSim, cudaFuncCachePreferL1, false);
-#endif
+//#if MACRO_VERSION
+//			device->registerKernel("CalcBVARCSim", calcMaxBVARCSim, cudaFuncCachePreferL1, false);
+//			device->registerKernel("CalcMCsARCSim", calcMCsARCSim, cudaFuncCachePreferL1, false);
+//			device->registerKernel("BuildPrimsARCSim", buildPrimitivesARCSim, cudaFuncCachePreferL1, false);
+//			device->registerKernel("RefitExtNodeARCSim", refitExtNodeARCSim, cudaFuncCachePreferL1, false);
+//#endif
 			/// morton codes
 			device->registerKernel("CalcBV"   , calcMaxBV, cudaFuncCachePreferL1, false);
-			device->registerKernel("CalcMCs"  , calcMCs  , cudaFuncCachePreferL1, false);
+			//device->registerKernel("CalcMCs"  , calcMCs  , cudaFuncCachePreferL1, false);
 			device->registerKernel("CalcMC64s", calcMC64s, cudaFuncCachePreferL1, false);
 			/// build
 			device->registerKernel("CalcPrimMap"          , calcInverseMapping              , cudaFuncCachePreferL1, false);
-			device->registerKernel("BuildPrims"           , buildPrimitives                 , cudaFuncCachePreferL1, false);			
+		//	device->registerKernel("BuildPrims"           , buildPrimitives                 , cudaFuncCachePreferL1, false);			
 			device->registerKernel("BuildIntNodes"        , buildIntNodes                   , cudaFuncCachePreferL1, false);
 			device->registerKernel("CalcIntNodeOrders"    , calcIntNodeOrders               , cudaFuncCachePreferL1, false);
 			device->registerKernel("UpdateBvhExtNodeLinks", updateBvhExtNodeLinks           , cudaFuncCachePreferL1, false);
@@ -71,10 +71,10 @@ namespace mn {
 			/// restructure
 			device->registerKernel("CalibrateLeafRangeMarks", calibrateLeafRangeMarks, cudaFuncCachePreferL1, false);
 			device->registerKernel("CalibrateRestrRoots"	, calibrateRestrRoots    , cudaFuncCachePreferL1, false);
-			device->registerKernel("CalcRestrMCs"			, calcRestrMCs           , cudaFuncCachePreferL1, false);
+			//device->registerKernel("CalcRestrMCs"			, calcRestrMCs           , cudaFuncCachePreferL1, false);
 			device->registerKernel("SelectPrimitives"		, selectPrimitives       , cudaFuncCachePreferL1, false);
 			device->registerKernel("UpdatePrimMap"			, updatePrimMap          , cudaFuncCachePreferL1, false);
-			device->registerKernel("UpdatePrimAndExtNode"	, updatePrimAndExtNode   , cudaFuncCachePreferL1, false);
+			//device->registerKernel("UpdatePrimAndExtNode"	, updatePrimAndExtNode   , cudaFuncCachePreferL1, false);
 			device->registerKernel("RestrIntNodes"			, restrIntNodes          , cudaFuncCachePreferL1, false);
 			device->registerKernel("CalcRestrIntNodeOrders"	, calcRestrIntNodeOrders , cudaFuncCachePreferL1, false);
 			device->registerKernel("ReorderRestrIntNodes"	, reorderRestrIntNodes   , cudaFuncCachePreferL1, false);
@@ -97,6 +97,7 @@ namespace mn {
 			/// restructure
 			device->registerKernel("CalcRestrMCs_BME"        , calcRestrMCs_BroadMarkEdition        , cudaFuncCachePreferL1, false);
 			device->registerKernel("UpdatePrimAndExtNode_BME", updatePrimAndExtNode_BroadMarkEdition, cudaFuncCachePreferL1, false);
+	
 		}
 		~LBvhKernelRegister() {}
 	};
