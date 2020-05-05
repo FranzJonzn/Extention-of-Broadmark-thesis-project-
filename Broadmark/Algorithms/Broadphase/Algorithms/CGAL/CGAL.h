@@ -32,7 +32,7 @@ private:
 	CGAL_Box *m_boxes = nullptr;
 
 public:
-	CGAL_Internal() { std::cout << "kkkkkkkkkkkkkkkkkkkkkkkkkk"; }
+	CGAL_Internal() {}
 	virtual ~CGAL_Internal() {
 		delete m_boxes;
 	}

@@ -21,9 +21,9 @@ namespace mn {
 		TheCudaDevice = CudaDevice::getInstance();
 		_bvh.setup(config);
 		///
-		_unsortedPrims.setup(config.primSize);
-		_unsortedTks.setup(config.intSize);
-		_restrLog.setup(config.extSize, config.primSize);
+		_unsortedPrims.setup  (config.primSize);
+		_unsortedTks.setup    (config.intSize);
+		_restrLog.setup       (config.extSize, config.primSize);
 		_restrLog.setBvhOptTag(false);
 
 		//checkCudaErrors(cudaMalloc((void**)&d_vertices, sizeof(PointType)*config.primSize*3));
@@ -38,24 +38,24 @@ namespace mn {
 
 
 		checkThrustErrors(
-		d_primMap.resize(config.primSize);
-		d_tkMap.resize(config.intSize);
-		d_count.resize(config.primSize);
-		d_offsetTable.resize(config.primSize);
-
-		d_keys32.resize(config.primSize);
-		d_keys64.resize(config.primSize);
-		d_vals.resize(config.primSize);
-
-		/// the following only used in the restructuring scheme
-		//d_prevLbds.resize(config.intSize);
-		//d_prevRbds.resize(config.intSize);
-		//d_gatherMap.resize(config.primSize);
-		//d_taskSequence.resize(config.primSize);	///< task sequence for primitives, external nodes
-		//d_sequence.resize(config.primSize);
-		//d_rtSubtrees.resize(config.intSize << 1);	///< stores root nodes of subtree
-		//d_sizePerSubtree.resize(config.intSize << 1);
-		//d_begPerSubtree.resize(config.intSize << 1);
+			d_primMap.resize    (config.primSize);
+			d_tkMap.resize      (config.intSize);
+			d_count.resize      (config.primSize);
+			d_offsetTable.resize(config.primSize);
+			
+			d_keys32.resize(config.primSize);
+			d_keys64.resize(config.primSize);
+			d_vals.resize  (config.primSize);
+			
+			/// the following only used in the restructuring scheme
+			//d_prevLbds.resize(config.intSize);
+			//d_prevRbds.resize(config.intSize);
+			//d_gatherMap.resize(config.primSize);
+			//d_taskSequence.resize(config.primSize);	///< task sequence for primitives, external nodes
+			//d_sequence.resize(config.primSize);
+			//d_rtSubtrees.resize(config.intSize << 1);	///< stores root nodes of subtree
+			//d_sizePerSubtree.resize(config.intSize << 1);
+			//d_begPerSubtree.resize(config.intSize << 1);
 		);
 		reportMemory();
 	}
@@ -123,7 +123,7 @@ namespace mn {
 //		checkCudaErrors(cudaMemcpy(d_faces, pdata.fids.data(), sizeof(int3)*pdata.fids.size(), cudaMemcpyHostToDevice));
 //		checkCudaErrors(cudaMemcpy(d_vertices, pdata.pos.data(), sizeof(PointType)*pdata.pos.size(), cudaMemcpyHostToDevice));
 //	}
-//
+
 //	void LBvhFixedDeformable::build() {
 //		/// calculate scene bounding box
 //		BOX	bv{};
@@ -199,7 +199,7 @@ namespace mn {
 //
 //		printf("BVH_SR: \t Primsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
 //	}
-//
+
 //	void LBvhFixedDeformable::refit() {
 //
 //		cbvh().lvs().clearExtBvs(cbvh().extSize());
@@ -218,7 +218,7 @@ namespace mn {
 //Logger::recordSection<TimerType::GPU>("refit_bvh");
 //
 //	}
-//
+
 //	void LBvhFixedDeformable::update() {
 //		cbvh().lvs().clearExtBvs(cbvh().extSize());
 //		configuredLaunch(
@@ -241,7 +241,7 @@ namespace mn {
 //							_restrLog.getIntRange(), 
 //							_restrLog.getRestrBvhRoot());
 //	}
-//
+
 //	bool LBvhFixedDeformable::restructure() {
 //		static bool lastRestr = false;
 //
@@ -473,8 +473,14 @@ namespace mn {
 		checkThrustErrors(thrust::sequence(getDevicePtr(d_vals), getDevicePtr(d_vals) + cbvh().primSize()));
 		checkThrustErrors(thrust::sort_by_key(getDevicePtr(d_keys32), getDevicePtr(d_keys32) + cbvh().primSize(), getDevicePtr<int>(d_vals)));
 		Logger::tock<TimerType::GPU>("SortCodes");
-		configuredLaunch({ "CalcPrimMap", cbvh().primSize() }, calcInverseMapping,
-			cbvh().primSize(), getRawPtr(d_vals), getRawPtr(d_primMap));
+		
+		
+		configuredLaunch(
+						{ "CalcPrimMap", cbvh().primSize() }, 
+						calcInverseMapping,
+							cbvh().primSize(), 
+							getRawPtr(d_vals), 
+							getRawPtr(d_primMap));
 		checkCudaErrors(cudaMemcpy(cbvh().lvs().getPrimitiveArray().getMtCodes(), getRawPtr(d_keys32), sizeof(MCSize) * cbvh().primSize(), cudaMemcpyDeviceToDevice));
 	}
 
@@ -553,7 +559,7 @@ namespace mn {
 		switch (scheme) {
 			case LBvhFixedDeformableMaintenance::BUILD:  build_BroadMarkEdition(settings.m_worldAabb); /*checkBvhValidity();*/				  break;
 			case LBvhFixedDeformableMaintenance::REFIT:  refit_BroadMarkEdition();					   /*checkBvhValidity();*/				  break;
-			case LBvhFixedDeformableMaintenance::UPDATE: //update_BroadMarkEdition();                    /*restructure(); checkBvhValidity();*/ break;
+			case LBvhFixedDeformableMaintenance::UPDATE: update_BroadMarkEdition();                    /*restructure(); checkBvhValidity();*/ break;
 			default:																														  break;
 		}
 	}
@@ -566,9 +572,10 @@ namespace mn {
 	}
 
 	void LBvhFixedDeformable::build_BroadMarkEdition(const Aabb& worldAabb) {
+	
 		/// uppdaterar 
 		BOX	bv(worldAabb);
-		checkCudaErrors(cudaMemcpy(&bv, cbvh().bv(), sizeof(BOX), cudaMemcpyHostToDevice));
+		checkCudaErrors(cudaMemcpy(cbvh().bv(), &bv, sizeof(BOX), cudaMemcpyHostToDevice));
 
 		configuredLaunch(
 						{ "CalcMCs_BME",cbvh().primSize() }, 
@@ -614,7 +621,6 @@ namespace mn {
 	}
 	
 	void LBvhFixedDeformable::refit_BroadMarkEdition() {
-
 		cbvh().lvs().clearExtBvs(cbvh().extSize());
 		
 		configuredLaunch(
@@ -652,6 +658,9 @@ namespace mn {
 	}
 
 	void LBvhFixedDeformable::update_BroadMarkEdition() {
+	
+
+		
 		cbvh().lvs().clearExtBvs(cbvh().extSize());
 
 		configuredLaunch(
@@ -677,6 +686,7 @@ namespace mn {
 
 	
 	bool LBvhFixedDeformable::restructure_BroadMarkEdition(const Aabb& worldAabb) {
+	
 		static bool lastRestr = false;
 
 		// 0 preliminary mark restr root(done in Front::checkQuality)

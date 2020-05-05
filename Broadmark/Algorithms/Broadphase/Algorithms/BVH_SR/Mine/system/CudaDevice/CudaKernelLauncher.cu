@@ -55,14 +55,17 @@ namespace mn {
 	void configuredLaunch(LaunchInput instr, void(*f)(Arguments...), Arguments... args)
 	
 	{
-
+	
 		ExecutionPolicy p = CudaDevice::getInstance()->launchConfig(instr.name(), instr.threads());
+
 		if (p.getSharedMemBytes() == 0) {
 			Logger::tick<TimerType::GPU>();
 			f << <p.getGridSize(), p.getBlockSize() >> >(args...);
 			Logger::tock<TimerType::GPU>(instr.name());
+
 		}
 		else {
+
 			Logger::tick<TimerType::GPU>();
 			f << <p.getGridSize(), p.getBlockSize(), p.getSharedMemBytes() >> >(args...);
 			Logger::tock<TimerType::GPU>(instr.name());

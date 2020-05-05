@@ -98,8 +98,9 @@ std::vector<const char*> Algorithms::EnumerateAlgorithms() {
 		"BVH_SR_STATIC_MANDATORY"  ,
 		"BVH_SR_REFIT_ONLY_FRONT"  ,
 		"BVH_SR_GENERATE"          ,
+		"BVH_SR_FRONT_GENERATE"    ,
 		
 		"None",
-		"BVH_SR_FRONT_GENERATE"    ,"TimeValidator",
+		"TimeValidator",
 	};
 }

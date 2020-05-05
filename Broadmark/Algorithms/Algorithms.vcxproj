@@ -124,14 +124,30 @@
     <ClCompile Include="Broadphase\Algorithms\BVH_SR\Header.cpp" />
     <ClCompile Include="Broadphase\Algorithms\BVH_SR\_Raper\BVH_SR_Entry.cpp" />
     <ClCompile Include="Broadphase\Algorithms\BVH_SR\_Raper\BVH_SR_Run.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\GPU\Bullet3GPUAlgorithms.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\Grid\Grid.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\Tracy\Tracy_Parallel.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\KD\KD.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\KD\KD_Broadphase.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\KD\KD_Operators.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\KD\KD_Update.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\KD\KD_Validation.cpp" />
+    <ClCompile Include="Broadphase\Algorithms\GPU\Bullet3GPUAlgorithms.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\Grid\Grid.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\Tracy\Tracy_Parallel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\KD\KD.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\KD\KD_Broadphase.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\KD\KD_Operators.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\KD\KD_Update.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\KD\KD_Validation.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Dependencies\Bullet2\btAxisSweep3.cpp" />
     <ClCompile Include="Dependencies\Bullet2\btBroadphaseProxy.cpp" />
     <ClCompile Include="Dependencies\Bullet2\btCollisionAlgorithm.cpp" />
@@ -164,13 +180,22 @@
     <ClCompile Include="Dependencies\Bullet3\Bullet3OpenCL\ParallelPrimitives\b3RadixSort32CL.cpp" />
     <ClCompile Include="Dependencies\cuda\cuda_drvapi_dynlink.c" />
     <ClCompile Include="Tests\SimdTest.cpp" />
-    <ClInclude Include="..\..\..\BVH_SR\BVH-based-Collision-Detection-Scheme\Source\Project\Mine\system\Log\Logger.hpp" />
     <ClInclude Include="Broadphase\Algorithms\BaseAlgorithm.h" />
-    <ClInclude Include="Broadphase\Algorithms\BF\BF.h" />
-    <ClInclude Include="Broadphase\Algorithms\BF\BF_Base.h" />
-    <ClInclude Include="Broadphase\Algorithms\BF\BF_Parallel.h" />
-    <ClInclude Include="Broadphase\Algorithms\BF\BF_SIMD.h" />
-    <ClInclude Include="Broadphase\Algorithms\BF\BF_SIMD_Parallel.h" />
+    <ClInclude Include="Broadphase\Algorithms\BF\BF.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\BF\BF_Base.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\BF\BF_Parallel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\BF\BF_SIMD.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\BF\BF_SIMD_Parallel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\BVH_SR.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Header.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\base\AggregatedAttribs.h" />
@@ -182,7 +207,6 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\auxiliary\FlOrderLog.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\auxiliary\OrderLog.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BVTTFront.h" />
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseInter.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseIntra.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -192,7 +216,6 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\BvhPrimitiveNode.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvh.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhFixedDeformable.h" />
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhRigid.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\AppBase.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\Main.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\CudaProject\CudaProjectModuleRegister.h" />
@@ -215,25 +238,63 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\utility\Utils.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\_Raper\BVH_SR_Entry.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\_Raper\BVH_SR_Run.h" />
-    <ClInclude Include="Broadphase\Algorithms\DBVT\DBVT.h" />
-    <ClInclude Include="Broadphase\Algorithms\GPU\Bullet3GPUAlgorithms.h" />
-    <ClInclude Include="Broadphase\Algorithms\Grid\Grid.h" />
-    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_Base.h" />
-    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_ND.h" />
-    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_ND_Parallel.h" />
-    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_ND_SAP.h" />
-    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_ND_SAP_Parallel.h" />
-    <ClInclude Include="Broadphase\Algorithms\SAP\SAP_Base.h" />
-    <ClInclude Include="Broadphase\Algorithms\SAP\SAP_Parallel.h" />
-    <ClInclude Include="Broadphase\Algorithms\SAP\SAP_SIMD.h" />
-    <ClInclude Include="Broadphase\Algorithms\SAP\SAP_SIMD_Parallel.h" />
-    <ClInclude Include="Broadphase\Algorithms\Tracy\Tracy_Parallel.h" />
-    <ClInclude Include="Broadphase\Algorithms\KD\KD.h" />
-    <ClInclude Include="Broadphase\Algorithms\KD\KD_Node.h" />
-    <ClInclude Include="Broadphase\Algorithms\KD\KD_Object.h" />
-    <ClInclude Include="Broadphase\Algorithms\Misc\None.h" />
-    <ClInclude Include="Broadphase\Algorithms\Misc\Inspectors.h" />
-    <ClInclude Include="Broadphase\Algorithms\CGAL\CGAL.h" />
+    <ClInclude Include="Broadphase\Algorithms\DBVT\DBVT.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\GPU\Bullet3GPUAlgorithms.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\Grid\Grid.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_Base.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_ND.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_ND_Parallel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_ND_SAP.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\Grid\Grid_ND_SAP_Parallel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\SAP\SAP_Base.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\SAP\SAP_Parallel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\SAP\SAP_SIMD.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\SAP\SAP_SIMD_Parallel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\Tracy\Tracy_Parallel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\KD\KD.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\KD\KD_Node.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\KD\KD_Object.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\Misc\None.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\Misc\Inspectors.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\CGAL\CGAL.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Broadphase\Algorithms\SoAAlgorithm.h" />
     <ClInclude Include="Broadphase\OverlapChaches\HashedCache.h" />
     <ClInclude Include="Core\Algorithms.h" />
@@ -242,7 +303,9 @@
     <ClInclude Include="Broadphase\Algorithms\Grid\Internal\SegSNP.hpp" />
     <ClInclude Include="Broadphase\Algorithms\Grid\Internal\SweepAndPrune.hpp" />
     <ClInclude Include="Broadphase\Algorithms\Grid\Internal\Utility.hpp" />
-    <ClInclude Include="Broadphase\Algorithms\Tracy\Tracy.h" />
+    <ClInclude Include="Broadphase\Algorithms\Tracy\Tracy.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Core\Parallel.h" />
     <ClInclude Include="Dependencies\Bullet2\btAxisSweep3.h" />
     <ClInclude Include="Dependencies\Bullet2\btAxisSweep3Internal.h" />
@@ -374,8 +437,12 @@
     <ClInclude Include="Dependencies\Tracy\SegSNP.hpp" />
     <ClInclude Include="Dependencies\Tracy\SweepAndPrune.hpp" />
     <ClInclude Include="Dependencies\Tracy\Utility.hpp" />
-    <ClInclude Include="Broadphase\Algorithms\iSAP\AxisSweep.h" />
-    <ClInclude Include="Broadphase\Algorithms\SAP\SAP.h" />
+    <ClInclude Include="Broadphase\Algorithms\iSAP\AxisSweep.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\SAP\SAP.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Broadphase\BroadphaseInterface.h" />
     <ClInclude Include="Broadphase\Object.h" />
     <ClInclude Include="Broadphase\ObjectPair.h" />
@@ -398,18 +465,30 @@
     <ClInclude Include="Dependencies\doctest.h" />
     <ClInclude Include="Dependencies\json.hpp" />
     <ClInclude Include="Macros.h" />
-    <ClCompile Include="Broadphase\Algorithms\CGAL\CGAL.cpp" />
+    <ClCompile Include="Broadphase\Algorithms\CGAL\CGAL.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Core\Algorithm.cpp" />
     <ClCompile Include="Core\Results.cpp" />
     <ClCompile Include="Tests\SettingsTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppMain.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\BF\BF.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\DBVT\DBVT.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\Tracy\Tracy.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\iSAP\AxisSweep.cpp" />
-    <ClCompile Include="Broadphase\Algorithms\SAP\SAP.cpp" />
+    <ClCompile Include="Broadphase\Algorithms\BF\BF.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\DBVT\DBVT.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\Tracy\Tracy.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\iSAP\AxisSweep.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\SAP\SAP.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Core\Math\Random.cpp" />
     <ClCompile Include="Core\Assertions.cpp" />
     <ClCompile Include="Core\Math\Vec3.cpp" />
@@ -433,9 +512,6 @@
       <FileType>Document</FileType>
     </CudaCompile>
     <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontKeepKernels.cu">
-      <FileType>Document</FileType>
-    </CudaCompile>
-    <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseInter.cu">
       <FileType>Document</FileType>
     </CudaCompile>
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\bvtt_front\BvttFrontLooseKernels.cuh">
@@ -471,9 +547,6 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhKernels.cuh" />
     <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhFixedDeformable.cu" />
     <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhRestructureKernels.cu">
-      <FileType>Document</FileType>
-    </CudaCompile>
-    <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhRigid.cu">
       <FileType>Document</FileType>
     </CudaCompile>
     <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhUpdateKernels.cu">

@@ -54,7 +54,7 @@ namespace mn {
 //			device->registerKernel("RefitExtNodeARCSim", refitExtNodeARCSim, cudaFuncCachePreferL1, false);
 //#endif
 			/// morton codes
-			device->registerKernel("CalcBV"   , calcMaxBV, cudaFuncCachePreferL1, false);
+			//device->registerKernel("CalcBV"   , calcMaxBV, cudaFuncCachePreferL1, false);
 			//device->registerKernel("CalcMCs"  , calcMCs  , cudaFuncCachePreferL1, false);
 			device->registerKernel("CalcMC64s", calcMC64s, cudaFuncCachePreferL1, false);
 			/// build

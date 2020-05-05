@@ -36,7 +36,7 @@ void BVH_SR_Run::RunFrame(const SceneFrame& frameData, const int frameNumber) {
 	auto maintainOpts = MaintainScheme(frameNumber);
 
 	BVH_SR_Run::_bvh->maintain_BroadMarkEdition(maintainOpts.first, frameData, settings);
-	//BVH_SR_Run::_fl->maintain(maintainOpts.second);
+	BVH_SR_Run::_fl->maintain(maintainOpts.second);
 }
 
 void BVH_SR_Run::Terminate() {

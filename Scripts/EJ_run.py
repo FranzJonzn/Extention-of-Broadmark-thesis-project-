@@ -19,7 +19,7 @@ batch_run_name = "TEST/" # use this to name this testing session. If blank, a au
 broadmark_bin = "D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/_EX_JOBB_Broadmark_REPO/Broadmark/bin64/Broadmark_Release_x64.exe"
 scenes_folder = "C:/Users/Franz/Desktop/i2"#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/Simulations/Sim/Recordings_AABBs/"
 output_folder = "C:/Users/Franz/Desktop/TEST_1"#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/_Resultat/"
-algorithms = ["BVH_SR_STATIC_MANDATORY"]
+algorithms = ["BVH_SR_GENERATE"]
 #BF",
 #BF_Parallel",
 #BF_SSE",
@@ -53,7 +53,7 @@ algorithms = ["BVH_SR_STATIC_MANDATORY"]
 #BVH_SR_STATIC_MANDATORY"
 #BVH_SR_REFIT_ONLY_FRONT"
 #BVH_SR_GENERATE"        
-
+#BVH_SR_FRONT_GENERATE
 
 
 

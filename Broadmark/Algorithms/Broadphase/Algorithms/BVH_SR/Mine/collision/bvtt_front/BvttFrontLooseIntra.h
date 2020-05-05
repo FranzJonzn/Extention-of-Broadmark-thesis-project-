@@ -35,7 +35,7 @@ namespace mn {
 		void	inspectResults();
 		void	applyCpResults(uint* _idx, uint2* _front);
 	private:
-		//void	proximityQuery();	///< narrow phase CD
+		void	proximityQuery();	///< narrow phase CD
 		void	reorderFronts();	///< ordering
 		void	separateFronts();	///< prepare for restructure
 		/// quality inspection

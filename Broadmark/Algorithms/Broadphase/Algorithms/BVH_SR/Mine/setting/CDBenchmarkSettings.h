@@ -38,7 +38,7 @@ namespace mn {
 	public:
 		static bool enableRestr() { return _enableRestr; }
 		static bool enableDivergentMark() { return _enableDivergentMark; }
-	//	static bool includeNarrowPhase() { return _includeNarrowPhase; }
+		static bool includeNarrowPhase() { return _includeNarrowPhase; }
 		static int version() { return _version; }
 		static int benchmarkNum() { return _benchmarks.size(); }
 		static Benchmark benchmark(int i) { return _benchmarks[i]; }

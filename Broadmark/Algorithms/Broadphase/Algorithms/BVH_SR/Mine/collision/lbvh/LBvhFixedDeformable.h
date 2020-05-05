@@ -36,9 +36,9 @@ namespace mn {
 	//	void	maintain(LBvhFixedDeformableMaintenance scheme, const SceneData& pdata);
 		void	maintain_BroadMarkEdition(LBvhFixedDeformableMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings); // broadmarkIntegration
 
-#if MACRO_VERSION
-		void	maintain(LBvhFixedDeformableMaintenance scheme, const ARCSimSceneData& pdata);
-#endif
+//#if MACRO_VERSION
+//		void	maintain(LBvhFixedDeformableMaintenance scheme, const ARCSimSceneData& pdata);
+//#endif
 
 		BvhPrimitiveArray&	cprim()				   { return cbvh().lvs().getPrimitiveArray(); }
 		BvhExtNodeArray&	clvs()				   { return cbvh().lvs(); }
@@ -110,10 +110,10 @@ namespace mn {
 		//PointType*							d_vertices;
 		Aabb*								d_aabb;// broadmarkIntegration
 
-#if MACRO_VERSION
-		uint3*								d_facesARCSim;
-		g_box*								d_bxsARCSim;
-#endif
+//#if MACRO_VERSION
+//		uint3*								d_facesARCSim;
+//		g_box*								d_bxsARCSim;
+//#endif
 		/// bvh
 		Bvh									_bvh;
 		/// auxiliary structures during maintenance procedure

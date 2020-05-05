@@ -14,7 +14,7 @@ void BVH_SR_Entry::Initialize(InflatedSettings settings, const SceneFrame& frame
 	BaseAlgorithm<Object, SimpleCache>::Initialize(settings, frameData);
 
 
-
+	mn::Logger::getInstance()->startup();
 
 	mn::BroadMark_Benchmark schemeSettings;
 	schemeSettings.stIdx     = 1;

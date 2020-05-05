@@ -82,7 +82,9 @@ namespace mn {
 		return blockSize;
 	}
 
-	ExecutionPolicy CudaDevice::launchConfig(const std::string& kernelName, int threadNum, bool sync, size_t smemSize, cudaStream_t sid) const {
+	ExecutionPolicy CudaDevice::launchConfig(const std::string& kernelName, int threadNum,
+		                                   bool sync, size_t smemSize, cudaStream_t sid) const {
+
 		auto&	config = _kFuncTable[kernelName];
 		int		bs = config.maxOccBlockSize;
 		if (smemSize > 0)

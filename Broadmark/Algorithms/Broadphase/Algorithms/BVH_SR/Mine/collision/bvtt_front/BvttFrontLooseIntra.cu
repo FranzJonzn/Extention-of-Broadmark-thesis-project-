@@ -9,7 +9,7 @@
 #include "setting\CDBenchmarkSettings.h"
 
 #include <thrust\execution_policy.h>
-//#include "collision\narrow_phase\narrow_phase.cuh"
+#include "collision\narrow_phase\narrow_phase.cuh"
 
 namespace mn {
 
@@ -112,12 +112,12 @@ namespace mn {
 		}
 
 		switch (scheme) {
-			case BvttFrontLooseIntraMaintenance::PURE_BVH_CD: Logger::message("pure bvhcd. "    ); pureBvhCd();   //proximityQuery(); break;
-			/// front based methods																				  //
+			case BvttFrontLooseIntraMaintenance::PURE_BVH_CD: //Logger::message("pure bvhcd. "    ); pureBvhCd();   //proximityQuery(); break;
+			/// front based methods																			  //
 			case BvttFrontLooseIntraMaintenance::GENERATE:	  Logger::message("generate front. "); generate();    //proximityQuery(); break;
-			case BvttFrontLooseIntraMaintenance::UPDATE:	  Logger::message("update front. "  ); pruneSprout(); //proximityQuery(); break;
-			case BvttFrontLooseIntraMaintenance::REORDER:	  Logger::message("balance front. " ); balance();     //proximityQuery(); break;
-			case BvttFrontLooseIntraMaintenance::KEEP:		  Logger::message("preserve front. "); keep();        //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::UPDATE:	  //Logger::message("update front. "  ); pruneSprout(); //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::REORDER:	  //Logger::message("balance front. " ); balance();     //proximityQuery(); break;
+			case BvttFrontLooseIntraMaintenance::KEEP:		  //Logger::message("preserve front. "); keep();        //proximityQuery(); break;
 
 			default: break;
 		}
@@ -125,17 +125,21 @@ namespace mn {
 		first = false;
 	}
 
-	//void BvttFrontLooseIntra::proximityQuery() {
-	//	/*if (CDBenchmarkSettings::includeNarrowPhase()) {
-	//		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
-	//		checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
-	//		configuredLaunch({ "SimpleNarrowPhase", _cpNum }, simpleNarrowPhase,
-	//			(uint)_cpNum, getRawPtr(d_orderedCdpairs), _pBvh->getFaces(), _pBvh->getVertices(), d_actualCpNum);
-
-	//		Logger::recordSection<TimerType::GPU>("narrow_phase");
-
-	//	}*/
-	//}
+	void BvttFrontLooseIntra::proximityQuery() {
+		if (CDBenchmarkSettings::includeNarrowPhase()) {
+			checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
+			checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
+			//configuredLaunch(
+			//				{ "SimpleNarrowPhase", _cpNum }, 
+			//			    simpleNarrowPhase,
+			//					(uint)_cpNum, 
+			//					getRawPtr(d_orderedCdpairs), 
+			//					_pBvh->getFaces(), 
+			//					_pBvh->getVertices(), 
+			//					d_actualCpNum);
+			Logger::recordSection<TimerType::GPU>("narrow_phase");
+		}
+	}
 
 	void BvttFrontLooseIntra::reorderFronts() {
 		Logger::tick<TimerType::GPU>();
@@ -228,21 +232,24 @@ Logger::recordSection<TimerType::GPU>("broad_phase_quality_check");
 	}
 
 	void BvttFrontLooseIntra::generate() {
+		
+		printf("\t generate() \n ");
+		
 		_log.clear(_pBvh->getExtNodeSize());
 		_fronts.resetNextSizes();
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
 		configuredLaunch(
-			{ "GenLooseIntraFrontsWithLog",	(int)_pBvh->getPrimNodeSize() - 1 }, 
-			genLooseIntraFrontsWithLog,
-			_pBvh->getPrimNodeSize(), 
-			_pBvh->clvs().portobj<0>(), 
-			_pBvh->ctks().portobj<0>(), 
-			_fronts.nsizes(), 
-			_fronts.nbufs(), 
-			_log.portobj<0>(), 
-			d_cpNum, 
-			getRawPtr(d_cpRes));
+						{ "GenLooseIntraFrontsWithLog",	(int)_pBvh->getPrimNodeSize() - 1 }, 
+						genLooseIntraFrontsWithLog,
+							_pBvh->getPrimNodeSize(), 
+							_pBvh->clvs().portobj<0>(), 
+							_pBvh->ctks().portobj<0>(), 
+							_fronts.nsizes(), 
+							_fronts.nbufs(), 
+							_log.portobj<0>(), 
+							d_cpNum, 
+							getRawPtr(d_cpRes));
 
 		_fronts.slide();
 
@@ -260,6 +267,9 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_gen");
 	}
 
 	void BvttFrontLooseIntra::pruneSprout() {
+		printf("\t pruneSprout() \n ");
+
+		
 		_log.clear(_pBvh->getExtNodeSize());
 		_fronts.retrieveSizes();
 		_fronts.resetNextSizes();
@@ -291,6 +301,9 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_update");
 	}
 
 	void BvttFrontLooseIntra::balance() {
+		
+		printf("\t balance() \n ");
+		
 		_log.prepare(_pBvh->getExtNodeSize());
 		_log.clear(_pBvh->getExtNodeSize());
 		_fronts.retrieveSizes();
@@ -320,6 +333,9 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_balance");
 	}
 
 	void BvttFrontLooseIntra::keep() {
+	
+		printf("\t keep() \n ");
+
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
 		uint osize = _fronts.cs(0);
@@ -336,6 +352,9 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_preserve");
 	}
 
 	void BvttFrontLooseIntra::restructure() {
+		
+		printf("\t restructure() \n ");
+		
 		/// prune is disabled in front restructuring
 		separateFronts();
 
@@ -408,6 +427,9 @@ Logger::recordSection<TimerType::GPU>("broad_phase_restr_front");
 	}
 
 	void BvttFrontLooseIntra::pureBvhCd() {
+		
+		printf("\t pureBvhCd() \n ");
+		
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
 		configuredLaunch({ "PureBvhSelfCD", (int)_pBvh->getPrimNodeSize() - 1 }, pureBvhSelfCD,
