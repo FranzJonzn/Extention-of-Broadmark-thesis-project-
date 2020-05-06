@@ -49,7 +49,7 @@ namespace mn {
 
 	void BvttFrontLooseIntra::inspectResults() {
 	
-		printf("\t inspectResults() \n ");
+	
 		
 		_fronts.retrieveSizes();
 		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
@@ -57,15 +57,15 @@ namespace mn {
 
 		std::string str = string_format("front (%d, %d) cpNum %d actualCpNum %d", _fronts.cs(0), _fronts.cs(1), _cpNum, _actualCpNum);
 		if (_fronts.cs(0) >= BvttFrontSettings::int_front_size() || _fronts.cs(1) >= BvttFrontSettings::ext_front_size() || _cpNum >= BvttFrontSettings::collision_pair_num()) {
-			printf("BVH_SR: \t exceed front length! %d, %d  %d\n", _fronts.cs(0), _fronts.cs(1), _cpNum);
+			printf("BVH_SR: \t\t  exceed front length! %d, %d  %d\n", _fronts.cs(0), _fronts.cs(1), _cpNum);
 		}
-		std::cout << str << '\n';
+		std::cout << "BVH_SR: \t\t"<< str << '\n';
 		Logger::message(str);
 	}
 
 	void BvttFrontLooseIntra::applyCpResults(uint* _idx, uint2* _front) {
 		
-		printf("\t applyCpResults() \n ");
+
 		
 		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
 		checkCudaErrors(cudaMemcpy(_idx, d_cpNum, sizeof(uint), cudaMemcpyDeviceToDevice));
@@ -73,9 +73,7 @@ namespace mn {
 	}
 
 	void BvttFrontLooseIntra::maintain(BvttFrontLooseIntraMaintenance scheme) {
-	
-		printf("\t maintain() \n ");
-		
+
 		_pBvh->restrLog().setUpdateTag(false);
 		static bool first = true;
 		/**	
@@ -115,7 +113,7 @@ namespace mn {
 				}
 				else {			///< front restr
 					Logger::message("restructure front(in restr) ");
-					printf("BVH_SR: \t rt front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
+					printf("BVH_SR: \t\t rt front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
 					//getchar();
 					generate(); 
 					//restructure();
@@ -142,9 +140,7 @@ namespace mn {
 	}
 
 	void BvttFrontLooseIntra::proximityQuery() {
-		
-		printf("\t proximityQuery() \n ");
-		
+	
 		if (CDBenchmarkSettings::includeNarrowPhase()) {
 			checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
 			checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
@@ -161,9 +157,7 @@ namespace mn {
 	}
 
 	void BvttFrontLooseIntra::reorderFronts() {
-	
-		printf("\t reorderFronts() \n ");
-		
+
 		Logger::tick<TimerType::GPU>();
 		_log.prepare(_pBvh->getExtNodeSize());
 		Logger::tock<TimerType::GPU>("prepare_ordering_calc_offset");
@@ -275,7 +269,6 @@ Logger::recordSection<TimerType::GPU>("broad_phase_front_ordering");
 	}
 
 	void BvttFrontLooseIntra::calcSnapshot() {
-		printf("\t calcSnapshot() \n ");
 		
 		configuredLaunch(
 						{ "FrontSnapshot", (int)_pBvh->getIntNodeSize() }, 
@@ -288,8 +281,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_quality_gen");
 	}
 
 	void BvttFrontLooseIntra::checkQuality() {
-		printf("\t checkQuality() \n ");
-		
+
 		_pBvh->restrLog().clear(_pBvh->getExtNodeSize());
 
 		configuredLaunch(
@@ -306,9 +298,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_quality_check");
 	}
 
 	void BvttFrontLooseIntra::generate() {
-		
-		printf("\t generate() \n ");
-		
+
 		_log.clear(_pBvh->getExtNodeSize());
 		_fronts.resetNextSizes();
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
@@ -341,9 +331,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_gen");
 	}
 
 	void BvttFrontLooseIntra::pruneSprout() {
-		printf("\t pruneSprout() \n ");
 
-		
 		_log.clear(_pBvh->getExtNodeSize());
 		_fronts.retrieveSizes();
 		_fronts.resetNextSizes();
@@ -389,10 +377,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_update");
 		checkThrustErrors(thrust::copy(getDevicePtr(d_cpRes), getDevicePtr(d_cpRes) + _cpNum, getDevicePtr(d_orderedCdpairs)));
 	}
 
-	void BvttFrontLooseIntra::balance() {
-		
-		printf("\t balance() \n ");
-		
+	void BvttFrontLooseIntra::balance() {	
 		_log.prepare(_pBvh->getExtNodeSize());
 		_log.clear(_pBvh->getExtNodeSize());
 		_fronts.retrieveSizes();
@@ -421,9 +406,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_update");
 Logger::recordSection<TimerType::GPU>("broad_phase_cd_balance");
 	}
 
-	void BvttFrontLooseIntra::keep() {
-	
-		printf("\t keep() \n ");
+	void BvttFrontLooseIntra::keep() {	
 
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
@@ -442,7 +425,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_preserve");
 
 	void BvttFrontLooseIntra::restructure() {
 		
-		printf("\t restructure() \n ");
+
 		
 		/// prune is disabled in front restructuring
 		separateFronts();
@@ -516,8 +499,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_restr_front");
 	}
 
 	void BvttFrontLooseIntra::pureBvhCd() {
-		
-		printf("\t pureBvhCd() \n ");
+
 		
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 

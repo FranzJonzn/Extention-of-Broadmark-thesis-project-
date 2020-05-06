@@ -31,7 +31,9 @@ namespace mn {
 		checkCudaErrors(cudaMalloc((void**)&d_numRtSubtree, sizeof(int)));
 		checkCudaErrors(cudaMalloc((void**)&d_numRtIntNode, sizeof(int)));
 
+	
 
+	
 		/// broadmarkIntegration ===========================================================================
 		checkCudaErrors(cudaMalloc((void**)&d_aabb, sizeof(Aabb)*config.primSize));
 
@@ -47,15 +49,23 @@ namespace mn {
 			d_keys64.resize(config.primSize);
 			d_vals.resize  (config.primSize);
 			
+
+
+			/*
+			Måste pysa lite: jag har sutit i två jävla dagar pga den här skiten krånglade inte pga 
+			dessa jävla liner var ut tabbade.... varflör i helvete var de det? vet ej och har inte tid att 
+			titta upp det.
+			
+			*/
 			/// the following only used in the restructuring scheme
-			//d_prevLbds.resize(config.intSize);
-			//d_prevRbds.resize(config.intSize);
-			//d_gatherMap.resize(config.primSize);
-			//d_taskSequence.resize(config.primSize);	///< task sequence for primitives, external nodes
-			//d_sequence.resize(config.primSize);
-			//d_rtSubtrees.resize(config.intSize << 1);	///< stores root nodes of subtree
-			//d_sizePerSubtree.resize(config.intSize << 1);
-			//d_begPerSubtree.resize(config.intSize << 1);
+			d_prevLbds.resize(config.intSize);
+			d_prevRbds.resize(config.intSize);
+			d_gatherMap.resize(config.primSize);
+			d_taskSequence.resize(config.primSize);	///< task sequence for primitives, external nodes
+			d_sequence.resize(config.primSize);
+			d_rtSubtrees.resize(config.intSize << 1);	///< stores root nodes of subtree
+			d_sizePerSubtree.resize(config.intSize << 1);
+			d_begPerSubtree.resize(config.intSize << 1);
 		);
 		reportMemory();
 	}
@@ -544,6 +554,7 @@ namespace mn {
 ///==================================================================================================================================================================
 
 	void LBvhFixedDeformable::maintain_BroadMarkEdition(LBvhFixedDeformableMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings) {
+
 		/// 0: rebuild 1: refit
 		updatePrimData_BroadMarkEdition(fdata, settings);
 
@@ -615,9 +626,9 @@ namespace mn {
 		/// first correct indices, then sort
 		reorderIntNodes();
 
-		Logger::recordSection<TimerType::GPU>("sort_bvh");
+		Logger::recordSection<TimerType::GPU>("sort_bvh_BroadMarkEdition");
 
-		printf("BVH_SR: \t Primsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
+		printf("BVH_SR: \t \tPrimsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
 	}
 	
 	void LBvhFixedDeformable::refit_BroadMarkEdition() {
@@ -630,28 +641,18 @@ namespace mn {
 							cbvh().lvs().portobj<0>(), 
 							getRawPtr(d_primMap), 
 							d_aabb);
-//		
-//		
-//		cbvh().tks().clearIntNodes(cbvh().intSize());
-//
-//		configuredLaunch(
-//						{ "RefitIntNode", cbvh().extSize() }, 
-//						refitIntNode,
-//							cbvh().extSize(), 
-//							cbvh().lvs().portobj<0>(), 
-//							cbvh().tks().portobj<0>());
-//
-//		Logger::recordSection<TimerType::GPU>("refit_bvh");
-//
-//
-//
-//
-//		cbvh().lvs().clearExtBvs(cbvh().extSize());
-//
-//
-//
-//
-//		cbvh().tks().clearIntNodes(cbvh().intSize());
+		
+
+		cbvh().tks().clearIntNodes(cbvh().intSize());
+
+		configuredLaunch(
+						{ "RefitIntNode", cbvh().extSize() }, 
+						refitIntNode,
+							cbvh().extSize(), 
+							cbvh().lvs().portobj<0>(), 
+							cbvh().tks().portobj<0>());
+		
+Logger::recordSection<TimerType::GPU>("refit_bvh_BroadMarkEdition");
 
 
 
@@ -713,8 +714,28 @@ namespace mn {
 
 		// 4 mark restr root again, eliminate redundant marks
 		checkThrustErrors(thrust::fill(getDevicePtr(_restrLog.getExtRange()), getDevicePtr(_restrLog.getExtRange()) + cbvh().extSize() + 1, 0));
+		
+
+
+		
 		checkCudaErrors(cudaMemset(d_numRtSubtree, 0, sizeof(int)));
 		checkCudaErrors(cudaMemset(d_numRtIntNode, 0, sizeof(int)));
+
+
+	
+		
+		//printf("\n\n [ %d,\n %d,\n %d,\n %d,\n %d,\n %d,\n %d,\n %d,\n %d \n ]\n\n", 
+		//	cbvh().extSize(),
+		//	cbvh().tks().portobj<0>(),
+		//	(const int*)_restrLog.getRestrBvhRoot(),
+		//	(const int*)_restrLog.getIntMark(),
+		//	_restrLog.getExtRange(),
+		//	d_numRtSubtree,
+		//	getRawPtr(d_sizePerSubtree),
+		//	getRawPtr(d_rtSubtrees),
+		//	d_numRtIntNode);
+
+
 
 		configuredLaunch(
 						{ "CalibrateRestrRoots", cbvh().extSize() },
@@ -730,7 +751,6 @@ namespace mn {
 							d_numRtIntNode);
 
 		Logger::recordSection<TimerType::GPU>("check_bvh_restr");
-
 
 		//TODO är problem med här, kuda försöker läsa mine utanför mines bank
 
@@ -780,9 +800,10 @@ namespace mn {
 		checkThrustErrors(thrust::exclusive_scan(getDevicePtr(_restrLog.getPrimMark()), getDevicePtr(_restrLog.getPrimMark()) + cbvh().primSize() + 1, getDevicePtr(d_gatherMap)));
 		Logger::tock<TimerType::GPU>("CalcPrimitiveGatherMap");
 
-		BOX	bv(worldAabb);																																																		//
+		BOX	bv(worldAabb);			
+
 		checkCudaErrors(cudaMemcpy(&bv, cbvh().bv(), sizeof(BOX), cudaMemcpyDeviceToHost));																																		//
-		
+
 		configuredLaunch(																																																		//
 						{ "CalcRestrMCs_BME", cbvh().primSize() },
 						calcRestrMCs_BroadMarkEdition,

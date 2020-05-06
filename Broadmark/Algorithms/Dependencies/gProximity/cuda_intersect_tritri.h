@@ -347,7 +347,7 @@ __device__ int triangleIntersection(float3 const& P1, float3 const& P2, float3 c
 }
 
 __device__ int triangleIntersection2(float3 const& P1, float3 const& P2, float3 const& P3,
-                                    float3 const& Q1, float3 const& Q2, float3 const& Q3)
+                                     float3 const& Q1, float3 const& Q2, float3 const& Q3)
 {
 
 	// One triangle is (p1,p2,p3).  Other is (q1,q2,q3).

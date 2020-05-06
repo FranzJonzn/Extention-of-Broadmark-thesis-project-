@@ -25,7 +25,7 @@ namespace mn {
 
 		checkThrustErrors(d_IntFtIndices.resize(config.intNodeSize));
 		checkThrustErrors(d_ExtFtIndices.resize(config.extNodeSize));
-
+		 
 		checkCudaErrors(cudaMalloc((void**)&d_cpNum, sizeof(int)));
 		checkCudaErrors(cudaMalloc((void**)&d_actualCpNum, sizeof(int)));
 		checkThrustErrors(d_cpRes.resize(config.cpNum));

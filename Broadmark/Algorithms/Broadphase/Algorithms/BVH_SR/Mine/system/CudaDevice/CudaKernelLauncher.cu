@@ -59,6 +59,7 @@ namespace mn {
 		ExecutionPolicy p = CudaDevice::getInstance()->launchConfig(instr.name(), instr.threads());
 
 		if (p.getSharedMemBytes() == 0) {
+
 			Logger::tick<TimerType::GPU>();
 			f << <p.getGridSize(), p.getBlockSize() >> >(args...);
 			Logger::tock<TimerType::GPU>(instr.name());
@@ -70,7 +71,9 @@ namespace mn {
 			f << <p.getGridSize(), p.getBlockSize(), p.getSharedMemBytes() >> >(args...);
 			Logger::tock<TimerType::GPU>(instr.name());
 		}
+
 		cudaError_t error = cudaGetLastError();
+
 		if (error != cudaSuccess) printf("BVH_SR: \t Kernel launch failure %s\n", cudaGetErrorString(error));
 	}
 

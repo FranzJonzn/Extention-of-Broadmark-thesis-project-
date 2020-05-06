@@ -27,12 +27,15 @@ namespace mn {
 											  int* _subtrees, 
 											  int* _numRtIntNode) {	/// count number of affected int nodes
 		
-		printf("\n\n FRANZ: \t \d_numRtIntNode d_numRtSubtree [%d, %d] \n\n", _numRtIntNode, _numSubtree);
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
+
 		if (idx >= size) return;
 		int root = _leafRestrRoots[idx];
+	
+
+
 		if (root != INT_MAX && _intRestrMarks[root] == 1) {
-			//printf("BVH_SR: \t \tadding %d-th [%d, %d] int node need restructure\n", root, _tks.rangex(root), _tks.rangey(root));
+			printf("BVH_SR: \t \tadding %d-th [%d, %d] int node need restructure\n", root, _tks.rangex(root), _tks.rangey(root));
 			int2 range{ _tks.getrangex(root), _tks.getrangey(root) };
 			atomicAdd(_leafRestrRootMarks + idx, root);
 			atomicAdd(_leafRestrRootMarks + range.y + 1, -root);
@@ -41,7 +44,6 @@ namespace mn {
 			int id            = atomicAdd(_numSubtree, 1);
 			_subtrees[id]     = root;
 			_subtreeSizes[id] = range.y - range.x + 1;
-		
 		}
 	}
 
