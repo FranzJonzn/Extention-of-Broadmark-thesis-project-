@@ -16,6 +16,8 @@
 #include "system\Log\Logger.hpp"
 
 
+#include <thrust\host_vector.h>
+
 	
 
 
@@ -32,10 +34,12 @@ public:
 	void UpdateObjects(const SceneFrame& frameData) override;
 	void UpdateStructures() override;
 	void SearchOverlaps() override;
-
-
+#pragma warning(suppress : 4996)
+	thrust::host_vector<int2>	m_pairs;
+#pragma warning(disable : 4996)
 protected:
 	virtual mn::Scheme getSceme() = 0;
+
 
 private:
 	BVH_SR_Run Bvh;

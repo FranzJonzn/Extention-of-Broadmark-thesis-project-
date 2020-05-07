@@ -34,5 +34,26 @@ void BVH_SR_Entry::UpdateStructures() {
 }
 
 void BVH_SR_Entry::SearchOverlaps(){
-	std::cout << "SearchOverlaps\n";
+	
+	Bvh.SearchOverlaps(&m_pairs);
+
+	for (size_t i = 0; i < m_pairs.size(); i++) {
+		Object *p1, *p2;
+		int2 _cp = m_pairs[i];
+
+		if (_cp.x < _cp.y) {
+			p1 = &m_objects[_cp.x];
+			p2 = &m_objects[_cp.y];
+		}
+		else {
+			p1 = &m_objects[_cp.y];
+			p2 = &m_objects[_cp.x];
+
+		}
+
+		if (p1 != p2) {
+			m_cache.AddPair(p1, p2);
+		}
+	}
+	m_pairs.clear();
 }

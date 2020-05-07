@@ -12,7 +12,6 @@ void BVH_SR_Run::Initialaze(const InflatedSettings& simulationsSettings, const m
 	BVH_SR_Run* run;
 	run				   = new BVH_SR_Run;
 	run->TheCudaDevice = mn::CudaDevice::getInstance();
-	//run->TheLogic      = mn::BenchmarkLogic::getInstance();
 	run->TheLogic->startup();
 	printf("BVH_SR \t * Finishing App initialization!\n");
 
@@ -33,84 +32,90 @@ void BVH_SR_Run::Initialaze(const InflatedSettings& simulationsSettings, const m
 }
 void BVH_SR_Run::RunFrame(const SceneFrame& frameData, const int frameNumber) {
 	
-	auto maintainOpts = MaintainScheme(frameNumber);
-
+	MaintainScheme(frameNumber);
 	BVH_SR_Run::_bvh->maintain_BroadMarkEdition(maintainOpts.first, frameData, settings);
-	BVH_SR_Run::_fl->maintain(maintainOpts.second);
+
 }
 
 void BVH_SR_Run::Terminate() {
 
 }
 
-void BVH_SR_Run::SearchOverlaps() {
+// i stort hämtad från Bullet3GPUAlgorithms då det är den GPU algritmen som fans med från början.
+void BVH_SR_Run::SearchOverlaps(thrust::host_vector<int2> *_pairs) {
+	BVH_SR_Run::_fl->maintain(maintainOpts.second);
+
+	BVH_SR_Run::_fl->getOverlapingPares(_pairs);
 
 }
 
 
-std::pair<mn::LBvhFixedDeformableMaintenance, mn::BvttFrontLooseIntraMaintenance> BVH_SR_Run::MaintainScheme(int frameId) const {
+void BVH_SR_Run::MaintainScheme(int frameId)  {
 	mn::LBvhFixedDeformableMaintenance bvhOpt;
 	mn::BvttFrontLooseIntraMaintenance frontOpt;
 	switch (BVH_SR_Run::settings2.schemeOpt.type) {
-	case mn::CDSchemeType::GENERATE:
-		bvhOpt   = mn::LBvhFixedDeformableMaintenance::BUILD;
-		frontOpt = mn::BvttFrontLooseIntraMaintenance::PURE_BVH_CD;
-		break;
-	case mn::CDSchemeType::FRONT_GENERATE:
-		bvhOpt   = mn::LBvhFixedDeformableMaintenance::BUILD;
-		frontOpt = mn::BvttFrontLooseIntraMaintenance::GENERATE;
-		break;
-	case mn::CDSchemeType::STATIC_MANDATORY: ///< bvh cycle should sync with front cycle
-		if (mn::CDBenchmarkSettings::enableDivergentMark()) {
-			bvhOpt = (frameId - BVH_SR_Run::settings2.stIdx) % mn::BvhSettings::mandatoryRebuildCycle() ? mn::LBvhFixedDeformableMaintenance::REFIT : mn::LBvhFixedDeformableMaintenance::BUILD;
-			int frame = (frameId - BVH_SR_Run::settings2.stIdx) % mn::BvttFrontSettings::mandatoryRebuildCycle();
-			if (frame == 0)
-				frontOpt = frameId == BVH_SR_Run::settings2.stIdx ? mn::BvttFrontLooseIntraMaintenance::GENERATE : mn::BvttFrontLooseIntraMaintenance::UPDATE;
-			else if (frame == mn::BvttFrontSettings::mandatoryRebuildCycle() - 1)
-				frontOpt = mn::BvttFrontLooseIntraMaintenance::REORDER;
-			else
-				frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
+		case mn::CDSchemeType::GENERATE:
+			bvhOpt   = mn::LBvhFixedDeformableMaintenance::BUILD;
+			frontOpt = mn::BvttFrontLooseIntraMaintenance::PURE_BVH_CD;
+			break;
+		case mn::CDSchemeType::FRONT_GENERATE:
+			bvhOpt   = mn::LBvhFixedDeformableMaintenance::BUILD;
+			frontOpt = mn::BvttFrontLooseIntraMaintenance::GENERATE;
+			break;
+		case mn::CDSchemeType::STATIC_MANDATORY: ///< bvh cycle should sync with front cycle
+			if (mn::CDBenchmarkSettings::enableDivergentMark()) {
+				bvhOpt = (frameId - BVH_SR_Run::settings2.stIdx) % mn::BvhSettings::mandatoryRebuildCycle() ? mn::LBvhFixedDeformableMaintenance::REFIT : mn::LBvhFixedDeformableMaintenance::BUILD;
+				int frame = (frameId - BVH_SR_Run::settings2.stIdx) % mn::BvttFrontSettings::mandatoryRebuildCycle();
+				if (frame == 0)
+					frontOpt = frameId == BVH_SR_Run::settings2.stIdx ? mn::BvttFrontLooseIntraMaintenance::GENERATE : mn::BvttFrontLooseIntraMaintenance::UPDATE;
+				else if (frame == mn::BvttFrontSettings::mandatoryRebuildCycle() - 1)
+					frontOpt = mn::BvttFrontLooseIntraMaintenance::REORDER;
+				else
+					frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
 
-			if (bvhOpt == mn::LBvhFixedDeformableMaintenance::BUILD)
-				frontOpt = mn::BvttFrontLooseIntraMaintenance::GENERATE;
-			if ((frameId - BVH_SR_Run::settings2.stIdx + 1) % mn::BvhSettings::mandatoryRebuildCycle() == 0)
-				frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
-			break;
-		}
-		else {
-			bvhOpt = (frameId - BVH_SR_Run::settings2.stIdx) % mn::BvhSettings::mandatoryRebuildCycle() ? mn::LBvhFixedDeformableMaintenance::REFIT : mn::LBvhFixedDeformableMaintenance::BUILD;
-			switch ((frameId - BVH_SR_Run::settings2.stIdx) % mn::BvttFrontSettings::mandatoryRebuildCycle()) {
-			case 0: frontOpt = frameId == BVH_SR_Run::settings2.stIdx ? mn::BvttFrontLooseIntraMaintenance::GENERATE : mn::BvttFrontLooseIntraMaintenance::UPDATE; break;
-			default: frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
+				if (bvhOpt == mn::LBvhFixedDeformableMaintenance::BUILD)
+					frontOpt = mn::BvttFrontLooseIntraMaintenance::GENERATE;
+				if ((frameId - BVH_SR_Run::settings2.stIdx + 1) % mn::BvhSettings::mandatoryRebuildCycle() == 0)
+					frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
+				break;
 			}
-			if (bvhOpt == mn::LBvhFixedDeformableMaintenance::BUILD)
-				frontOpt = mn::BvttFrontLooseIntraMaintenance::GENERATE;
-			break;
-		}
-	case mn::CDSchemeType::REFIT_ONLY_FRONT: ///< bvh cycle should sync with front cycle
-		if (mn::CDBenchmarkSettings::enableDivergentMark()) {
-			bvhOpt = (frameId - BVH_SR_Run::settings2.stIdx) ? mn::LBvhFixedDeformableMaintenance::REFIT : mn::LBvhFixedDeformableMaintenance::BUILD;
-			int frame = (frameId - BVH_SR_Run::settings2.stIdx) % mn::BvttFrontSettings::mandatoryRebuildCycle();
-			if (frame == 0)
-				frontOpt = frameId == BVH_SR_Run::settings2.stIdx ? mn::BvttFrontLooseIntraMaintenance::GENERATE : mn::BvttFrontLooseIntraMaintenance::UPDATE;
-			else if (frame == mn::BvttFrontSettings::mandatoryRebuildCycle() - 1)
-				frontOpt = mn::BvttFrontLooseIntraMaintenance::REORDER;
-			else
-				frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
-		}
-		else {
-			bvhOpt = (frameId - BVH_SR_Run::settings2.stIdx) ? mn::LBvhFixedDeformableMaintenance::REFIT : mn::LBvhFixedDeformableMaintenance::BUILD;
-			switch ((frameId - BVH_SR_Run::settings2.stIdx) % mn::BvttFrontSettings::mandatoryRebuildCycle()) {
-			case 0:  frontOpt = frameId == BVH_SR_Run::settings2.stIdx ? mn::BvttFrontLooseIntraMaintenance::GENERATE : mn::BvttFrontLooseIntraMaintenance::UPDATE; break;
-			default: frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
+			else {
+				bvhOpt = (frameId - BVH_SR_Run::settings2.stIdx) % mn::BvhSettings::mandatoryRebuildCycle() ? mn::LBvhFixedDeformableMaintenance::REFIT : mn::LBvhFixedDeformableMaintenance::BUILD;
+				switch ((frameId - BVH_SR_Run::settings2.stIdx) % mn::BvttFrontSettings::mandatoryRebuildCycle()) {
+				case 0: frontOpt = frameId == BVH_SR_Run::settings2.stIdx ? mn::BvttFrontLooseIntraMaintenance::GENERATE : mn::BvttFrontLooseIntraMaintenance::UPDATE; break;
+				default: frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
+				}
+				if (bvhOpt == mn::LBvhFixedDeformableMaintenance::BUILD)
+					frontOpt = mn::BvttFrontLooseIntraMaintenance::GENERATE;
+				break;
 			}
-			break;
-		}
-	default:
-		__assume(false);
-		//__builtin_unreachable();
+		case mn::CDSchemeType::REFIT_ONLY_FRONT: ///< bvh cycle should sync with front cycle
+			if (mn::CDBenchmarkSettings::enableDivergentMark()) {
+				bvhOpt = (frameId - BVH_SR_Run::settings2.stIdx) ? mn::LBvhFixedDeformableMaintenance::REFIT : mn::LBvhFixedDeformableMaintenance::BUILD;
+				int frame = (frameId - BVH_SR_Run::settings2.stIdx) % mn::BvttFrontSettings::mandatoryRebuildCycle();
+				if (frame == 0)
+					frontOpt = frameId == BVH_SR_Run::settings2.stIdx ? mn::BvttFrontLooseIntraMaintenance::GENERATE : mn::BvttFrontLooseIntraMaintenance::UPDATE;
+				else if (frame == mn::BvttFrontSettings::mandatoryRebuildCycle() - 1)
+					frontOpt = mn::BvttFrontLooseIntraMaintenance::REORDER;
+				else
+					frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
+			}
+			else {
+				bvhOpt = (frameId - BVH_SR_Run::settings2.stIdx) ? mn::LBvhFixedDeformableMaintenance::REFIT : mn::LBvhFixedDeformableMaintenance::BUILD;
+				switch ((frameId - BVH_SR_Run::settings2.stIdx) % mn::BvttFrontSettings::mandatoryRebuildCycle()) {
+				case 0:  frontOpt = frameId == BVH_SR_Run::settings2.stIdx ? mn::BvttFrontLooseIntraMaintenance::GENERATE : mn::BvttFrontLooseIntraMaintenance::UPDATE; break;
+				default: frontOpt = mn::BvttFrontLooseIntraMaintenance::KEEP;
+				}
+				break;
+			}
+		default:
+			__assume(false);
+			//__builtin_unreachable();
 	}
-	return std::make_pair(bvhOpt, frontOpt);
+
+
+	maintainOpts = std::make_pair(bvhOpt, frontOpt);
+
 }
 
 

@@ -40,7 +40,7 @@ namespace mn {
 			device->registerKernel("FilterExtFrontCnts", filterExtFrontCnts, cudaFuncCachePreferL1, false);
 
 			/// coherent BVH based CD
-			device->registerKernel("SimpleNarrowPhase", simpleNarrowPhase, cudaFuncCachePreferL1, false);
+		//	device->registerKernel("SimpleNarrowPhase", simpleNarrowPhase, cudaFuncCachePreferL1, false);
 			device->registerKernel("ReorderCdPairs"   , reorderCdPairs   , cudaFuncCachePreferL1, false);
 
 			/// pure BVH based CD

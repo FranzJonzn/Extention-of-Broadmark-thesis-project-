@@ -34,8 +34,12 @@ namespace mn {
 
 		void	inspectResults();
 		void	applyCpResults(uint* _idx, uint2* _front);
+
+		void getOverlapingPares(thrust::host_vector<int2>	*d_oCp);
+
+
 	private:
-		void	proximityQuery();	///< narrow phase CD
+		//void	proximityQuery();	///< narrow phase CD
 		void	reorderFronts();	///< ordering
 		void	separateFronts();	///< prepare for restructure
 		/// quality inspection
@@ -75,6 +79,7 @@ namespace mn {
 		uint                         *d_extFtNodeCnt, _extFtNodeCnt, *d_intFtNodeCnt, _intFtNodeCnt;
 		thrust::device_vector<int2>	d_cpRes;
 		thrust::device_vector<int2>	d_orderedCdpairs;
+	
 	};
 	
 }

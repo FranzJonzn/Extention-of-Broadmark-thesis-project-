@@ -16,6 +16,8 @@
 #include <utility\CudaHostUtils.h>
 #include "setting\BvttFrontSettings.h"
 
+#include <thrust/device_vector.h>
+#include "Broadphase\Algorithms\BaseAlgorithm.h"
 
 class BVH_SR_Run {
 
@@ -28,22 +30,22 @@ public:
 
 	void Terminate();
 
-	void SearchOverlaps();
+	void SearchOverlaps(thrust::host_vector<int2> *_pairs);
 
 private:
 
 
-	std::pair<mn::LBvhFixedDeformableMaintenance, mn::BvttFrontLooseIntraMaintenance> MaintainScheme(int frameId) const;
+	void MaintainScheme(int frameId) ;
 
 
 
 
 
 
+	std::pair<mn::LBvhFixedDeformableMaintenance, mn::BvttFrontLooseIntraMaintenance> maintainOpts;
 
-
-	InflatedSettings        settings;
-	mn::BroadMark_Benchmark    settings2; // replacement for the seting that was in BVH_SR original system
+	InflatedSettings           settings;
+	mn::BroadMark_Benchmark    settings2; // replacement for the seting that was in BVH_SR original system, used in MaintainScheme
 
 	/// systems (initialized)
 	mn::CudaDevice*		TheCudaDevice;
@@ -54,5 +56,11 @@ private:
 	mn::BvttFrontKernelRegister											_kFrontKernelRegister;
 	std::unique_ptr<mn::LBvh<mn::ModelType::FixedDeformableType>>		_bvh;
 	std::unique_ptr<mn::BvttFront<mn::BvttFrontType::LooseIntraType>>	_fl;
+
+
+
+
+
+
 
 }; 

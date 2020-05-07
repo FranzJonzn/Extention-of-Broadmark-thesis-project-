@@ -139,22 +139,22 @@ namespace mn {
 		first = false;
 	}
 
-	void BvttFrontLooseIntra::proximityQuery() {
-	
-		if (CDBenchmarkSettings::includeNarrowPhase()) {
-			checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
-			checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
-			//configuredLaunch(
-			//				{ "SimpleNarrowPhase", _cpNum }, 
-			//			    simpleNarrowPhase,
-			//					(uint)_cpNum, 
-			//					getRawPtr(d_orderedCdpairs), 
-			//					_pBvh->getFaces(), 
-			//					_pBvh->getVertices(), 
-			//					d_actualCpNum);
-			Logger::recordSection<TimerType::GPU>("narrow_phase");
-		}
-	}
+	//void BvttFrontLooseIntra::proximityQuery() {
+	//
+	//	if (CDBenchmarkSettings::includeNarrowPhase()) {
+	//		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
+	//		checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
+	//		//configuredLaunch(
+	//		//				{ "SimpleNarrowPhase", _cpNum }, 
+	//		//			    simpleNarrowPhase,
+	//		//					(uint)_cpNum, 
+	//		//					getRawPtr(d_orderedCdpairs), 
+	//		//					_pBvh->getFaces(), 
+	//		//					_pBvh->getVertices(), 
+	//		//					d_actualCpNum);
+	//		Logger::recordSection<TimerType::GPU>("narrow_phase");
+	//	}
+	//}
 
 	void BvttFrontLooseIntra::reorderFronts() {
 
@@ -411,8 +411,15 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_balance");
 		checkCudaErrors(cudaMemset(d_cpNum, 0, sizeof(int)));
 
 		uint osize = _fronts.cs(0);
-		configuredLaunch({ "KeepIntLooseIntraFronts", (int)osize }, keepIntLooseIntraFronts,
-			_pBvh->clvs().portobj<0>(), _pBvh->ctks().portobj<0>(), osize, (const int2*)_fronts.cbuf(0), d_cpNum, getRawPtr(d_cpRes));
+		configuredLaunch(
+						{ "KeepIntLooseIntraFronts", (int)osize }, 
+						keepIntLooseIntraFronts,
+							_pBvh->clvs().portobj<0>(), 
+							_pBvh->ctks().portobj<0>(), 
+							osize, 
+							(const int2*)_fronts.cbuf(0), 
+							d_cpNum, 
+							getRawPtr(d_cpRes));
 		osize = _fronts.cs(1);
 		configuredLaunch({ "KeepExtLooseIntraFronts", (int)osize }, keepExtLooseIntraFronts,
 			_pBvh->clvs().portobj<0>(), osize, (const int2*)_fronts.cbuf(1), d_cpNum, getRawPtr(d_cpRes));
@@ -513,4 +520,16 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_bvh");
 		
 	}
 
+
+///==================================================================================================================================================================
+/// broadmarkIntegration
+///==================================================================================================================================================================
+
+
+
+
+	void BvttFrontLooseIntra::getOverlapingPares(thrust::host_vector<int2> *d_oCp) {
+		//(checkThrustErrors(thrust::copy(getDevicePtr(d_orderedCdpairs), getDevicePtr(d_orderedCdpairs) + _cpNum, getDevicePtr(d_oCp)));
+		(*d_oCp) = d_orderedCdpairs;
+	}
 }
