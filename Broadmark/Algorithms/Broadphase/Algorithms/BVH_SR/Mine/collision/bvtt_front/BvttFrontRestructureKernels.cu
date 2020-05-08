@@ -18,9 +18,6 @@ namespace mn {
 		int2	cp = _intRestrFront[idx];
 		int		st = cp.y << 1;
 		const BOX bv = _prims.getBV(cp.x);
-#if MACRO_VERSION
-		const int3 ids = _prims.getVids(cp.x);
-#endif
 
 		cp.y = _lvs.getlca(_tks.getrangey(cp.y) + 1);
 		do {
@@ -31,11 +28,7 @@ namespace mn {
 			if (st > t) {
 				_slideFtLists[1][atomicAdd(_ftSlideSizes + 1, 1)] = make_int2(cp.x, idx);
 				atomicAdd(&_log.extcnt(idx), 1);
-				if (
-#if MACRO_VERSION
-					!covertex(ids, _prims.getVids(idx)) &&
-#endif
-					_lvs.overlaps(idx, bv)) {
+				if (_lvs.overlaps(idx, bv)) {
 					_cpRes[atomicAdd(_cpNum, 1)] = make_int2(_prims.getidx(cp.x), _prims.getidx(idx));
 				}
 				st = _lvs.getlca(idx + 1);
@@ -56,10 +49,6 @@ namespace mn {
 		const auto& _prims = _lvs.primPort();
 		int2	cp = _extRestrFront[idx];
 		int		st = cp.y << 1 | 1;
-#if MACRO_VERSION
-		const int3 ids = _prims.getVids(cp.x);
-#endif
-
 		const BOX bv = _prims.getBV(cp.x);
 
 		cp.y = _lvs.getlca(_tks.getrangey(_leafRestrRoots[cp.y]) + 1);
@@ -72,11 +61,7 @@ namespace mn {
 			if (st > t) {
 				_slideFtLists[1][atomicAdd(_ftSlideSizes + 1, 1)] = make_int2(cp.x, idx);
 				atomicAdd(&_log.extcnt(idx), 1);
-				if (
-#if MACRO_VERSION
-					!covertex(ids, _prims.getVids(idx)) && 
-#endif
-					_lvs.overlaps(idx, bv)) {
+				if (_lvs.overlaps(idx, bv)) {
 					_cpRes[atomicAdd(_cpNum, 1)] = make_int2(_prims.getidx(cp.x), _prims.getidx(idx));
 				}
 				st = _lvs.getlca(idx + 1);

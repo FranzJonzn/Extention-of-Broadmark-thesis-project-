@@ -9,7 +9,7 @@
 #include "setting\CDBenchmarkSettings.h"
 
 #include <thrust\execution_policy.h>
-#include "collision\narrow_phase\narrow_phase.cuh"
+
 
 namespace mn {
 
@@ -59,7 +59,7 @@ namespace mn {
 		if (_fronts.cs(0) >= BvttFrontSettings::int_front_size() || _fronts.cs(1) >= BvttFrontSettings::ext_front_size() || _cpNum >= BvttFrontSettings::collision_pair_num()) {
 			printf("BVH_SR: \t\t  exceed front length! %d, %d  %d\n", _fronts.cs(0), _fronts.cs(1), _cpNum);
 		}
-		std::cout << "BVH_SR: \t\t"<< str << '\n';
+		//std::cout << "BVH_SR: \t\t"<< str << '\n';
 		Logger::message(str);
 	}
 
@@ -113,7 +113,7 @@ namespace mn {
 				}
 				else {			///< front restr
 					Logger::message("restructure front(in restr) ");
-					printf("BVH_SR: \t\t rt front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
+					//printf("BVH_SR: \t\t rt front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
 					//getchar();
 					generate(); 
 					//restructure();
@@ -138,23 +138,6 @@ namespace mn {
 		inspectResults();
 		first = false;
 	}
-
-	//void BvttFrontLooseIntra::proximityQuery() {
-	//
-	//	if (CDBenchmarkSettings::includeNarrowPhase()) {
-	//		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
-	//		checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
-	//		//configuredLaunch(
-	//		//				{ "SimpleNarrowPhase", _cpNum }, 
-	//		//			    simpleNarrowPhase,
-	//		//					(uint)_cpNum, 
-	//		//					getRawPtr(d_orderedCdpairs), 
-	//		//					_pBvh->getFaces(), 
-	//		//					_pBvh->getVertices(), 
-	//		//					d_actualCpNum);
-	//		Logger::recordSection<TimerType::GPU>("narrow_phase");
-	//	}
-	//}
 
 	void BvttFrontLooseIntra::reorderFronts() {
 
@@ -263,7 +246,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_front_ordering");
 							(const int*)_pBvh->clvs().getLcas(),
 							_log.portobj<0>());
 
-		printf("BVH_SR: \t \n#original front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
+	//	printf("BVH_SR: \t \n#original front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
 			_numValidFrontNodes[0], _numValidFrontNodes[1], osizes.x - _numValidFrontNodes[0], osizes.y - _numValidFrontNodes[1]);
 		_fronts.slide();
 	}

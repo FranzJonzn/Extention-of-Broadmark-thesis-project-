@@ -7,7 +7,6 @@
 #include "base\Singleton.h"
 
 // framework modules
-#include "world\Scene.h"
 #include "collision\lbvh\LBvh.h"
 #include "collision\bvtt_front\BVTTFront.h"
 #include "system\Logic\BenchmarkLogic.hpp"

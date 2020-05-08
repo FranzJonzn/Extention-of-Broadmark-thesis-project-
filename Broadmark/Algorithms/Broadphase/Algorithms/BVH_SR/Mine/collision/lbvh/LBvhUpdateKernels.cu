@@ -7,30 +7,7 @@
 
 namespace mn {
 
-#if MACRO_VERSION
-	__global__ void refitExtNodeARCSim(int primsize, BvhExtNodeCompletePort _lvs, int* _primMap, uint3* _faces, g_box* _bxs) {
-		int idx = blockIdx.x * blockDim.x + threadIdx.x;
-		if (idx >= primsize) return;
-		auto &_prims = _lvs.refPrimPort();
-		//auto &_extBvs = _lvs.refExtBvs();
-		///
-		const g_box box = _bxs[idx];
-		const BOX bv(box._min.x, box._min.y, box._min.z, box._max.x, box._max.y, box._max.z);
-		int newIdx = _primMap[idx];
-		//int extIdx = _prims.getextno(newIdx) - 1;
-		_prims.setBV(newIdx, bv);
-		_lvs.setBV(newIdx, bv);
-		//_extBvs.setBV(extIdx, bv);	///< since it's one-to-one
-		/*
-		atomicMinD(&_extBvs.minx(extIdx), bv._min.x);
-		atomicMinD(&_extBvs.miny(extIdx), bv._min.y);
-		atomicMinD(&_extBvs.minz(extIdx), bv._min.z);
-		atomicMaxD(&_extBvs.maxx(extIdx), bv._max.x);
-		atomicMaxD(&_extBvs.maxy(extIdx), bv._max.y);
-		atomicMaxD(&_extBvs.maxz(extIdx), bv._max.z);
-		*/
-	}
-#endif
+
 
 	__global__ void refitExtNode(int primsize, BvhExtNodeCompletePort _lvs, int* _primMap, int3* _faces, PointType* _vertices) {
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;

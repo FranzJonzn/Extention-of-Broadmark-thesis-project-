@@ -15,7 +15,7 @@
 #include "Broadphase/Algorithms/Misc/Inspectors.h"
 #include "Broadphase/Algorithms/KD/KD.h"
 #include "Broadphase/Algorithms/BVH_SR/_Raper/BVH_SR_Entry.h"
-#include "Broadphase/Algorithms/BVH_SR/Header.h"
+
 
 
 #define REGISTER(name, type) if (strcmp(name, algorithmName) == 0) { return std::make_unique<type>(); }

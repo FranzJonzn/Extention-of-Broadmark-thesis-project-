@@ -54,7 +54,7 @@ namespace mn {
 		//Benchmark{ 0, 706, "flamenco5\\flamenco5.%d.ply", "flamenco-49k","%s\\%s.txt",{ CDSchemeType::GENERATE, "generate" } },
 
 		//Benchmark{ 0, 94, "cloth_ball.plys\\cloth_ball%d.ply", "clothball-92k","%s\\%s.txt",{ CDSchemeType::REFIT_ONLY_FRONT, "refit_only" } },
-		Benchmark{ 1, 500, "funnel.plys\\%03d.ply", "funnel-18k","%s\\%s.txt",{ CDSchemeType::REFIT_ONLY_FRONT, "refit_only" } },
+		//Benchmark{ 1, 500, "funnel.plys\\%03d.ply", "funnel-18k","%s\\%s.txt",{ CDSchemeType::REFIT_ONLY_FRONT, "refit_only" } },
 		//Benchmark{ 0, 706, "flamenco5\\flamenco5.%d.ply", "flamenco-49k","%s\\%s.txt",{ CDSchemeType::REFIT_ONLY_FRONT, "refit_only" } },
 		//Benchmark{ 0, 210, "princess.plys\\princess%d.ply", "princess-40k","%s\\%s.txt",{ CDSchemeType::REFIT_ONLY_FRONT, "refit_only" } },
 

@@ -42,6 +42,9 @@ namespace mn {
 		static int version() { return _version; }
 		static int benchmarkNum() { return _benchmarks.size(); }
 		static Benchmark benchmark(int i) { return _benchmarks[i]; }
+
+		static bool BVH_SR_DEBUG() { return true; }
+
 		static std::pair<std::string, std::string> file_name(int expNo, int frameNo) {
 			char tmp[500];
 			std::pair<std::string, std::string>	pair;
@@ -60,7 +63,7 @@ namespace mn {
 		static std::string		_inputBaseAddr;
 		static std::string		_outputBaseAddr;
 		static std::vector<Benchmark>	_benchmarks;
-		static  const bool		_enableRestr{ true };
+		static  const bool		_enableRestr        { true };
 		static  const bool		_enableDivergentMark{ true };
 		static  const bool		_includeNarrowPhase{ false };
 
