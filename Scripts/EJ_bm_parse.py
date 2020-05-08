@@ -162,7 +162,9 @@ def EJ_process_results(results_folder):
             # loads the data into a dataframe and store the "Total" column
             df = json_normalize(data["Frames"])
             df = pd.DataFrame(data["Frames"])
-            frame[(scene, algorithm, ps, n, )] = df["Total"]
+            #frame[(scene, algorithm, ps, n, )] = df["Total"]
+            frame[(scene, ps, n, algorithm)] = df["Total"]
+        
     
     
     
@@ -214,7 +216,7 @@ def EJ_process_results(results_folder):
 
     lines_frame = dmi_frame["mean"].transpose()
     lines_frame = lines_frame.reset_index()
-    lines_frame = pd.pivot_table(lines_frame, values="mean", index=["level_1","level_2"], columns="level_3")
+    lines_frame = pd.pivot_table(lines_frame, values="mean", index="level_1", columns="level_2") #lines_frame = pd.pivot_table(lines_frame, values="mean", index=["level_1","level_2"], columns="level_3")
     lines_frame.to_csv(join(results_folder, "lines_frame.csv"), sep=';')
     lines_frame.to_excel(join(results_folder, "lines_frame.xlsx"))
     lines_frame.to_pickle(join(results_folder, "lines_frame.pickle"))

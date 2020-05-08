@@ -31,13 +31,13 @@ namespace mn {
 
 		//static const int	_maxExtFrontSize = 33554432;	//(1 << 25)
 		//static const int	_maxExtFrontSize = 16777216;	//(1 << 24)
-		static const int	_maxExtFrontSize = 2300000;
-		//static const int	_maxExtFrontSize = 50000000;
+		//static const int	_maxExtFrontSize = 2300000;//<< orginal
+		static const int	_maxExtFrontSize = 50000000;
 
 		//static const int	_maxIntFrontSize = 16777216;	//(1 << 24)
-		static const int	_maxIntFrontSize = 2300000;
+		//static const int	_maxIntFrontSize = 2300000; //<< orginal
 		//static const int	_maxIntFrontSize = 33554432;
-		//static const int	_maxIntFrontSize = 50000000;
+		static const int	_maxIntFrontSize = 50000000;
 		
 		//static const int	_maxCollisionPairNum = 8388608;		//(1 << 23)
 		static const int	_maxCollisionPairNum = 1600000;

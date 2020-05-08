@@ -117,11 +117,11 @@ void execute(const Settings& settings) {
 		// tolerance at the beggining.
 		// If you want to simulate algorithms despite them being too slow, you should
 		// comment out this 'if'
-		if (i > 5 && avgDt > 2.0f ||
-			i > 15 && avgDt > 1.0f) {
-			std::cout << "\n\tToo slow, aborting...\n";
-			return;
-		}
+		//if (i > 5 && avgDt > 2.0f ||
+		//	i > 15 && avgDt > 1.0f) {
+		//	std::cout << "\n\tToo slow, aborting...\n";
+		//	return;
+		//}
 #endif
 	}
 

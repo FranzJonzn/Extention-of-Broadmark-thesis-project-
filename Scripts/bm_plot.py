@@ -72,7 +72,7 @@ def plot_lines(results_folder):
         subframe['N (10³)'] = subframe['N (10³)'] / 1000
     
         if len(algorithms) <= 6:
-            plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', style="Algorithm", palette="rocket", ax=a, markers=True, data=subframe)
+            plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', style="Algorithm", palette="Set2", ax=a, markers=True, data=subframe)
         else:
             plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', ax=a, markers=True, data=subframe)
 

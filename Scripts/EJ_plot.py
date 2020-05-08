@@ -2,7 +2,7 @@
 from __future__ import print_function, unicode_literals, with_statement, division, absolute_import
 from os import listdir, getcwd
 from os.path import isfile, isdir, join, basename, getmtime
-from bm_plot import *
+from EJ_bm_plot import *
 from bm_parse import process_results
 from os.path import join, isfile
 
@@ -14,8 +14,7 @@ if results_folder == '':
   #  all_subdirs = [root + d + '\\Results\\' for d in listdir(root)]
   #  latest_subdir = max(all_subdirs, key=getmtime)
   #  results_folder = latest_subdir
-	results_folder = "C:/Users/Franz/Desktop/TEST_1"#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb\BroadMarker/_Resultat/Tests 2020-01-23_18-03-07/Results"#
-	
+	results_folder = "E:/BVH_SR_validering/Resultat_k"#"C:/Users/Franz/Desktop/TEST_1" #"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb\BroadMarker/_Resultat/Tests 2020-01-23_18-03-07/Results"#
 
 plot_lines(results_folder)
 plot_bars(results_folder)
