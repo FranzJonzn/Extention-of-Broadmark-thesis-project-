@@ -7,88 +7,7 @@
 
 namespace mn {
 
-//#if MACRO_VERSION
-//	__global__ void calcMaxBVARCSim(int size, g_box *_bxs, BOX* _bv) {
-//		int idx = blockIdx.x * blockDim.x + threadIdx.x;
-//		if (idx >= size) return;
-//		//for (; idx < size; idx += gridDim.x * blockDim.x) {
-//		const g_box bv = _bxs[idx];
-//		/// could use aggregate atomic min/max
-//		atomicMinCustom<ExtentType>(&_bv->_min.x, bv._min.x);
-//		atomicMinCustom<ExtentType>(&_bv->_min.y, bv._min.y);
-//		atomicMinCustom<ExtentType>(&_bv->_min.z, bv._min.z);
-//		atomicMaxCustom<ExtentType>(&_bv->_max.x, bv._max.x);
-//		atomicMaxCustom<ExtentType>(&_bv->_max.y, bv._max.y);
-//		atomicMaxCustom<ExtentType>(&_bv->_max.z, bv._max.z);
-//		//}
-//	}
-//
-//	__global__ void calcMCsARCSim(int size, g_box *_bxs, BOX scene, uint* codes) {
-//		int idx = blockIdx.x * blockDim.x + threadIdx.x;
-//		if (idx >= size) return;
-//		//for (; idx < size; idx += gridDim.x * blockDim.x) {
-//		const g_box bv = _bxs[idx];
-//		const PointType c = MakePoint<ExtentType>::p((bv._min.x + bv._max.x) / 2, (bv._min.y + bv._max.y) / 2, (bv._min.z + bv._max.z) / 2);
-//		const PointType offset = c - scene._min;
-//		codes[idx] = morton3D(offset.x / scene.width(), offset.y / scene.height(), offset.z / scene.depth());
-//		//}
-//	}
-//
-//	__global__ void buildPrimitivesARCSim(int size, BvhPrimitiveCompletePort _prims, int *_primMap, uint3 *_faces, g_box *_bxs) {	///< update idx-th _bxs to idx-th leaf
-//		int idx = blockIdx.x * blockDim.x + threadIdx.x;
-//		if (idx >= size) return;
-//		//for (; idx < size; idx += gridDim.x * blockDim.x) {
-//		const g_box box = _bxs[idx];
-//		const BOX bv(box._min.x, box._min.y, box._min.z, box._max.x, box._max.y, box._max.z);
-//		int newIdx = _primMap[idx];
-//		_prims.vida(newIdx) = _faces[idx].x;
-//		_prims.vidb(newIdx) = _faces[idx].y;
-//		_prims.vidc(newIdx) = _faces[idx].z;
-//		_prims.idx(newIdx) = idx;
-//		_prims.type(newIdx) = static_cast<uint>(ModelType::FixedDeformableType);
-//		_prims.setBV(newIdx, bv);
-//		//}
-//	}
-//#endif
 
-	/// could be optimized by warp intrinsics
-	//__global__ void calcMaxBV(int size, const int3 *_faces, const PointType *_vertices, BOX* _bv) {
-	//	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	//	if (idx >= size) return;
-	//	//for (; idx < size; idx += gridDim.x * blockDim.x) {
-	//		BOX bv{};
-	//		auto v = _vertices[_faces[idx].x];
-	//		bv.combines(v.x, v.y, v.z);
-	//		v = _vertices[_faces[idx].y];
-	//		bv.combines(v.x, v.y, v.z);
-	//		v = _vertices[_faces[idx].z];
-	//		bv.combines(v.x, v.y, v.z);
-	//		/// could use aggregate atomic min/max
-	//		atomicMinCustom<ExtentType>(&_bv->_min.x, bv._min.x);
-	//		atomicMinCustom<ExtentType>(&_bv->_min.y, bv._min.y);
-	//		atomicMinCustom<ExtentType>(&_bv->_min.z, bv._min.z);
-	//		atomicMaxCustom<ExtentType>(&_bv->_max.x, bv._max.x);
-	//		atomicMaxCustom<ExtentType>(&_bv->_max.y, bv._max.y);
-	//		atomicMaxCustom<ExtentType>(&_bv->_max.z, bv._max.z);
-	//	//}
-	//}
-
-	//__global__ void calcMCs(int size, int3* _faces, PointType* _vertices, BOX scene, uint* codes) {
-	//	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	//	if (idx >= size) return;
-	//	//for (; idx < size; idx += gridDim.x * blockDim.x) {
-	//		BOX bv{};
-	//		auto v = _vertices[_faces[idx].x];
-	//		bv.combines(v.x, v.y, v.z);
-	//		v = _vertices[_faces[idx].y];
-	//		bv.combines(v.x, v.y, v.z);
-	//		v = _vertices[_faces[idx].z];
-	//		bv.combines(v.x, v.y, v.z);
-	//		const PointType c = bv.center();
-	//		const PointType offset = c - scene._min;
-	//		codes[idx] = morton3D(offset.x / scene.width(), offset.y / scene.height(), offset.z / scene.depth());
-	//	//}
-	//}
 
 	__global__ void calcMC64s(int size, int3* _faces, PointType* _vertices, BOX* scene, uint64* codes) {
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -111,26 +30,6 @@ namespace mn {
 		_primcodes[idx] = _codes[idx] << 32;
 	}
 
-	//__global__ void buildPrimitives(int size, BvhPrimitiveCompletePort _prims, int *_primMap, int3 *_faces, PointType *_vertices) {	///< update idx-th _bxs to idx-th leaf
-	//	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	//	if (idx >= size) return;
-	//	//for (; idx < size; idx += gridDim.x * blockDim.x) {
-	//		int newIdx = _primMap[idx];
-	//		BOX bv{};
-	//		auto v = _vertices[_faces[idx].x];
-	//		bv.combines(v.x, v.y, v.z);
-	//		v = _vertices[_faces[idx].y];
-	//		bv.combines(v.x, v.y, v.z);
-	//		v = _vertices[_faces[idx].z];
-	//		bv.combines(v.x, v.y, v.z);
-	//		//_prims.vida(newIdx) = _faces[idx].x;
-	//		//_prims.vidb(newIdx) = _faces[idx].y;
-	//		//_prims.vidc(newIdx) = _faces[idx].z;
-	//		_prims.idx(newIdx) = idx;
-	//		_prims.type(newIdx) = static_cast<uint>(ModelType::FixedDeformableType);
-	//		_prims.setBV(newIdx, bv);
-	//	//}
-	//}
 
 	__global__ void buildIntNodes(int size, uint *_depths, BvhExtNodeCompletePort _lvs, BvhIntNodeCompletePort _tks) {
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -291,27 +190,7 @@ namespace mn {
 			}
 		}
 	}
-	/*	parent computation different
-	__global__ void reorderIntNode(int intSize, const int* _tkMap, BvhIntNodeCompletePort _unorderedTks, BvhIntNodeCompletePort _tks) {
-		int idx = blockIdx.x * blockDim.x + threadIdx.x;
-		if (idx >= intSize) return;
-		int newId = _tkMap[idx];
-		uint mark = _unorderedTks.getmark(idx);
 
-		/// left-branch
-		if (mark & 1) 	_tks.lc(newId) = _unorderedTks.getlc(idx);
-		else			_tks.par(_tks.lc(newId) = _tkMap[_unorderedTks.getlc(idx)]) = newId;
-		/// right-branch
-		if (mark & 2) 	_tks.rc(newId) = _unorderedTks.getrc(idx);
-		else			_tks.par(_tks.rc(newId) = _tkMap[_unorderedTks.getrc(idx)]) = newId;
-		/// 
-		_tks.mark(newId) = mark;
-		_tks.rangex(newId) = _unorderedTks.getrangex(idx);
-		_tks.rangey(newId) = _unorderedTks.getrangey(idx);
-		//_tks.metric(newId) = _unorderedTks.getmetric(tid);
-		_tks.setBV(newId, _unorderedTks, idx);
-	}
-	*/
 
 
 

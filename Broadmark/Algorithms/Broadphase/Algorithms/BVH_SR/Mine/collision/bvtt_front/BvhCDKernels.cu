@@ -23,9 +23,6 @@ namespace mn {
 			int	lbd;
 			int st = _lvs.getlca(idx + 1);		///< prims.getextno(idx)
 			const BOX bv{ prims.getBV(idx) };
-#if MACRO_VERSION
-			const int3 ids = prims.getVids(idx);
-#endif
 			do {
 				int t = st & 1;
 				st >>= 1;
@@ -33,11 +30,7 @@ namespace mn {
 				if (!t)	for (t = _lvs.getpar(lbd = _tks.getrangex(st));st <= t && _tks.overlaps(st, bv); st++);
 				else	t = st - 1, lbd = st;
 				if (st > t) {
-					if (
-#if MACRO_VERSION
-						!covertex(ids, prims.getVids(lbd)) && 
-#endif
-						_lvs.overlaps(lbd, bv)) {
+					if (_lvs.overlaps(lbd, bv)) {
 						_cpRes[atomicAdd(_cpNum, 1)] = make_int2(prims.getidx(idx), prims.getidx(lbd));
 					}
 					st = _lvs.getlca(lbd + 1);

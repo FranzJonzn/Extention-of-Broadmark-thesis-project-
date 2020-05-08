@@ -59,9 +59,7 @@ namespace mn {
 			int st = _lvs.getlca(idx + 1);		///< _prims.getextno(idx)
 
 			const BOX bv{ _prims.getBV(idx) };
-#if MACRO_VERSION
-			const int3 ids = _prims.getVids(idx);
-#endif
+
 			do {
 				t = st & 1;
 				st >>= 1;
@@ -70,9 +68,6 @@ namespace mn {
 				else	t = st - 1, lbd = st;
 				if (st == t + 1) {
 					if (
-#if MACRO_VERSION
-						!covertex(ids, _prims.getVids(lbd)) &&
-#endif
 						_lvs.overlaps(lbd, bv)) {
 						_cpRes[atomicAdd(_cpNum, 1)] = make_int2(_prims.getidx(idx), _prims.getidx(lbd));		///< prim no, ext node no
 					}

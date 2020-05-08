@@ -20,9 +20,6 @@ namespace mn {
 
 		int st = (_tks.getlc(cp.y) << 1) | (_tks.getmark(cp.y) & 1);
 		cp.y = _lvs.getlca(_tks.getrangey(cp.y) + 1);
-#if MACRO_VERSION
-		const int3 ids = _prims.getVids(cp.x);
-#endif
 		while (st != cp.y) {
 			int t = st & 1;
 			st >>= 1;
@@ -30,9 +27,6 @@ namespace mn {
 			else	t = st - 1, idx = st;
 			if (st == t + 1) {
 				if (
-#if MACRO_VERSION
-					!covertex(ids, _prims.getVids(idx)) &&
-#endif
 					_lvs.overlaps(idx, bv)) 
 					_cpRes[atomicAdd(_cpNum, 1)] = make_int2(_prims.getidx(cp.x), _prims.getidx(idx));
 				st = _lvs.getlca(idx + 1);
@@ -48,11 +42,7 @@ namespace mn {
 		const auto &_prims = _lvs.primPort();
 		int2 cp = _ftList[idx];
 
-		if (
-#if MACRO_VERSION
-			!covertex(_prims.getVids(cp.x), _prims.getVids(cp.y)) &&
-#endif
-			_lvs.overlaps(cp.x, cp.y)) {
+		if (_lvs.overlaps(cp.x, cp.y)) {
 			_cpRes[atomicAggInc(_cpNum)] = make_int2(_prims.getidx(cp.x), _prims.getidx(cp.y));
 		}
 	}

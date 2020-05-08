@@ -4,7 +4,6 @@
 #include "base\Singleton.h"
 #include "setting\CDBenchmarkSettings.h"
 #include "collision\bvtt_front\BvttFrontLooseIntra.h"
-#include "collision\bvtt_front\BvttFrontLooseInter.h"
 
 namespace mn {
 

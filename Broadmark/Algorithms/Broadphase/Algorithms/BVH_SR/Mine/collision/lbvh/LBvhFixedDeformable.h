@@ -4,7 +4,6 @@
 #include <thrust\device_vector.h>
 
 #include "setting\BvhSettings.h"
-#include "world\scene.h"
 #include "Core\Scene.h"	  //broadmarkIntegration
 #include "Core\Settings.h"//broadmarkIntegration
 
@@ -33,12 +32,7 @@ namespace mn {
 		LBvhFixedDeformable() = delete;
 		LBvhFixedDeformable(LBvhBuildConfig&& config);
 		~LBvhFixedDeformable();
-	//	void	maintain(LBvhFixedDeformableMaintenance scheme, const SceneData& pdata);
 		void	maintain_BroadMarkEdition(LBvhFixedDeformableMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings); // broadmarkIntegration
-
-//#if MACRO_VERSION
-//		void	maintain(LBvhFixedDeformableMaintenance scheme, const ARCSimSceneData& pdata);
-//#endif
 
 		BvhPrimitiveArray&	cprim()				   { return cbvh().lvs().getPrimitiveArray(); }
 		BvhExtNodeArray&	clvs()				   { return cbvh().lvs(); }
@@ -52,8 +46,6 @@ namespace mn {
 		uint				getIntNodeSize()       { return cbvh().intSize(); }
 		uint				getPrimNodeSize()      { return cbvh().primSize(); }
 		int*				getPrimMap()           { return getRawPtr(d_primMap); }
-		//const int3*			getFaces()       const { return d_faces; }
-		//const PointType*	getVertices()    const { return d_vertices; }
 
 	private:
 		class	Bvh {
@@ -88,16 +80,11 @@ namespace mn {
 		Bvh&	cbvh() { return _bvh; }
 
 		/// main maintenance methods
-	//	void	build();
 		void	build_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
-		//void	refit();
 		void	refit_BroadMarkEdition();// broadmarkIntegration
-	//	void	update();	///< gather degradation infos
 		void	update_BroadMarkEdition();///< gather degradation infos broadmarkIntegration	
 		/// 
-	//	bool	restructure();
 		bool	restructure_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
-	//	void	updatePrimData(const SceneData& pdata);
 		void	updatePrimData_BroadMarkEdition(const SceneFrame& fdata, const InflatedSettings& settings);// broadmarkIntegration
 		void	reorderPrims();
 		void	reorderIntNodes();
@@ -105,15 +92,9 @@ namespace mn {
 		void	checkPrimitiveMap();
 		void	checkBvhValidity();
 
-		/// pre-formated input data
-		//int3*								d_faces;
-		//PointType*							d_vertices;
+
 		Aabb*								d_aabb;// broadmarkIntegration
 
-//#if MACRO_VERSION
-//		uint3*								d_facesARCSim;
-//		g_box*								d_bxsARCSim;
-//#endif
 		/// bvh
 		Bvh									_bvh;
 		/// auxiliary structures during maintenance procedure

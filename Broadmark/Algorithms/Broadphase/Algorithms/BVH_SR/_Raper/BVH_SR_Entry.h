@@ -7,7 +7,7 @@
 
 
 //Associated BVH_SR 
-#include "Frameworks\AppBase\Main.h"
+//#include "Frameworks\AppBase\Main.h"
 #include "Frameworks\CudaProject\CudaProjectModuleRegister.h"	
 
 #include"BVH_SR_Run.h"

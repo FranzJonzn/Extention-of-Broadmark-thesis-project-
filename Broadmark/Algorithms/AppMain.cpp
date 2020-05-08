@@ -7,7 +7,7 @@
 #include "Core\Settings.h"
 #include <iostream>
 #include <iomanip>
-#include "Broadphase/Algorithms/BVH_SR/BVH_SR.h"
+
 
 
 // This is the main entry point of the Broadmark system

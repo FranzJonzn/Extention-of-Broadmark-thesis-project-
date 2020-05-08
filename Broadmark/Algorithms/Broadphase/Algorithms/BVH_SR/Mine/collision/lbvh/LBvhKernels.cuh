@@ -12,22 +12,8 @@
 namespace mn {
 
 	/// Building Kernels
-//#if MACRO_VERSION
-//	__global__ void calcMaxBVARCSim(int size, g_box *_bxs, BOX* _bv);
-//	__global__ void calcMCsARCSim(int size, g_box *_bxs, BOX scene, uint* codes);
-//	__global__ void buildPrimitivesARCSim(int size, BvhPrimitiveCompletePort _prims, int *_primMap, uint3 *_faces, g_box *_bxs);
-//	__global__ void refitExtNodeARCSim(int primsize, BvhExtNodeCompletePort _lvs, int* _primMap, uint3* _faces, g_box* _bxs);
-//#endif
-//	
-	//__global__ void calcMaxBV               (int size, const int3 *_faces, const PointType *_vertices, BOX* _bv);
-	/*__global__ void calcMCs                 (int size, int3 *_faces, PointType *_vertices, BOX scene, uint* codes);*/
 	__global__ void calcMC64s               (int size, int3* _faces, PointType* _vertices, BOX* scene, uint64* codes);
 	__global__ void copyBackCodes           (int size, uint64* _primcodes, uint* _codes);	///< deprecated
-
-	//__global__ void buildPrimitives                  (int size, BvhPrimitiveCompletePort _prims, int *_primMap, int3 *_faces, PointType *_vertices);
-	__global__ void buildPrimitives_BroadMarkEdition(int size, BvhPrimitiveCompletePort _prims, int *_primMap, Aabb *_Aabb); /// broadmarkIntegration
-
-
 
 	__global__ void buildIntNodes(int size, uint *_depths, BvhExtNodeCompletePort _lvs, BvhIntNodeCompletePort _tks);
 	__global__ void calcIntNodeOrders(int size, BvhIntNodeCompletePort _tks, int *_lcas, uint *_depths, uint *_offsets, int *_tkMap);
@@ -46,13 +32,9 @@ namespace mn {
 	__global__ void calibrateRestrRoots    (int size, BvhIntNodeCompletePort _tks, const int* _leafRestrRoots, 
 											const int* _intRestrMarks, int* _leafRestrRootMarks, int* _numSubtree,
 		                                    uint* _subtreeSizes, int* _subtrees, int* _numRtIntNode);	// uniform inclusive_scanned restr marks
-	//__global__ void calcRestrMCs           (int size, const int3* _faces, const PointType* _vertices, BOX scene, 
-	//										const int* _primRestrMarks, const int* _primmap, uint* codes);
 	__global__ void selectPrimitives       (int primsize, const int* _leafRestrRoots, const int* _gatherMap, 
 											const MCSize* _mtcodes, uint64* _finalKeys, int* _scatterMap);
 	__global__ void updatePrimMap          (int restrPrimNum, int* _indices, int* _values, int* _primToIdx, int* _primmap);
-	/*__global__ void updatePrimAndExtNode   (int primsize, const int *_primRestrMarks, const int* _primMap, const int3* _faces, 
-		                                    const PointType * _vertices, const BOX* scene, BvhExtNodeCompletePort _lvs);*/
 	__global__ void restrIntNodes          (int extSize, int numRtExtNode, const int *_restrExtNodes, const uint *_prevTkMarks,
 		                                    const int *_leafRestrRoots, uint *_depths, int *_localLcas, BvhExtNodeCompletePort _lvs,
 		                                    BvhIntNodeCompletePort _tks);
@@ -78,8 +60,6 @@ namespace mn {
 		/// Building Kernels
 
 	__global__ void calcMCs_BroadMarkEdition(int size, Aabb *_Aabb, BOX scene, uint* codes);
-
-
 
 	__global__ void buildPrimitives_BroadMarkEdition(int size, BvhPrimitiveCompletePort _prims, int *_primMap, Aabb *_Aabb); 
 

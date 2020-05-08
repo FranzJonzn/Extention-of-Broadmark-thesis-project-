@@ -47,26 +47,6 @@ namespace mn {
 		}
 	}
 
-	//__global__ void calcRestrMCs(int size, const int3* _faces, const PointType* _vertices, BOX scene, const int* _primRestrMarks, const int* _primmap, uint* codes) {
-	//	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	//	if (idx >= size) return;
-	//	//for (; idx < size; idx += gridDim.x * blockDim.x) {
-	//		int pid = _primmap[idx];
-	//		if (_primRestrMarks[pid]) {
-	//			BOX bv{};
-	//			auto v = _vertices[_faces[idx].x];
-	//			bv.combines(v.x, v.y, v.z);
-	//			v = _vertices[_faces[idx].y];
-	//			bv.combines(v.x, v.y, v.z);
-	//			v = _vertices[_faces[idx].z];
-	//			bv.combines(v.x, v.y, v.z);
-	//			const auto c = bv.center();
-	//			const auto offset = c - scene._min;
-	//			codes[pid] = morton3D(offset.x / scene.width(), offset.y / scene.height(), offset.z / scene.depth());
-	//		}
-	//	//}
-	//}
-
 	__global__ void selectPrimitives(int primsize, const int* _leafRestrRoots, const int* _gatherMap, const MCSize* _mtcodes, uint64* _finalKeys, int* _scatterMap) {
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
 		if (idx >= primsize) return;
@@ -89,48 +69,6 @@ namespace mn {
 		//_primToIdx[_primIds[idx]] = _primIds[idx];
 	}
 
-	//__global__ void updatePrimAndExtNode(int primsize, const int *_primRestrMarks, const int * _primMap, const int3* _faces, 
-	//	const PointType * _vertices, const BOX * scene, BvhExtNodeCompletePort _lvs) {
-	//	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	//	if (idx >= primsize) return;
-	//	auto &_prims = _lvs.refPrimPort();
-	//	//auto _prims = _lvs.getPrimPort();
-	//	int pid = _primMap[idx];
-	//	BOX bv{};
-	//	auto v = _vertices[_faces[idx].x];
-	//	bv.combines(v.x, v.y, v.z);
-	//	v = _vertices[_faces[idx].y];
-	//	bv.combines(v.x, v.y, v.z);
-	//	v = _vertices[_faces[idx].z];
-	//	bv.combines(v.x, v.y, v.z);
-	//	// primitive layer
-
-	//	_prims.setBV(pid, bv);
-	//	// ext node layer
-	//	//int extId = _prims.extno(idx) - 1;
-	//	//const auto &primBvs = _lvs.primBvs();
-	//	//auto &extBvs = _lvs.refExtBvs();	// issues
-
-	//	_lvs.setBV(pid, bv);
-	//	//atomicMinD(&extBvs.minx(extId), primBvs.getminx(idx));
-	//	//atomicMinD(&extBvs.miny(extId), primBvs.getminy(idx));
-	//	//atomicMinD(&extBvs.minz(extId), primBvs.getminz(idx));
-	//	//atomicMaxD(&extBvs.maxx(extId), primBvs.getmaxx(idx));
-	//	//atomicMaxD(&extBvs.maxy(extId), primBvs.getmaxy(idx));
-	//	//atomicMaxD(&extBvs.maxz(extId), primBvs.getmaxz(idx));
-	//	// restr primitive
-	//	if (_primRestrMarks[pid]) {
-	//		_prims.vida(pid) = _faces[idx].x;
-	//		_prims.vidb(pid) = _faces[idx].y;
-	//		_prims.vidc(pid) = _faces[idx].z;
-	//		//_prims.idx(pid) = idx;
-	//		//_prims.type(pid) = static_cast<uchar>(ModelType::FixedDeformableType);
-
-	//		const auto c = bv.center();
-	//		const auto offset = c - scene->_min;
-	//		_prims.mtcode(pid) = morton3D(offset.x / scene->width(), offset.y / scene->height(), offset.z / scene->depth());
-	//	}
-	//}
 
 	__global__ void restrIntNodes(int extSize, int numRtExtNode, const int *_restrExtNodes, const uint *_prevTkMarks,
 		const int *_leafRestrRoots, uint *_depths, int *_localLcas, BvhExtNodeCompletePort _lvs, BvhIntNodeCompletePort _tks) {
