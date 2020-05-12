@@ -32,9 +32,9 @@ def plot_bars(results_folder):
                 y        = list(subframe)
 
                 plot = sns.barplot(x=x, y=y, palette="rocket", ax=a)
-                plot = plot.set_title(scene + "\n"+pstatic)
+                plot = plot.set_title(scene + "\n"+re.sub("ps", '', pstatic) + " procent statiska" +"\n" +str(n) + " Objects")
                 a.axhline(0, color="k", clip_on=False)
-                a.set_ylabel(str(n) + " Objects")
+                a.set_ylabel("mean time (s)")
                 for tick in a.get_xticklabels():
                     tick.set_rotation(90)
                     
@@ -63,7 +63,7 @@ def plot_box(results_folder):
             for (n, a) in zip(ns, get_iterable(axes)):
                 subframe = frame.transpose()[scene][p][n]
                 plot     = sns.boxplot(data=subframe, ax=a)
-                plot     = plot.set_title(scene+ "\n" + "Procent statiska: " +re.sub("ps", '', p) + "\n" + str(n) + " Objects" )
+                plot     = plot.set_title(scene+ "\n"  +re.sub("ps", '', p) + " procent statiska"+ "\n" + str(n) + " Objects" )
                 for tick in a.get_xticklabels():
                     tick.set_rotation(90)
 
@@ -72,29 +72,7 @@ def plot_box(results_folder):
                 sns.despine(bottom=False)
                 plt.tight_layout(h_pad=2)
     plt.show()
-			
-def plot_violinplot(results_folder):
-    # Reading the data
-    frame = pd.read_pickle(join(results_folder, "multi_index_frame.pickle"))
-    
-    # Fetching scenes, number of objects and algorithms
-    scenes     = list(set(frame.index.get_level_values(0)))
-    ns         = sorted(list(set(frame.index.get_level_values(2))))
-    algorithms = list(set(frame.index.get_level_values(3)))
-    ps         = list(set(frame.index.get_level_values(1)))
-    
-    subframe = frame.transpose()[scenes[0]][ps[0]][ns[2]]
-    
-    sns.set(style="ticks", palette="pastel")
-    pal = sns.cubehelix_palette(len(algorithms), rot=-.5, dark=.3)
-    sns.violinplot(data=subframe, palette=pal)
-    
-        
-    sns.despine(offset=10, trim=True)
-    plt.show()
-		
 
-	
 def plot_lines(results_folder):
     frame = pd.read_pickle(join(results_folder, "multi_index_described_frame.pickle"))
     scenes = list(set(frame.index.get_level_values(0)))
@@ -110,17 +88,14 @@ def plot_lines(results_folder):
             subframe['N (10³)']     = subframe['N (10³)'] / 1000
       
             a.axhline(0, color="k", clip_on=True)
-          #  a.set_xticks(np.arange(0, 20 , 1))
-          #  a.set_ylim(0, 0.55)
-          #  a.set_yticks(np.arange(0, 0.55, 0.005))
            
             if len(algorithms) <= 6:
                 plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', style="Algorithm",  palette="rocket", ax=a, markers=True, data=subframe)
             else:
                 plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', ax=a, markers=True, data=subframe)
             
-            plot = plot.set_title(scene+ " \n" +p )
-      
+            plot = plot.set_title(scene+ " \n" +re.sub("ps", '', p) + " procent statiska" )
+            a.set_ylabel("mean time (s)")
             for tick in a.get_xticklabels():
                 tick.set_rotation(90)
                 
