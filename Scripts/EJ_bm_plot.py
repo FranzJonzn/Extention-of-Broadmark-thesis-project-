@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import re
 from bm_utils import get_iterable
 from os.path import join
 from six.moves import zip
@@ -20,7 +21,7 @@ def plot_bars(results_folder):
     algorithms = list(set(frame.index.get_level_values(3)))
     ps         = list(set(frame.index.get_level_values(1)))
     
-    sns.set(style="white", context="talk")
+    sns.set(style="whitegrid")
     for scene in scenes:
         for pstatic in ps:
             f, axes = plt.subplots(1, len(ns), figsize=(12, 5), sharex=True, sharey=True)
@@ -38,8 +39,8 @@ def plot_bars(results_folder):
                     tick.set_rotation(90)
                     
                 
-    sns.despine(bottom=True)
-    plt.tight_layout(h_pad=2)
+        sns.despine(bottom=True)
+        plt.tight_layout(h_pad=2)
     plt.show()
 		
 
@@ -53,41 +54,25 @@ def plot_box(results_folder):
     algorithms = list(set(frame.index.get_level_values(3)))
     ps         = list(set(frame.index.get_level_values(1)))
     
-	
 
-
-#    for scene in scenes:
-#       f, axes = plt.subplots(1, len(ps), figsize=(12, 5), sharex=False, sharey=False)
-#       for (p, a) in zip(ps, get_iterable(axes)):
-#          for n in ns:
-#             subframe = frame.transpose()[scene][p][n]
-#             sns.set(style="ticks", palette="pastel")
-#             pal  = sns.cubehelix_palette(len(algorithms), rot=-.5, dark=.3)
-#             plot = sns.boxplot(data=subframe, orient="h", palette=pal)
-#             plot = plot.set_title(scene+ "\n" +p+ "\n"+str(n) )
-#    sns.despine(offset=10, trim=True)
-#    plt.show()
-#	
-    sns.set(style="white", context="talk")
+    sns.set(style="whitegrid", palette="pastel")
+    pal  = sns.cubehelix_palette(len(algorithms), rot=-.5, dark=.3)
     for scene in scenes:
         for p in ps:
-            f, axes = plt.subplots(1, len(ns), figsize=(12, 5), sharex=False, sharey=False)
+            f, axes = plt.subplots(1, len(ns), figsize=(12, 5), sharex=True, sharey=True)
             for (n, a) in zip(ns, get_iterable(axes)):
                 subframe = frame.transpose()[scene][p][n]
-                sns.set(style="ticks", palette="pastel")
-                pal  = sns.cubehelix_palette(len(algorithms), rot=-.5, dark=.3)
-                plot = sns.boxplot(data=subframe, orient="h", palette=pal)
-                plot = plot.set_title(scene+ "\n" +p+ "\n"+str(n) )
-                a.axhline(0, color="k", clip_on=False)
-                a.set_ylabel(str(n) + " Objects")
+                plot     = sns.boxplot(data=subframe, ax=a)
+                plot     = plot.set_title(scene+ "\n" + "Procent statiska: " +re.sub("ps", '', p) + "\n" + str(n) + " Objects" )
                 for tick in a.get_xticklabels():
                     tick.set_rotation(90)
-                    
-                
-    sns.despine(bottom=True)
-    plt.tight_layout(h_pad=2)
-    plt.show()
 
+                    
+                sns.despine(bottom=True)
+                sns.despine(bottom=False)
+                plt.tight_layout(h_pad=2)
+    plt.show()
+			
 def plot_violinplot(results_folder):
     # Reading the data
     frame = pd.read_pickle(join(results_folder, "multi_index_frame.pickle"))
@@ -125,9 +110,9 @@ def plot_lines(results_folder):
             subframe['N (10³)']     = subframe['N (10³)'] / 1000
       
             a.axhline(0, color="k", clip_on=True)
-            a.set_xticks(np.arange(0, 20 , 1))
-            a.set_ylim(0, 0.55)
-            a.set_yticks(np.arange(0, 0.55, 0.005))
+          #  a.set_xticks(np.arange(0, 20 , 1))
+          #  a.set_ylim(0, 0.55)
+          #  a.set_yticks(np.arange(0, 0.55, 0.005))
            
             if len(algorithms) <= 6:
                 plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', style="Algorithm",  palette="rocket", ax=a, markers=True, data=subframe)
@@ -140,6 +125,6 @@ def plot_lines(results_folder):
                 tick.set_rotation(90)
                 
             
-    sns.despine(bottom=True)
-    plt.tight_layout(h_pad=2)
+            sns.despine(bottom=True)
+            plt.tight_layout(h_pad=2)
     plt.show()
