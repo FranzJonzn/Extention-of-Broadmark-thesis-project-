@@ -30,24 +30,32 @@ namespace mn {
 			printf("BVH_SR: \t Result = FAIL\n");
 			exit(EXIT_FAILURE);
 		}
-		if (deviceCount == 0)	printf("BVH_SR: \t There are no available device(s) that support CUDA\n");
-		else					printf("BVH_SR: \t Detected %d CUDA Capable device(s)\n", deviceCount);
+		if (deviceCount == 0) {
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+			//printf("BVH_SR: \t There are no available device(s) that support CUDA\n");
+		}
+		else {
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+			//printf("BVH_SR: \t Detected %d CUDA Capable device(s)\n", deviceCount);
+		}
 		_akDeviceProps = new cudaDeviceProp[deviceCount];
 		for (int i = 0; i < deviceCount; i++) {
 			cudaSetDevice(i);
 			cudaGetDeviceProperties(&_akDeviceProps[i], i);
 		}
 		_iDevID = findCudaDevice(0, nullptr);
-		printf("BVH_SR: \t > GPU device has %d Multi-Processors, SM %d.%d compute capabilities\n",
-			_akDeviceProps[_iDevID].multiProcessorCount, _akDeviceProps[_iDevID].major, 
-			_akDeviceProps[_iDevID].minor);
-
-		printf("BVH_SR: \t # Finished \'CudaDevice\' initialization\n");
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+		//printf("BVH_SR: \t > GPU device has %d Multi-Processors, SM %d.%d compute capabilities\n",
+			//_akDeviceProps[_iDevID].multiProcessorCount, _akDeviceProps[_iDevID].major, 
+			//_akDeviceProps[_iDevID].minor);
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+		//printf("BVH_SR: \t # Finished \'CudaDevice\' initialization\n");
 	}
 
 	CudaDevice::~CudaDevice() {
 		delete[] _akDeviceProps;
-		printf("BVH_SR: \t # Finished \'CudaDevice\' termination\n");
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+		//printf("BVH_SR: \t # Finished \'CudaDevice\' termination\n");
 	}
 
 	int CudaDevice::generalGridSize(int& threadNum, int& blockSize) const { return (threadNum + blockSize - 1) / blockSize; }
@@ -98,9 +106,9 @@ namespace mn {
 	void CudaDevice::registerKernel(const std::string& tag, KernelFunc f, cudaFuncCache cacheConfig, bool waveFashion) {
 		_kFuncTable.emplace(tag, KernelConfig(f, cacheConfig, waveFashion));
 		
-
-		printf("BVH_SR: \t Kernel[%s](%s) block size configuration: %d\n", tag.c_str(), waveFashion?"wave":"general", _kFuncTable[tag].maxOccBlockSize);
-		printf("BVH_SR: \t_kFuncTable.length[%d] \n", _kFuncTable.size());
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+		//printf("BVH_SR: \t Kernel[%s](%s) block size configuration: %d\n", tag.c_str(), waveFashion?"wave":"general", _kFuncTable[tag].maxOccBlockSize);
+		//printf("BVH_SR: \t_kFuncTable.length[%d] \n", _kFuncTable.size());
 
 		
 	}

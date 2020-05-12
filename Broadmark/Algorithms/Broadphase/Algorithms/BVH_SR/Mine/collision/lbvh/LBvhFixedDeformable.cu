@@ -227,8 +227,8 @@ namespace mn {
 		reorderIntNodes();
 
 		Logger::recordSection<TimerType::GPU>("sort_bvh_BroadMarkEdition");
-
-		printf("BVH_SR: \t \tPrimsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+		//printf("BVH_SR: \t \tPrimsize: %d Extsize: %d\n", cbvh().primSize(), cbvh().extSize());
 	}
 	
 	void LBvhFixedDeformable::refit_BroadMarkEdition() {
@@ -362,9 +362,10 @@ Logger::recordSection<TimerType::GPU>("refit_bvh_BroadMarkEdition");
 		/// restr threshold is user defined
 		int			opt = _numRtIntNode > (cbvh().intSize() >> 1);
 		if (opt) { ///< restructure couldn't handle this much degeneration efficiently
-			str = string_format("%d subtrees and %d (%d) internal nodes need restructuring. build\n", _numRtSubtree, _numRtIntNode, cbvh().intSize());
-			std::cout << str << '\n';
-			Logger::message(str);
+//FRANZ: Kommenterat ut för att få mer städad utprintning		
+			//str = string_format("%d subtrees and %d (%d) internal nodes need restructuring. build\n", _numRtSubtree, _numRtIntNode, cbvh().intSize());
+			//std::cout << str << '\n';
+			//Logger::message(str);
 
 			build_BroadMarkEdition(worldAabb);
 			// should notify the fronts to be reconstructed
@@ -374,9 +375,10 @@ Logger::recordSection<TimerType::GPU>("refit_bvh_BroadMarkEdition");
 		}
 		opt = _numRtIntNode < (cbvh().intSize() >> 3);	/// could consider the quantity of related front nodes
 		if (opt) {
-			str = string_format("%d subtrees and %d (%d) internal nodes need restructuring. refit\n", _numRtSubtree, _numRtIntNode, cbvh().intSize());
-			std::cout << str << '\n';
-			Logger::message(str);
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+			//str = string_format("%d subtrees and %d (%d) internal nodes need restructuring. refit\n", _numRtSubtree, _numRtIntNode, cbvh().intSize());
+			//std::cout << str << '\n';
+			//Logger::message(str);
 
 			refit_BroadMarkEdition();
 			_restrLog.setBvhOptTag(0);
@@ -466,10 +468,10 @@ Logger::recordSection<TimerType::GPU>("refit_bvh_BroadMarkEdition");
 
 		/// 10 build internal nodes
 		cbvh().lvs().calcSplitMetrics(cbvh().extSize());
-
-		str = string_format("%d subtrees and %d (%d) internal nodes need restructuring. restr\n", _numRtSubtree, _numRtIntNode, cbvh().intSize());
-		std::cout << str << '\n';
-		Logger::message(str);
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+		//str = string_format("%d subtrees and %d (%d) internal nodes need restructuring. restr\n", _numRtSubtree, _numRtIntNode, cbvh().intSize());
+		//std::cout << str << '\n';
+		//Logger::message(str);
 
 		checkCudaErrors(cudaMemset(getRawPtr(d_count), 0, sizeof(uint) * (cbvh().extSize() + 1)));	///< storing lcl-values, used for ordering
 		_unsortedTks.clearIntNodes(cbvh().intSize());

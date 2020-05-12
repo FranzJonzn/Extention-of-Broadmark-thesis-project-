@@ -18,8 +18,9 @@ namespace mn {
 		double free_db = (double)free_byte;
 		double total_db = (double)total_byte;
 		double used_db = total_db - free_db;
-		printf("BVH_SR: \t GPU memory usage: used = %f, free = %f MB, total = %f MB\n",
-			used_db / 1024.0 / 1024.0, free_db / 1024.0 / 1024.0, total_db / 1024.0 / 1024.0);
+//FRANZ: Kommenterat ut för att få mer städad utprintning	
+		//printf("BVH_SR: \t GPU memory usage: used = %f, free = %f MB, total = %f MB\n",
+		//	used_db / 1024.0 / 1024.0, free_db / 1024.0 / 1024.0, total_db / 1024.0 / 1024.0);
 	}
 
 	inline __host__ __device__ float diagonalLength(float3 ext) {

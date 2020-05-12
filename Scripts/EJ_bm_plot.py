@@ -15,10 +15,10 @@ def plot_bars(results_folder):
     frame = pd.read_pickle(join(results_folder, "multi_index_described_frame.pickle"))
     
     # Fetching scenes, number of objects and algorithms
-    scenes = list(set(frame.index.get_level_values(0)))
-    ns = sorted(list(set(frame.index.get_level_values(2))))
+    scenes     = list(set(frame.index.get_level_values(0)))
+    ns         = sorted(list(set(frame.index.get_level_values(2))))
     algorithms = list(set(frame.index.get_level_values(3)))
-    ps= list(set(frame.index.get_level_values(1)))
+    ps         = list(set(frame.index.get_level_values(1)))
     
     sns.set(style="white", context="talk")
     for scene in scenes:
@@ -27,8 +27,8 @@ def plot_bars(results_folder):
             for (n, a) in zip(ns, get_iterable(axes)):
                 subframe = frame["mean"].transpose()[scene][pstatic][n]#[wanted_algorithms]
                 subframe = subframe.sort_values(ascending=False)
-                x = list(subframe.index)
-                y = list(subframe)
+                x        = list(subframe.index)
+                y        = list(subframe)
 
                 plot = sns.barplot(x=x, y=y, palette="rocket", ax=a)
                 plot = plot.set_title(scene + "\n"+pstatic)
@@ -38,21 +38,67 @@ def plot_bars(results_folder):
                     tick.set_rotation(90)
                     
                 
-        sns.despine(bottom=True)
-        plt.tight_layout(h_pad=2)
-        plt.show()
+    sns.despine(bottom=True)
+    plt.tight_layout(h_pad=2)
+    plt.show()
+		
 
 def plot_box(results_folder):
     # Reading the data
     frame = pd.read_pickle(join(results_folder, "multi_index_frame.pickle"))
     
     # Fetching scenes, number of objects and algorithms
-    scenes = list(set(frame.index.get_level_values(0)))
-    ns = sorted(list(set(frame.index.get_level_values(2))))
+    scenes     = list(set(frame.index.get_level_values(0)))
+    ns         = sorted(list(set(frame.index.get_level_values(2))))
     algorithms = list(set(frame.index.get_level_values(3)))
-    ps= list(set(frame.index.get_level_values(1)))
+    ps         = list(set(frame.index.get_level_values(1)))
     
-    subframe = frame.transpose()[scenes[0]][ps[1]][ns[2]]
+	
+
+
+#    for scene in scenes:
+#       f, axes = plt.subplots(1, len(ps), figsize=(12, 5), sharex=False, sharey=False)
+#       for (p, a) in zip(ps, get_iterable(axes)):
+#          for n in ns:
+#             subframe = frame.transpose()[scene][p][n]
+#             sns.set(style="ticks", palette="pastel")
+#             pal  = sns.cubehelix_palette(len(algorithms), rot=-.5, dark=.3)
+#             plot = sns.boxplot(data=subframe, orient="h", palette=pal)
+#             plot = plot.set_title(scene+ "\n" +p+ "\n"+str(n) )
+#    sns.despine(offset=10, trim=True)
+#    plt.show()
+#	
+    sns.set(style="white", context="talk")
+    for scene in scenes:
+        for p in ps:
+            f, axes = plt.subplots(1, len(ns), figsize=(12, 5), sharex=False, sharey=False)
+            for (n, a) in zip(ns, get_iterable(axes)):
+                subframe = frame.transpose()[scene][p][n]
+                sns.set(style="ticks", palette="pastel")
+                pal  = sns.cubehelix_palette(len(algorithms), rot=-.5, dark=.3)
+                plot = sns.boxplot(data=subframe, orient="h", palette=pal)
+                plot = plot.set_title(scene+ "\n" +p+ "\n"+str(n) )
+                a.axhline(0, color="k", clip_on=False)
+                a.set_ylabel(str(n) + " Objects")
+                for tick in a.get_xticklabels():
+                    tick.set_rotation(90)
+                    
+                
+    sns.despine(bottom=True)
+    plt.tight_layout(h_pad=2)
+    plt.show()
+
+def plot_violinplot(results_folder):
+    # Reading the data
+    frame = pd.read_pickle(join(results_folder, "multi_index_frame.pickle"))
+    
+    # Fetching scenes, number of objects and algorithms
+    scenes     = list(set(frame.index.get_level_values(0)))
+    ns         = sorted(list(set(frame.index.get_level_values(2))))
+    algorithms = list(set(frame.index.get_level_values(3)))
+    ps         = list(set(frame.index.get_level_values(1)))
+    
+    subframe = frame.transpose()[scenes[0]][ps[0]][ns[2]]
     
     sns.set(style="ticks", palette="pastel")
     pal = sns.cubehelix_palette(len(algorithms), rot=-.5, dark=.3)
@@ -61,33 +107,35 @@ def plot_box(results_folder):
         
     sns.despine(offset=10, trim=True)
     plt.show()
+		
 
+	
 def plot_lines(results_folder):
     frame = pd.read_pickle(join(results_folder, "multi_index_described_frame.pickle"))
     scenes = list(set(frame.index.get_level_values(0)))
     algorithms = list(set(frame.index.get_level_values(3)))
-    procentStaticks= list(set(frame.index.get_level_values(1)))
+    pstatic         = list(set(frame.index.get_level_values(1)))
 
-    sns.set(style="white", context="poster")
-    for procentStatick in procentStaticks:
-        f, axes = plt.subplots(1, len(scenes), figsize=(12, 8), sharex=True, sharey=True)
-        for (s, a) in zip(scenes, get_iterable(axes)):
-            subframe                = frame["mean"].transpose()[s]
+    for scene in scenes:
+        f, axes = plt.subplots(1, len(pstatic), figsize=(12, 5), sharex=False, sharey=True)
+        for (p, a) in zip(pstatic, get_iterable(axes)):
+            subframe                = frame["mean"].transpose()[scene]#[wanted_algorithms]
             subframe                = subframe.reset_index()
             subframe.rename(columns = {'level_2':'Algorithm','level_0':'ps','level_1':'N (10³)',  'mean':'mean time'}, inplace=True)
             subframe['N (10³)']     = subframe['N (10³)'] / 1000
-            
+      
+            a.axhline(0, color="k", clip_on=True)
+            a.set_xticks(np.arange(0, 20 , 1))
+            a.set_ylim(0, 0.55)
+            a.set_yticks(np.arange(0, 0.55, 0.005))
+           
             if len(algorithms) <= 6:
                 plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', style="Algorithm",  palette="rocket", ax=a, markers=True, data=subframe)
             else:
                 plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', ax=a, markers=True, data=subframe)
             
-            plot = plot.set_title(s+" \n"+procentStatick )
-            a.axhline(0, color="k", clip_on=True)
-            a.set_xticks(np.arange(0, 1024+128, 128.0))
-            a.set_ylim(0, 0.55)
-            a.set_yticks(np.arange(0, 0.55, 0.05))
-        
+            plot = plot.set_title(scene+ " \n" +p )
+      
             for tick in a.get_xticklabels():
                 tick.set_rotation(90)
                 
@@ -95,4 +143,3 @@ def plot_lines(results_folder):
     sns.despine(bottom=True)
     plt.tight_layout(h_pad=2)
     plt.show()
-

@@ -17,9 +17,9 @@ from shutil import rmtree
 
 batch_run_name = "TEST/" # use this to name this testing session. If blank, a auto-generated timestamped name will be used
 broadmark_bin = "D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/_EX_JOBB_Broadmark_REPO/Broadmark/bin64/Broadmark_Release_x64.exe"
-scenes_folder =  "E:/BVH_SR_validering/Simulation"  #"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/Simulations/Sim/Recordings_AABBs/"   "E:/BVH_SR_validering/Simulation_k" #"C:/Users/Franz/Desktop/l1"
-output_folder = "E:/BVH_SR_validering/Resultat"#"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/_Resultat/" "C:/Users/Franz/Desktop/TEST_1"
-algorithms =  ["BVH_SR_GENERATE","GPU_LBVH","CGAL","KD"]#["BVH_SR_GENERATE", "BVH_SR_REFIT_ONLY_FRONT", "BVH_SR_FRONT_GENERATE","BVH_SR_STATIC_MANDATORY"]
+scenes_folder =  "C:/Users/Franz/Desktop/testOfparselineframe/sim"# "E:/plot_validering/Simulation"  #"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/Simulations/Sim/Recordings_AABBs/"   "E:/BVH_SR_validering/Simulation_k" #"C:/Users/Franz/Desktop/l1"
+output_folder = "C:/Users/Franz/Desktop/testOfparselineframe/res"#"E:/plot_validering/Resultat"# "C:/Users/Franz/Desktop/TEST_1"
+algorithms =  ["BVH_SR_GENERATE"]#["BVH_SR_GENERATE", "BVH_SR_REFIT_ONLY_FRONT", "BVH_SR_FRONT_GENERATE","BVH_SR_STATIC_MANDATORY"]
 #BF",
 #BF_Parallel",
 #BF_SSE",

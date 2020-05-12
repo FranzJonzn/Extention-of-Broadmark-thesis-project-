@@ -246,7 +246,7 @@ Logger::recordSection<TimerType::GPU>("broad_phase_front_ordering");
 							(const int*)_pBvh->clvs().getLcas(),
 							_log.portobj<0>());
 
-	//	printf("BVH_SR: \t \n#original front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
+		printf("BVH_SR: \t \n#original front(%d, %d) valid(%d, %d) invalid(%d, %d)#\n\n", osizes.x, osizes.y,
 			_numValidFrontNodes[0], _numValidFrontNodes[1], osizes.x - _numValidFrontNodes[0], osizes.y - _numValidFrontNodes[1]);
 		_fronts.slide();
 	}
