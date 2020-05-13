@@ -126,6 +126,7 @@
     <ClCompile Include="Broadphase\Algorithms\Grid\Grid.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Broadphase\Algorithms\PSM_SAP\SuccTree.cpp" />
     <ClCompile Include="Broadphase\Algorithms\Tracy\Tracy_Parallel.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -253,6 +254,7 @@
     <ClInclude Include="Broadphase\Algorithms\Grid\Grid_ND_SAP_Parallel.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="Broadphase\Algorithms\PSM_SAP\SuccTree.h" />
     <ClInclude Include="Broadphase\Algorithms\SAP\SAP_Base.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
