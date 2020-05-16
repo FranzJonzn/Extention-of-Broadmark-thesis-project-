@@ -145,6 +145,7 @@
     <ClCompile Include="Broadphase\Algorithms\KD\KD_Validation.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="BrodmarkValidation_sammanstelning.cpp" />
     <ClCompile Include="Dependencies\Bullet2\btAxisSweep3.cpp" />
     <ClCompile Include="Dependencies\Bullet2\btBroadphaseProxy.cpp" />
     <ClCompile Include="Dependencies\Bullet2\btCollisionAlgorithm.cpp" />
@@ -290,6 +291,7 @@
     </ClInclude>
     <ClInclude Include="Broadphase\Algorithms\SoAAlgorithm.h" />
     <ClInclude Include="Broadphase\OverlapChaches\HashedCache.h" />
+    <ClInclude Include="BrodmarkValidation_sammanstelning.h" />
     <ClInclude Include="Core\Algorithms.h" />
     <ClInclude Include="Core\Math\SIMD.h" />
     <ClInclude Include="Broadphase\Algorithms\Grid\Internal\GridSuperstructure.hpp" />

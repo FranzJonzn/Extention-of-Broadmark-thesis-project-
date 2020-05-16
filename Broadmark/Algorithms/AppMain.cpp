@@ -10,6 +10,11 @@
 
 
 
+#include "BrodmarkValidation_sammanstelning.h"
+BrodmarkValidation_sammanstelning validtester = BrodmarkValidation_sammanstelning();
+
+
+
 // This is the main entry point of the Broadmark system
 // It is divided into two parts, one for 'release' builds, 
 // which is based on reading command line args, and a part
@@ -84,10 +89,22 @@ void execute(const Settings& settings) {
 		validation->Initialize(inflatedSettings, initialData);
 	});
 
+
+/////////////////////
+// Validation test//
+	validtester.SetOutputFile();
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 	// Actual test code
 	Results::Init(inflatedSettings);
 	for (size_t i = 0; i < scene.GetHeader().m_numberOfFrames; i++) {
 		const SceneFrame& frameData = scene.GetNextFrame();
+
+		/////////////////////
+		// Validation test//
+		validtester.StartTimer();/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		const double dt = Measure([&] {
 			Results::BeginFrame();
@@ -95,6 +112,11 @@ void execute(const Settings& settings) {
 			algorithm->GetOverlaps()->Validate(); // Does nothing at 'release' mode
 			Results::EndFrame();
 		});
+
+		/////////////////////
+		// Validation test//
+		validtester.EndTimer();/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 		algorithm->Validate();
 		validation->Execute(frameData);
@@ -111,18 +133,25 @@ void execute(const Settings& settings) {
 		// Some algorithms may report extra pairs due to AABB margins or other devices
 		ASSERT(algorithm->GetOverlaps()->Size() >= validation->GetOverlaps()->Size());
 
-#ifndef DEBUG
-		// Avoids wasting too much time on slow algorithms or on bad alg-scene combinations
-		// some algorithms are really bad just at the beggining, so we give them some 
-		// tolerance at the beggining.
-		// If you want to simulate algorithms despite them being too slow, you should
-		// comment out this 'if'
-		//if (i > 5 && avgDt > 2.0f ||
-		//	i > 15 && avgDt > 1.0f) {
-		//	std::cout << "\n\tToo slow, aborting...\n";
-		//	return;
-		//}
-#endif
+
+/////////////////////
+// Validation test//
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		validtester.PrintToTestRun(dt);
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//#ifndef DEBUG
+//		// Avoids wasting too much time on slow algorithms or on bad alg-scene combinations
+//		// some algorithms are really bad just at the beggining, so we give them some 
+//		// tolerance at the beggining.
+//		// If you want to simulate algorithms despite them being too slow, you should
+//		// comment out this 'if'
+//		//if (i > 5 && avgDt > 2.0f ||
+//		//	i > 15 && avgDt > 1.0f) {
+//		//	std::cout << "\n\tToo slow, aborting...\n";
+//		//	return;
+//		//}
+//#endif
 	}
 
 	Results::Finish();
@@ -203,10 +232,21 @@ int main(int argc, char** argv) {
 	#endif
 	initializeDocTestForAssertionsOutOfTestCases();
 
+
+
+
+
+
 	#ifdef DEBUG
 	main_debug();
 	#else
-	if (argc == 2) {
+
+	if (argc == 3) {
+		/////////////////////
+		// Validation test//
+		validtester.CompileResult();
+	}
+	else if (argc == 2) {
 		if (strcmp(argv[1], "-tests") == 0) {
 			main_tests();
 		} else {

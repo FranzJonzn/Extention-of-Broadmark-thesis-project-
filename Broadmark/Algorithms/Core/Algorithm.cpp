@@ -13,7 +13,7 @@
 //#include "Broadphase/Algorithms/GPU/Bullet3GPUAlgorithms.h"
 #include "Broadphase/Algorithms/Misc/None.h"
 #include "Broadphase/Algorithms/Misc/Inspectors.h"
-//#include "Broadphase/Algorithms/KD/KD.h"
+#include "Broadphase/Algorithms/KD/KD.h"
 #include "Broadphase/Algorithms/BVH_SR/_Raper/BVH_SR_Entry.h"
 
 
@@ -49,11 +49,11 @@ std::unique_ptr<BroadphaseInterface> Algorithms::Create(const char* algorithmNam
 	//REGISTER("GPU_Grid"					, GPU_Grid);
 	//REGISTER("GPU_LBVH"					, GPU_LBVH);
 	//REGISTER("GPU_SAP"					, GPU_SAP);
-	//REGISTER("KD"						, KD);
-	REGISTER("BVH_SR_STATIC_MANDATORY"  , BVH_SR_STATIC_MANDATORY); // << ny
-	REGISTER("BVH_SR_REFIT_ONLY_FRONT"  , BVH_SR_REFIT_ONLY_FRONT); // << ny
+	 REGISTER("KD"						, KD);
+	//REGISTER("BVH_SR_STATIC_MANDATORY"  , BVH_SR_STATIC_MANDATORY); // << ny
+	//REGISTER("BVH_SR_REFIT_ONLY_FRONT"  , BVH_SR_REFIT_ONLY_FRONT); // << ny
 	REGISTER("BVH_SR_GENERATE"          , BVH_SR_GENERATE); // << ny
-	REGISTER("BVH_SR_FRONT_GENERATE"    , BVH_SR_FRONT_GENERATE); // << ny
+	//REGISTER("BVH_SR_FRONT_GENERATE"    , BVH_SR_FRONT_GENERATE); // << ny
 
 
 	// Misc algorithms used to validate the system
@@ -94,7 +94,7 @@ std::vector<const char*> Algorithms::EnumerateAlgorithms() {
 		//"GPU_Grid",
 		//"GPU_LBVH",
 		//"GPU_SAP",
-		//"KD",
+		"KD",
 		//"BVH_SR_STATIC_MANDATORY"  ,
 		//"BVH_SR_REFIT_ONLY_FRONT"  ,
 		//"BVH_SR_GENERATE"          ,
