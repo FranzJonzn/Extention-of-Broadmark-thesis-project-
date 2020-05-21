@@ -21,19 +21,7 @@ def EJ_generate_jsons(batch_name, results_folder, tests_folder, scenes_folder, a
   
   # finding all scene files
     scenes = [f for f in listdir(scenes_folder) if isfile(join(scenes_folder, f))]
-
-    # creating tests and results folders
- #  if batch_name != "":
- #      tests_folder = join(root_folder, batch_name)
- #      if (exists(tests_folder)):
- #          rmtree(tests_folder) # in case it already existed
- #  else:
- #      tests_folder = join(root_folder, "Tests " + datetime.now().strftime('%Y-%m-%d_%H-%M-%S' + '/'))
-
-    #results_folder = join(tests_folder, "Results/")
-   # makedirs(tests_folder)
-    #makedirs(results_folder)
-    # generating all jsons for scene-algorithm pairs
+    
     for s in scenes:
         if additionalProp == "":
             task = s + "_" + algorithm 
@@ -68,7 +56,7 @@ def EJ_generate_jsons(batch_name, results_folder, tests_folder, scenes_folder, a
     return tests_folder
     
 
-def EJ_run_algorithms(tests_folder, broadmark_bin):
+def EJ_run_algorithms(tests_folder, broadmark_bin, testNumer,numberOfTest):
     # display header
     process = Popen([broadmark_bin])
     process.wait()
@@ -77,12 +65,12 @@ def EJ_run_algorithms(tests_folder, broadmark_bin):
     tests = [f for f in listdir(tests_folder) if isfile(join(tests_folder, f))]
     count = 1
     for t in tests:
-        print("Test " + str(count) + " of " + str(len(tests)))
-        
+        #print("Test " + str(count) + " of " + str(len(tests)))
+        print("Test " + str(testNumer) + " av " + str(numberOfTest))
         args = [broadmark_bin, join(tests_folder, t)]
         process = Popen(args)
         process.wait()
-        count = count + 1
-
+        #count = count + 1
+        testNumer = testNumer+1
     results_folder = join(tests_folder, "Results/")
     return results_folder

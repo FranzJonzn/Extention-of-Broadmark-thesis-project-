@@ -62,7 +62,7 @@ def plot_box(results_folder):
             f, axes = plt.subplots(1, len(ns), figsize=(12, 5), sharex=True, sharey=True)
             for (n, a) in zip(ns, get_iterable(axes)):
                 subframe = frame.transpose()[scene][p][n]
-                plot     = sns.boxplot(data=subframe, ax=a)
+                plot     = sns.violinplot(data=subframe, ax=a)#sns.boxplot(data=subframe, ax=a)
                 plot     = plot.set_title(scene+ "\n"  +re.sub("ps", '', p) + " procent statiska"+ "\n" + str(n) + " Objects" )
                 for tick in a.get_xticklabels():
                     tick.set_rotation(90)

@@ -54,11 +54,11 @@ def EJ_calcAverage(results_folder, main_out_folder, tests_folder, procent_static
 			frameA = pd.concat((frameA, df))
 			
 
-	frameData   = formate_Frame_Data(frameA)
+	frameData   = EJ_formate_Frame_Data(frameA)
 	averageData = averageData.replace("@", frameData)
-	averageData = formate_setting_Data(join(results_folder, results[0]), averageData, procent_static,str(len(results)))
+	averageData = EJ_formate_setting_Data(join(results_folder, results[0]), averageData, procent_static,str(len(results)))
 	
-	name = formate_name_Data(results[0],results_folder,procent_static)	
+	name = EJ_formate_name_Data(results[0],results_folder,procent_static)	
      
 	#To local results
 	average_results_folder = tests_folder +"_Average_Result/"	
@@ -71,7 +71,7 @@ def EJ_calcAverage(results_folder, main_out_folder, tests_folder, procent_static
 		rf.write(averageData)
 	
 
-def formate_Frame_Data(frameA):
+def EJ_formate_Frame_Data(frameA):
 	frameA_in   = frameA.groupby(frameA.index)
 	frameA_mean = frameA_in.mean()
 	frameData   = frameA_mean.to_json(orient='records')
@@ -96,7 +96,7 @@ def formate_Frame_Data(frameA):
 	frameResData = "["+frameResData+"\n    ]"
 	return frameResData	
 	
-def formate_setting_Data(result, averageData, procent_static, number_of_teast):
+def EJ_formate_setting_Data(result, averageData, procent_static, number_of_teast):
 	with (open(result))as file:
 		# Copy the informaton from settion to the average
 		data = json.load(file)
@@ -117,7 +117,7 @@ def formate_setting_Data(result, averageData, procent_static, number_of_teast):
 		
 	return averageData	
 	
-def formate_name_Data(results_name, results_folder, procent_static):
+def EJ_formate_name_Data(results_name, results_folder, procent_static):
 	name = " "
 	with (open( join(results_folder, results_name)))as file:
 		data = json.load(file)
@@ -176,6 +176,7 @@ def EJ_process_results(results_folder):
     main_frame.to_excel(join(results_folder, "main_frame.xlsx"))
     main_frame.to_pickle(join(results_folder, "main_frame.pickle"))
     print("main_frame written!")
+  
     
     # The master dataframe in described form
     # Columns: (scene, n, algorithm)

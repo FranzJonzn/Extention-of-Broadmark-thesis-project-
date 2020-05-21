@@ -17,8 +17,8 @@ from shutil import rmtree
 
 batch_run_name = "TEST/" # use this to name this testing session. If blank, a auto-generated timestamped name will be used
 broadmark_bin = "D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/_EX_JOBB_Broadmark_REPO/Broadmark/bin64/Broadmark_Release_x64.exe"
-scenes_folder =  "C:/Users/Franz/Desktop/testOfparselineframe/sim"# "E:/plot_validering/Simulation"  #"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/Simulations/Sim/Recordings_AABBs/"   "E:/BVH_SR_validering/Simulation_k" #"C:/Users/Franz/Desktop/l1"
-output_folder = "C:/Users/Franz/Desktop/testOfparselineframe/res"#"E:/plot_validering/Resultat"# "C:/Users/Franz/Desktop/TEST_1"
+scenes_folder =  "C:/Users/Franz/Desktop/N"#"E:/BVH_SR_validering/Simulation - kopia" # E:/plot_validering/Simulation"  #"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/BroadMarker/Simulations/Sim/Recordings_AABBs/"   "E:/BVH_SR_validering/Simulation_k" #"C:/Users/Franz/Desktop/l1"
+output_folder = ""#"C:/Users/Franz/Desktop/testOfparselineframe/res"#"E:/plot_validering/Resultat"# "C:/Users/Franz/Desktop/TEST_1"
 algorithms =  ["BVH_SR_GENERATE"]#["BVH_SR_GENERATE", "BVH_SR_REFIT_ONLY_FRONT", "BVH_SR_FRONT_GENERATE","BVH_SR_STATIC_MANDATORY"]
 #BF",
 #BF_Parallel",
@@ -94,7 +94,32 @@ if(output_folder == ""):
 if (exists(output_folder)):
 	rmtree(output_folder) # in case it already existed	
 makedirs(output_folder)
+pathTmep = ""
+for ps in os.listdir(root):
+	if(ps[0] != "_"):
+		pathTmep = root + '/' + ps + '/'
+		break
+#mest ineffektiva sättet att beräkna anatalet på, men min hjärna får det inte att gå ihop på npgt emr elegant 
+antalTester = 1
+# sätt och jag har itne tid att redda ut det bättre sättet.
+for ps in os.listdir(root):
+    if(ps[0] != "_"):
+        pathPS = root + '/' + ps + '/'
+        for sim in os.listdir(pathPS):
+            pathSim = pathPS +  sim + '/'
+            for inte in os.listdir(pathSim):
+                pathInte = pathSim + inte + '/'
+                for n in os.listdir(pathInte):
+                    pathN = pathInte +  n + '/'
+                    for ob in os.listdir(pathN):
+                        if(ob[0] != "_"):
+                            pathOB  = pathN +  ob + '/'
+                            for alg in algorithms:
+                                for t in os.listdir(pathOB) :
+                                    if (t[0] != "_"):
+                                        antalTester = antalTester+1
 
+nuvarandeTest = 0
 for ps in os.listdir(root):
 	if(ps[0] != "_"):
 		pathPS = root + '/' + ps + '/'
@@ -108,7 +133,6 @@ for ps in os.listdir(root):
 					for ob in os.listdir(pathN):
 						pathOB  = pathN +  ob + '/'
 						pathRes = pathOB + "_Testning/"
-				
 						if (exists(pathRes)):
 							rmtree(pathRes) # in case it already existed
 						makedirs(pathRes)
@@ -121,12 +145,12 @@ for ps in os.listdir(root):
 	
 							for t in os.listdir(pathOB) :
 								if (t[0] != "_"):
+									nuvarandeTest = nuvarandeTest+1
 									pathT         = pathOB + t + '/'
 									scenes_folder = pathT + "Recordings_AABBs" + '/'	
 									test_name     = "_"+t
 									tests_folder  = EJ_generate_jsons(test_name, pathResult, pathalg, scenes_folder, alg, additionalProperty, additionaPropertyValues)
-									results_folder = EJ_run_algorithms(tests_folder, broadmark_bin)
-									
+									results_folder = EJ_run_algorithms(tests_folder, broadmark_bin,nuvarandeTest,antalTester)
 							proStat = ps.split('_')		
 							EJ_calcAverage(pathResult, output_folder, pathalg, proStat[0])
 						

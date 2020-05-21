@@ -73,7 +73,7 @@ def generate_jsons(batch_name, root_folder, scenes_folder, algorithms, additiona
     return tests_folder
     
 
-def run_algorithms(tests_folder, broadmark_bin):
+def run_algorithms(tests_folder, validation_folder, broadmark_bin):
     # display header
     process = Popen([broadmark_bin])
     process.wait()
@@ -84,7 +84,7 @@ def run_algorithms(tests_folder, broadmark_bin):
     for t in tests:
         print("Test " + str(count) + " of " + str(len(tests)))
         
-        args = [broadmark_bin, join(tests_folder, t)]
+        args = [broadmark_bin, join(tests_folder, t),validation_folder]
         process = Popen(args)
         process.wait()
         count = count + 1
@@ -92,12 +92,12 @@ def run_algorithms(tests_folder, broadmark_bin):
     results_folder = join(tests_folder, "Results/")
     return results_folder
 
-def combinde_Validation_Results(tests_folder, broadmark_bin):
+def combinde_Validation_Results(validation_folder, broadmark_bin):
     # display header
     process = Popen([broadmark_bin])
     process.wait()
     print("Combindes validations test " )
-    args = [broadmark_bin, join(tests_folder,tests_folder),tests_folder]
+    args = [broadmark_bin, validation_folder,validation_folder,validation_folder]
     process = Popen(args)
     process.wait()
    

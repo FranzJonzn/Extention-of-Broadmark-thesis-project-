@@ -12,7 +12,7 @@ void BVH_SR_Run::Initialaze(const InflatedSettings& simulationsSettings, const m
 	BVH_SR_Run* run;
 	run				   = new BVH_SR_Run;
 	run->TheCudaDevice = mn::CudaDevice::getInstance();
-	run->TheLogic->startup();
+	//run->TheLogic->startup();
 //FRANZ: Kommenterat ut för att få mer städad utprintning	
 	//printf("BVH_SR \t * Finishing App initialization!\n");
 

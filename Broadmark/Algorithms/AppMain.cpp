@@ -10,10 +10,11 @@
 
 
 
-#include "BrodmarkValidation_sammanstelning.h"
-BrodmarkValidation_sammanstelning validtester = BrodmarkValidation_sammanstelning();
 
-
+/////////////////////
+// Validation test/////////////////////////////////////////////
+#include "BrodmarkValidation_sammanstelning.h"/////////////////
+///////////////////////////////////////////////////////////////
 
 // This is the main entry point of the Broadmark system
 // It is divided into two parts, one for 'release' builds, 
@@ -89,22 +90,10 @@ void execute(const Settings& settings) {
 		validation->Initialize(inflatedSettings, initialData);
 	});
 
-
-/////////////////////
-// Validation test//
-	validtester.SetOutputFile();
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 	// Actual test code
 	Results::Init(inflatedSettings);
 	for (size_t i = 0; i < scene.GetHeader().m_numberOfFrames; i++) {
 		const SceneFrame& frameData = scene.GetNextFrame();
-
-		/////////////////////
-		// Validation test//
-		validtester.StartTimer();/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		const double dt = Measure([&] {
 			Results::BeginFrame();
@@ -112,10 +101,6 @@ void execute(const Settings& settings) {
 			algorithm->GetOverlaps()->Validate(); // Does nothing at 'release' mode
 			Results::EndFrame();
 		});
-
-		/////////////////////
-		// Validation test//
-		validtester.EndTimer();/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 		algorithm->Validate();
@@ -133,13 +118,6 @@ void execute(const Settings& settings) {
 		// Some algorithms may report extra pairs due to AABB margins or other devices
 		ASSERT(algorithm->GetOverlaps()->Size() >= validation->GetOverlaps()->Size());
 
-
-/////////////////////
-// Validation test//
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		validtester.PrintToTestRun(dt);
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 //#ifndef DEBUG
 //		// Avoids wasting too much time on slow algorithms or on bad alg-scene combinations
 //		// some algorithms are really bad just at the beggining, so we give them some 
@@ -156,6 +134,14 @@ void execute(const Settings& settings) {
 
 	Results::Finish();
 }
+
+
+
+
+
+
+
+
 
 // Used on 'release' mode when the '-tests' argument is passed
 void main_tests() {
@@ -225,6 +211,12 @@ void main_help() {
 	//std::cout << "\n\n\n";
 }
 
+/////////////////////
+// Validation test////////////////////////////////////////////////////////////////////////////////////
+void main_validation(const char* path, BrodmarkValidation_sammanstelning *validtester);            //
+void validation_execute(const Settings& settings, BrodmarkValidation_sammanstelning *validtester); //
+void ValidationTestningen(int argc, char** argv);                                                  //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char** argv) {
 	#ifdef DEBUG
@@ -232,21 +224,23 @@ int main(int argc, char** argv) {
 	#endif
 	initializeDocTestForAssertionsOutOfTestCases();
 
-
-
-
-
-
 	#ifdef DEBUG
 	main_debug();
 	#else
 
-	if (argc == 3) {
-		/////////////////////
-		// Validation test//
-		validtester.CompileResult();
-	}
-	else if (argc == 2) {
+
+	/////////////////////
+    // Validation test////////////////////////
+	if (argc > 2)                          ///
+	{									   ///
+		ValidationTestningen(argc, argv);  ///
+		return 0;                          ///    
+	}									   ///
+	//////////////////////////////////////////
+	
+
+
+    if (argc == 2) {
 		if (strcmp(argv[1], "-tests") == 0) {
 			main_tests();
 		} else {
@@ -265,5 +259,147 @@ int main(int argc, char** argv) {
 	std::cout << "\n\n";
 	return 0;
 }
+
+
+/////////////////////
+// Validation test//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// skulle kunna varit i main, men bröt ut för tydlighetens skull
+void ValidationTestningen(int argc, char** argv) 
+{
+	BrodmarkValidation_sammanstelning	validtester(argv[2]);
+	if (argc == 3)
+		main_validation(argv[1], &validtester);
+	else 
+		validtester.CompileResult();
+
+}
+
+void main_validation(const char* path, BrodmarkValidation_sammanstelning *validtester) {
+
+	
+	std::ifstream file(path);
+	if (file.fail()) {
+		std::cout << "The supplied JSON file does not exists or is unavailable. \n";
+		std::cout << "\tFile: " << path << "\n\n";
+		system("pause");
+		exit(0);
+	}
+
+	json j;
+	file >> j;
+	Settings settings;
+	try {
+		settings = j.get<Settings>();
+	}
+	catch (json::exception& e) {
+		std::cout << "The supplied JSON could not be parsed. \n";
+		std::cout << "\tJson: " << e.what() << '\n' << "\tException id: " << e.id << std::endl;
+		std::cout << "\tFile: " << path << "\n\n";
+		system("pause");
+		exit(0);
+	}
+
+	settings.Validate();
+	validation_execute(settings, validtester);
+}
+
+// This is the 'core' function of the Broadmark system. It takes a 'settings'
+// parameter, which has the algorithm, scene and parameters that should be used.
+// In sequence, it sets everything up and runs the algorithms, measuring them
+void validation_execute(const Settings& settings, BrodmarkValidation_sammanstelning *validtester) {
+
+
+	Scene scene(settings.m_inputScene.c_str());
+
+	// A 'inflated' scene has some scene specific data fed into it.
+	const InflatedSettings inflatedSettings(settings, scene.GetHeader());
+
+
+
+	std::unique_ptr<BroadphaseInterface> algorithm = Algorithms::Create(inflatedSettings.m_algorithm.c_str());
+	std::unique_ptr<BroadphaseInterface> validation = Algorithms::Create(VALIDATION_ALGORITHM);
+
+	if (algorithm == nullptr) {
+		std::cout << "The specified algorithm does not exists (" << inflatedSettings.m_algorithm << ")\n";
+		return;
+	}
+	else if (inflatedSettings.m_algorithm == "GPU_SAP" && inflatedSettings.m_numberOfObjects > 512000) {
+		std::cout << "GPU SAP does not work for more than 512k objects)\n";
+		return;
+	}
+
+	std::cout << "Algorithm: " << inflatedSettings.m_algorithm_prettyName << '\n';
+	std::cout << "Scene: " << inflatedSettings.m_inputScene << '\n';
+
+	// Reading the 'first frame', which has the initial AABBs of objects
+	// Although we measure the time taken to initialize algorithms, we only
+	// use this info as a starting value for the average time taken per frame.
+	// This info is only used to compute the test remaining time.
+	const SceneFrame& initialData = scene.GetNextFrame();
+	double avgDt = Measure([&] {
+		algorithm->Initialize(inflatedSettings, initialData);
+		validation->Initialize(inflatedSettings, initialData);
+	});
+
+
+	/////////////////////
+	// Validation test/////////////
+	validtester->SetOutputFile();//
+	///////////////////////////////
+
+
+
+		// Actual test code
+	Results::Init(inflatedSettings);
+	for (size_t i = 0; i < scene.GetHeader().m_numberOfFrames; i++) {
+		const SceneFrame& frameData = scene.GetNextFrame();
+
+		/////////////////////
+		// Validation test///////////
+		validtester->StartTimer();///
+		////////////////////////////
+
+		const double dt = Measure([&] {
+			Results::BeginFrame();
+			algorithm->ExecuteAndMeasure(frameData);
+			algorithm->GetOverlaps()->Validate(); // Does nothing at 'release' mode
+			Results::EndFrame();
+		});
+
+		/////////////////////
+		// Validation test/////////
+		validtester->EndTimer();//
+		/////////////////////////
+
+		algorithm->Validate();
+		validation->Execute(frameData);
+		validation->GetOverlaps()->Validate();
+
+		avgDt = weightedExponentialMovingAverage(dt, avgDt);
+		std::cout << std::setprecision(4) << std::setw(5) << std::fixed
+			<< "\r\t(" << i + 1 << "/" << scene.GetHeader().m_numberOfFrames << "): "
+			<< avgDt << " s/frame "
+			<< "(ETA: " << avgDt * (scene.GetHeader().m_numberOfFrames - i) / 60 << "m) - "
+			<< algorithm->GetOverlaps()->Size() / (double)scene.GetHeader().m_numberOfObjects << " collisions/object"
+			<< " ";
+
+		// Some algorithms may report extra pairs due to AABB margins or other devices
+		ASSERT(algorithm->GetOverlaps()->Size() >= validation->GetOverlaps()->Size());
+
+
+		/////////////////////
+		// Validation test////////////////
+		validtester->PrintToTestRun(dt);//
+		/////////////////////////////////
+
+	}
+	//behöver inte logga utt resultat för valideringen till egna filler
+	//Results::Finish();
+}
+
+
+
 
 
