@@ -17,9 +17,11 @@ from shutil import rmtree
 
 batch_run_name = "TEST/" # use this to name this testing session. If blank, a auto-generated timestamped name will be used
 broadmark_bin = "D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/_EX_JOBB_Broadmark_REPO/Broadmark/bin64/Broadmark_Release_x64.exe"
-scenes_folder = 'E:/BVH_SR_validering/Simulation'#C:\Users\Franz\Desktop\simForB
+scenes_folder = "C:/Users/Franz/Desktop/ValideringsTest2"#'E:/BVH_SR_validering/Simulation'#C:\Users\Franz\Desktop\ValideringsTest
 output_folder = ""
-algorithms =  ["BVH_SR_GENERATE"]#,"AxisSweep","DBVT D","DBVT F","GPU_SAP","GPU_LBVH"]
+algorithms =  ["BF","BF_Parallel","BF_SSE","BF_AVX","BF_SSE_Parallel","BF_AVX_Parallel","SAP_Parallel","SAP_SSE","SAP_AVX_Parallel","CGAL","AxisSweep","Grid_2D","Grid_2D_SAP","Grid_2D_Parallel","Grid_2D_SAP_Parallel","Grid_3D","Grid_3D_Parallel","Grid_3D_SAP_Parallel","Tracy","Tracy_Parallel","DBVT D","DBVT F","GPU_Grid","GPU_LBVH","GPU_SAP","KD","BVH_SR_GENERATE"]
+#algorithms =  ["BVH_SR_GENERATE"]
+
 #BF",
 #BF_Parallel",
 #BF_SSE",
@@ -50,9 +52,10 @@ algorithms =  ["BVH_SR_GENERATE"]#,"AxisSweep","DBVT D","DBVT F","GPU_SAP","GPU_
 #GPU_LBVH",
 #GPU_SAP",
 #KD",
+#BVH_SR_GENERATE" 
+#== de här under finns men är inte garanterade att fungera ==
 #BVH_SR_STATIC_MANDATORY"
-#BVH_SR_REFIT_ONLY_FRONT"
-#BVH_SR_GENERATE"        
+#BVH_SR_REFIT_ONLY_FRONT"   
 #BVH_SR_FRONT_GENERATE
 
 

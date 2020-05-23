@@ -74,7 +74,7 @@ namespace mn {
 
 		cudaError_t error = cudaGetLastError();
 
-		if (error != cudaSuccess) printf("BVH_SR4: \t Kernel launch failure %s\n", cudaGetErrorString(error));
+		if (error != cudaSuccess) printf("BVH_SR4: \t Kernel launch failure %s [%s]\n", cudaGetErrorString(error),instr.name());
 	}
 
 	/*

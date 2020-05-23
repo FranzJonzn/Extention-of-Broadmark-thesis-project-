@@ -213,7 +213,9 @@
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\BvhPrimitiveNode.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvh.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhFixedDeformable.h" />
-    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\narrow_phase\narrow_phase.cuh" />
+    <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\collision\narrow_phase\narrow_phase.cuh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\Frameworks\AppBase\AppBase.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\setting\BvhSettings.h" />
     <ClInclude Include="Broadphase\Algorithms\BVH_SR\Mine\setting\BvttFrontSettings.h" />
@@ -553,7 +555,9 @@
     <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\lbvh\LBvhUpdateKernels.cu">
       <FileType>Document</FileType>
     </CudaCompile>
-    <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\narrow_phase\narrow_phase.cu" />
+    <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\collision\narrow_phase\narrow_phase.cu">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </CudaCompile>
     <CudaCompile Include="Broadphase\Algorithms\BVH_SR\Mine\system\CudaDevice\CudaDevice.cu">
       <FileType>Document</FileType>
     </CudaCompile>

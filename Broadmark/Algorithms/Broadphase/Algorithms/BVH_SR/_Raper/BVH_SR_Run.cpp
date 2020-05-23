@@ -42,7 +42,8 @@ void BVH_SR_Run::RunFrame(const SceneFrame& frameData, const int frameNumber) {
 }
 
 void BVH_SR_Run::Terminate() {
-
+	BVH_SR_Run::_bvh.reset();
+	BVH_SR_Run::_fl.reset();
 }
 
 // i stort hämtad från Bullet3GPUAlgorithms då det är den GPU algritmen som fans med från början.

@@ -479,7 +479,7 @@ Logger::recordSection<TimerType::GPU>("refit_bvh_BroadMarkEdition");
 
 		configuredLaunch(
 						{ "RestrIntNodes", _numRtExtNode },
-						restrIntNodes,
+						restrIntNodes, 
 							cbvh().extSize(),
 							_numRtExtNode,
 							(const int*)getRawPtr(d_taskSequence),

@@ -5,7 +5,12 @@
 //bool mn::ModuleRegister::s_bTerminateRegistered  = mn::ModuleRegister::RegisterTerminate();
 
 
+BVH_SR_Entry::~BVH_SR_Entry() {
+	mn::CudaDevice::getInstance()->shutdown();
+	mn::Logger::getInstance()->shutdown();
+	printf("BVH-SR shutdown");
 
+}
 void BVH_SR_Entry::Initialize(InflatedSettings settings, const SceneFrame& frameData)
 {
 

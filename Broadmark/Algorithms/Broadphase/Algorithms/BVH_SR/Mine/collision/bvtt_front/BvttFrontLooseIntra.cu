@@ -105,7 +105,7 @@ namespace mn {
 				checkCudaErrors(cudaMemcpy(&_intFtNodeCnt, d_intFtNodeCnt, sizeof(int), cudaMemcpyDeviceToHost));
 				if ((_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y) > 0.30) {	///< front build
 					Logger::message("build front(in restr). ");
-					printf("BVH_SR: \t bd front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
+					//printf("BVH_SR: \t bd front: restr(%d, %d) total(%d, %d) ratio: %.3f\n", _intFtNodeCnt, _extFtNodeCnt, osizes.x, osizes.y, (_extFtNodeCnt + _intFtNodeCnt) * 1. / (osizes.x + osizes.y));
 					//getchar();
 					generate();
 					inspectResults();

@@ -29,7 +29,7 @@ public:
 
 
 
-
+	 ~BVH_SR_Entry();
 	void Initialize(InflatedSettings settings, const SceneFrame& frameData) override;
 	void UpdateObjects(const SceneFrame& frameData) override;
 	void UpdateStructures() override;
