@@ -4,7 +4,7 @@
 #include "Broadphase\OverlapChaches\SimpleCache.h"
 
 
-
+#include "Broadphase/OverlapChaches/NullCache.h"
 
 //Associated BVH_SR 
 //#include "Frameworks\AppBase\Main.h"
@@ -22,7 +22,7 @@
 
 
 
-class BVH_SR_Entry : public BaseAlgorithm<Object, SimpleCache> 
+class BVH_SR_Entry : public BaseAlgorithm<Object, NullCache>
 {
 public:
 
@@ -34,9 +34,8 @@ public:
 	void UpdateObjects(const SceneFrame& frameData) override;
 	void UpdateStructures() override;
 	void SearchOverlaps() override;
-#pragma warning(suppress : 4996)
-	thrust::host_vector<int2>	m_pairs;
-#pragma warning(disable : 4996)
+
+
 protected:
 	virtual mn::Scheme getSceme() = 0;
 

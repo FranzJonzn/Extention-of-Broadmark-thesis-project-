@@ -106,9 +106,10 @@ namespace mn {
 	void CudaDevice::registerKernel(const std::string& tag, KernelFunc f, cudaFuncCache cacheConfig, bool waveFashion) {
 		_kFuncTable.emplace(tag, KernelConfig(f, cacheConfig, waveFashion));
 		
-	
-		printf("BVH_SR: \t Kernel[%s](%s) block size configuration: %d\n", tag.c_str(), waveFashion?"wave":"general", _kFuncTable[tag].maxOccBlockSize);
-		printf("BVH_SR: \t_kFuncTable.length[%d] \n", _kFuncTable.size());
+
+//FRANZ: Kommenterat ut för att få mer städad utprintning		
+		//printf("BVH_SR: \t Kernel[%s](%s) block size configuration: %d\n", tag.c_str(), waveFashion?"wave":"general", _kFuncTable[tag].maxOccBlockSize);
+		//printf("BVH_SR: \t_kFuncTable.length[%d] \n", _kFuncTable.size());
 
 		
 	}

@@ -9,7 +9,7 @@
 #include "setting\CDBenchmarkSettings.h"
 
 #include <thrust\execution_policy.h>
-
+//#include "collision\narrow_phase\narrow_phase.cuh"
 
 namespace mn {
 
@@ -505,14 +505,49 @@ Logger::recordSection<TimerType::GPU>("broad_phase_cd_bvh");
 
 
 ///==================================================================================================================================================================
-/// broadmarkIntegration
+// FJ_BME: 
 ///==================================================================================================================================================================
 
 
 
+	//void BvttFrontLooseIntra::getOverlapingPares(thrust::host_vector<int2> *d_oCp) {
+	//	//(checkThrustErrors(thrust::copy(getDevicePtr(d_orderedCdpairs), getDevicePtr(d_orderedCdpairs) + _cpNum, getDevicePtr(d_oCp)));
+	//	(*d_oCp) = d_orderedCdpairs;
+	//}
 
-	void BvttFrontLooseIntra::getOverlapingPares(thrust::host_vector<int2> *d_oCp) {
-		//(checkThrustErrors(thrust::copy(getDevicePtr(d_orderedCdpairs), getDevicePtr(d_orderedCdpairs) + _cpNum, getDevicePtr(d_oCp)));
-		(*d_oCp) = d_orderedCdpairs;
+	//d_orderedCdpairs inehåller redan alla funna överlapningar så behöver endast storleken för 
+	//broadmark
+
+	int BvttFrontLooseIntra::getOverlapingPares() 
+	{
+		checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
+		//checkCudaErrors(cudaMemset(d_actualCpNum, 0, sizeof(int)));
+		//configuredLaunch(
+		//				{ "simpleNarrowPhase_BME", _cpNum }, 
+		//				simpleNarrowPhase_BME,
+		//					(uint)_cpNum, 
+		//					getRawPtr(d_orderedCdpairs), 
+		//					(const Aabb *)_pBvh->getAabbs(),
+		//					d_actualCpNum);
+
+		//_fronts.retrieveSizes();
+		////checkCudaErrors(cudaMemcpy(&_cpNum, d_cpNum, sizeof(int), cudaMemcpyDeviceToHost));
+		//checkCudaErrors(cudaMemcpy(&_actualCpNum, d_actualCpNum, sizeof(int), cudaMemcpyDeviceToHost));
+
+		//std::string str = string_format("front (%d, %d) cpNum %d actualCpNum %d", _fronts.cs(0), _fronts.cs(1), _cpNum, _actualCpNum);
+	
+		//std::cout << "BVH_SR: \t\t"<< str << '\n';
+		//
+		//Logger::recordSection<TimerType::GPU>("narrow_phase");
+
+
+
+
+		return _cpNum;// *d_actualCpNum;
 	}
+
+	
+
+
+
 }

@@ -98,7 +98,7 @@ void execute(const Settings& settings) {
 		const double dt = Measure([&] {
 			Results::BeginFrame();
 			algorithm->ExecuteAndMeasure(frameData);
-			algorithm->GetOverlaps()->Validate(); // Does nothing at 'release' mode
+			//algorithm->GetOverlaps()->Validate(); // Does nothing at 'release' mode
 			Results::EndFrame();
 		});
 

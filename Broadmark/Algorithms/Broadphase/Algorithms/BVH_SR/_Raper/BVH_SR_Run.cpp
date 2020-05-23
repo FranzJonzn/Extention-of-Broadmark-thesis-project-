@@ -46,13 +46,18 @@ void BVH_SR_Run::Terminate() {
 }
 
 // i stort hämtad från Bullet3GPUAlgorithms då det är den GPU algritmen som fans med från början.
-void BVH_SR_Run::SearchOverlaps(thrust::host_vector<int2> *_pairs) {
+//void BVH_SR_Run::SearchOverlaps(thrust::host_vector<int2> *_pairs) {
+//	BVH_SR_Run::_fl->maintain(maintainOpts.second);
+//	BVH_SR_Run::_fl->getOverlapingPares(_pairs);
+//
+//}
+int BVH_SR_Run::SearchOverlaps() {
 	BVH_SR_Run::_fl->maintain(maintainOpts.second);
-
-	BVH_SR_Run::_fl->getOverlapingPares(_pairs);
+	int test  = BVH_SR_Run::_fl->getOverlapingPares();
+	printf("i%", test);
+	return test;
 
 }
-
 
 void BVH_SR_Run::MaintainScheme(int frameId)  {
 	mn::LBvhFixedDeformableMaintenance bvhOpt;

@@ -13,7 +13,7 @@ namespace mn {
 		f << <gs, bs >> >(args...);
 		cudaDeviceSynchronize();
 		error = cudaGetLastError();
-		if (error != cudaSuccess) printf("BVH_SR: \t Kernel launch failure %s\n", cudaGetErrorString(error));
+		if (error != cudaSuccess) printf("BVH_SR1: \t Kernel launch failure %s\n", cudaGetErrorString(error));
 	}
 
 	template <typename... Arguments>
@@ -28,7 +28,7 @@ namespace mn {
 			Logger::tock<TimerType::GPU>(tag);
 		}
 		cudaError_t error = cudaGetLastError();
-		if (error != cudaSuccess) printf("BVH_SR: \t Kernel launch failure %s\n", cudaGetErrorString(error));
+		if (error != cudaSuccess) printf("BVH_SR2: \t Kernel launch failure %s\n", cudaGetErrorString(error));
 	}
 
 	template <typename... Arguments>
@@ -43,7 +43,7 @@ namespace mn {
 			Logger::tock<TimerType::GPU>(tag);
 		}
 		cudaError_t error = cudaGetLastError();
-		if (error != cudaSuccess) printf("BVH_SR: \t Kernel launch failure %s\n", cudaGetErrorString(error));
+		if (error != cudaSuccess) printf("BVH_SR3: \t Kernel launch failure %s\n", cudaGetErrorString(error));
 	}
 
 	template <typename... Arguments>
@@ -74,7 +74,7 @@ namespace mn {
 
 		cudaError_t error = cudaGetLastError();
 
-		if (error != cudaSuccess) printf("BVH_SR: \t Kernel launch failure %s\n", cudaGetErrorString(error));
+		if (error != cudaSuccess) printf("BVH_SR4: \t Kernel launch failure %s\n", cudaGetErrorString(error));
 	}
 
 	/*

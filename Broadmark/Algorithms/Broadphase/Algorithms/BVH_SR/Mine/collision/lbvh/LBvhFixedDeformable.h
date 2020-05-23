@@ -35,17 +35,18 @@ namespace mn {
 		void	maintain_BroadMarkEdition(LBvhFixedDeformableMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings); // broadmarkIntegration
 
 		BvhPrimitiveArray&	cprim()				   { return cbvh().lvs().getPrimitiveArray(); }
-		BvhExtNodeArray&	clvs()				   { return cbvh().lvs(); }
-		BvhIntNodeArray&	ctks()				   { return cbvh().tks(); }
-		int*				getPrevLbds()		   { return getRawPtr(d_prevLbds); }
-		int*				getPrevRbds()		   { return getRawPtr(d_prevRbds); }
-		BvhRestrLog&		restrLog()			   { return _restrLog; }
-		bool				logUpdated()     const { return _restrLog.getUpdateTag(); }
-		int 				bvhOptTag()		 const { return _restrLog.getBvhOptTag(); }
-		uint				getExtNodeSize()       { return cbvh().extSize(); }
-		uint				getIntNodeSize()       { return cbvh().intSize(); }
-		uint				getPrimNodeSize()      { return cbvh().primSize(); }
-		int*				getPrimMap()           { return getRawPtr(d_primMap); }
+		BvhExtNodeArray&	clvs()				   { return cbvh().lvs();					  }
+		BvhIntNodeArray&	ctks()				   { return cbvh().tks();					  }
+		int*				getPrevLbds()		   { return getRawPtr(d_prevLbds);			  }
+		int*				getPrevRbds()		   { return getRawPtr(d_prevRbds);			  }
+		BvhRestrLog&		restrLog()			   { return _restrLog;						  }
+		bool				logUpdated()     const { return _restrLog.getUpdateTag();		  }
+		int 				bvhOptTag()		 const { return _restrLog.getBvhOptTag();		  }
+		uint				getExtNodeSize()       { return cbvh().extSize();				  }
+		uint				getIntNodeSize()       { return cbvh().intSize();				  }
+		uint				getPrimNodeSize()      { return cbvh().primSize();				  }
+		int*				getPrimMap()           { return getRawPtr(d_primMap);			  }
+		const Aabb*			getAabbs()		 const { return d_aabb;							  }//FJ_BME:
 
 	private:
 		class	Bvh {
@@ -79,13 +80,17 @@ namespace mn {
 		//Bvh&	cbvh() { return _bvhs.cho(); }
 		Bvh&	cbvh() { return _bvh; }
 
+// FJ_BME:
 		/// main maintenance methods
-		void	build_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
-		void	refit_BroadMarkEdition();// broadmarkIntegration
-		void	update_BroadMarkEdition();///< gather degradation infos broadmarkIntegration	
+		void	build_BroadMarkEdition(const Aabb& worldAabb);
+		void	refit_BroadMarkEdition();
+		void	update_BroadMarkEdition();///< gather degradation infos 
 		/// 
-		bool	restructure_BroadMarkEdition(const Aabb& worldAabb);// broadmarkIntegration
-		void	updatePrimData_BroadMarkEdition(const SceneFrame& fdata, const InflatedSettings& settings);// broadmarkIntegration
+		bool	restructure_BroadMarkEdition(const Aabb& worldAabb);
+		void	updatePrimData_BroadMarkEdition(const SceneFrame& fdata, const InflatedSettings& settings);
+	
+		
+		
 		void	reorderPrims();
 		void	reorderIntNodes();
 		///
@@ -93,7 +98,7 @@ namespace mn {
 		void	checkBvhValidity();
 
 
-		Aabb*								d_aabb;// broadmarkIntegration
+		Aabb*								d_aabb;	// FJ_BME:
 
 		/// bvh
 		Bvh									_bvh;

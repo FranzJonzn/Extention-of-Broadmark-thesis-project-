@@ -14,6 +14,7 @@
 #include "utility\CudaThrustUtils.hpp"
 #include "setting\CDBenchmarkSettings.h"
 
+
 namespace mn {
 
 	/// Definitions
@@ -32,8 +33,8 @@ namespace mn {
 	
 
 	
-		/// broadmarkIntegration ===========================================================================
-		checkCudaErrors(cudaMalloc((void**)&d_aabb, sizeof(Aabb)*config.primSize));
+
+		checkCudaErrors(cudaMalloc((void**)&d_aabb, sizeof(Aabb)*config.primSize));	// FJ_BME:
 
 
 
@@ -149,8 +150,8 @@ namespace mn {
 			getchar();
 	}
 
-	///==================================================================================================================================================================
-/// broadmarkIntegration
+///==================================================================================================================================================================
+// FJ_BME:
 ///==================================================================================================================================================================
 
 	void LBvhFixedDeformable::maintain_BroadMarkEdition(LBvhFixedDeformableMaintenance scheme, const SceneFrame& fdata, const InflatedSettings& settings) {
@@ -352,7 +353,7 @@ Logger::recordSection<TimerType::GPU>("refit_bvh_BroadMarkEdition");
 
 		Logger::recordSection<TimerType::GPU>("check_bvh_restr");
 
-		//TODO är problem med här, kuda försöker läsa mine utanför mines bank
+
 
 		// check the extent of the degeneration according to the number of subtree
 		checkCudaErrors(cudaMemcpy(&_numRtSubtree, d_numRtSubtree, sizeof(int), cudaMemcpyDeviceToHost));

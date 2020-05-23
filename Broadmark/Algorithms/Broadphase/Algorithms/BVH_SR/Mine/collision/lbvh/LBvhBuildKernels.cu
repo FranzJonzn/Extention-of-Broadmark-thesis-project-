@@ -197,26 +197,26 @@ namespace mn {
 
 
 ///==================================================================================================================================================================
-/// broadmarkIntegration
+// FJ_BME:
 ///==================================================================================================================================================================
 
 
 	__global__ void calcMCs_BroadMarkEdition(int size, Aabb* _Aabb, BOX scene, uint* codes) {
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
 		if (idx >= size) return;
-		auto v = _Aabb[idx];
-		BOX bv(v);
-		const PointType c = bv.center();
+	//	auto v = _Aabb[idx];
+		BOX bv(_Aabb[idx]);
+		const PointType c      = bv.center();
 		const PointType offset = c - scene._min;
-		codes[idx] = morton3D(offset.x / scene.width(), offset.y / scene.height(), offset.z / scene.depth());
+		codes[idx]             = morton3D(offset.x / scene.width(), offset.y / scene.height(), offset.z / scene.depth());
 	}
 
 	__global__ void buildPrimitives_BroadMarkEdition(int size, BvhPrimitiveCompletePort _prims, int *_primMap, Aabb *_Aabb) {	///< update idx-th _bxs to idx-th leaf
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
 		if (idx >= size) return;
 		int newIdx = _primMap[idx];
-		auto v = _Aabb[idx];
-		BOX bv(v);
+		//auto v = _Aabb[idx];
+		BOX bv(_Aabb[idx]);
 		_prims.idx(newIdx) = idx;
 		_prims.type(newIdx) = static_cast<uint>(ModelType::FixedDeformableType);
 		_prims.setBV(newIdx, bv);

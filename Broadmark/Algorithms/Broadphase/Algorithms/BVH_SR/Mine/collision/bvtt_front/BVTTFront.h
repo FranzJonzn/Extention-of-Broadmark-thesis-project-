@@ -12,7 +12,7 @@
 #include "BvttFrontLooseIntra.h"
 #include "BvttFrontLooseKernels.cuh"
 #include "system\CudaDevice\CudaDevice.h"
-
+//#include "collision\narrow_phase\narrow_phase.cuh"
 namespace mn {
 
 	template<BvttFrontType bvttFrontType>
@@ -37,7 +37,8 @@ namespace mn {
 			device->registerKernel("FilterExtFrontCnts", filterExtFrontCnts, cudaFuncCachePreferL1, false);
 
 			/// coherent BVH based CD
-			device->registerKernel("ReorderCdPairs"   , reorderCdPairs   , cudaFuncCachePreferL1, false);
+			//device->registerKernel("simpleNarrowPhase_BME", simpleNarrowPhase_BME, cudaFuncCachePreferL1, false); // FJ_BME:
+			device->registerKernel("ReorderCdPairs"       , reorderCdPairs       , cudaFuncCachePreferL1, false);
 
 			/// pure BVH based CD
 			device->registerKernel("PureBvhSelfCD" , pureBvhSelfCD , cudaFuncCachePreferL1, false);

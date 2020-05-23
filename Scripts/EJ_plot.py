@@ -14,7 +14,7 @@ if results_folder == '':
   #  all_subdirs = [root + d + '\\Results\\' for d in listdir(root)]
   #  latest_subdir = max(all_subdirs, key=getmtime)
   #  results_folder = latest_subdir
-	results_folder = "C:/Users/Franz/Desktop/simBForBild/_Results"#"C:/Users/Franz/Desktop/TEST_1" #"D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb\BroadMarker/_Resultat/Tests 2020-01-23_18-03-07/Results"#
+	results_folder = 'E:/BVH_SR_validering/Simulation/_Results'#
 
 plot_lines(results_folder)
 plot_bars(results_folder)

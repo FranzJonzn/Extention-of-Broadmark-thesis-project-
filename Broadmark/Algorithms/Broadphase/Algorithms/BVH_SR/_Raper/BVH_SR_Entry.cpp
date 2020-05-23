@@ -11,7 +11,7 @@ void BVH_SR_Entry::Initialize(InflatedSettings settings, const SceneFrame& frame
 
 
 	BVH_SR_Entry::frameNumber = 1;
-	BaseAlgorithm<Object, SimpleCache>::Initialize(settings, frameData);
+	BaseAlgorithm<Object, NullCache>::Initialize(settings, frameData);
 
 
 	mn::Logger::getInstance()->startup();
@@ -34,26 +34,17 @@ void BVH_SR_Entry::UpdateStructures() {
 }
 
 void BVH_SR_Entry::SearchOverlaps(){
-	
-	Bvh.SearchOverlaps(&m_pairs);
 
-	for (size_t i = 0; i < m_pairs.size(); i++) {
-		Object *p1, *p2;
-		int2 _cp = m_pairs[i];
+	m_cache.m_numOfOverlaps = Bvh.SearchOverlaps();
 
-		if (_cp.x < _cp.y) {
-			p1 = &m_objects[_cp.x];
-			p2 = &m_objects[_cp.y];
-		}
-		else {
-			p1 = &m_objects[_cp.y];
-			p2 = &m_objects[_cp.x];
+//#pragma warning(suppress : 4996)
+//	thrust::host_vector<int2>	m_pairs;
+//#pragma warning(disable : 4996)
+	//Bvh.SearchOverlaps(&m_pairs);
+	/*int lenght = m_pairs.size();
 
-		}
-
-		if (p1 != p2) {
-			m_cache.AddPair(p1, p2);
-		}
-	}
-	m_pairs.clear();
+	for (size_t i = 0; i < lenght; i++) 
+		m_cache.AddPair(&m_objects[m_pairs[i].x], &m_objects[m_pairs[i].y]);
+*/
+	//m_pairs.clear();
 }

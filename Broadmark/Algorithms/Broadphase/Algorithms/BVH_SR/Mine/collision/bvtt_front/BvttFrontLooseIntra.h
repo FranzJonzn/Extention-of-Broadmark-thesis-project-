@@ -35,7 +35,8 @@ namespace mn {
 		void	inspectResults();
 		void	applyCpResults(uint* _idx, uint2* _front);
 
-		void getOverlapingPares(thrust::host_vector<int2>	*d_oCp);
+		//void getOverlapingPares(thrust::host_vector<int2>	*d_oCp);
+		int getOverlapingPares();
 
 
 	private:

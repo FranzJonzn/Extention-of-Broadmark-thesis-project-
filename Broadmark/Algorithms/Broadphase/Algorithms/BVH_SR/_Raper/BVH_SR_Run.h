@@ -29,7 +29,8 @@ public:
 
 	void Terminate();
 
-	void SearchOverlaps(thrust::host_vector<int2> *_pairs);
+	//void SearchOverlaps(thrust::host_vector<int2> *_pairs);
+	int SearchOverlaps();
 
 private:
 
