@@ -19,29 +19,50 @@ def plot_bars(results_folder):
     scenes     = list(set(frame.index.get_level_values(0)))
     ns         = sorted(list(set(frame.index.get_level_values(2))))
     algorithms = list(set(frame.index.get_level_values(3)))
-    ps         = list(set(frame.index.get_level_values(1)))
+    ps           = sorted(list(set(frame.index.get_level_values(1))))
     
-    sns.set(style="whitegrid")
-    for scene in scenes:
-        for pstatic in ps:
-            f, axes = plt.subplots(1, len(ns), figsize=(12, 5), sharex=True, sharey=True)
-            for (n, a) in zip(ns, get_iterable(axes)):
-                subframe = frame["mean"].transpose()[scene][pstatic][n]#[wanted_algorithms]
-                subframe = subframe.sort_values(ascending=False)
-                x        = list(subframe.index)
-                y        = list(subframe)
+    #Soretera listan i storleks ordninge, annars så sätteer den 100 efter noll
+    if len(ps) >= 2:
+        psW   = ps[1]
+        for x in range(1, len(ps)-1):
+            ps[x] = ps[x+1]
+        ps[ len(ps)-1]   = psW
+    
+    
+    
+    NumberOfTest = len(scenes)*len(ns)*len(ps)
+    testVisade = 0
 
-                plot = sns.barplot(x=x, y=y, palette="rocket", ax=a)
-                plot = plot.set_title(scene + "\n"+re.sub("ps", '', pstatic) + " procent statiska" +"\n" +str(n) + " Objects")
-                a.axhline(0, color="k", clip_on=False)
+    sns.set(style="whitegrid")
+
+    for n in ns:
+        for scene in scenes:
+            f, axes = plt.subplots(1, len(ps), figsize=(len(algorithms), 10), sharex=True, sharey=True)
+            for (pstatic, a) in zip(ps, get_iterable(axes)):
+                subframe   = frame["mean"].transpose()[scene][pstatic][n]#[wanted_algorithms]
+                subframe   = subframe.sort_values(ascending=False)
+                x          = list(subframe.index)
+                y          = list(subframe)
+                testVisade = testVisade+1
+        
+                if len(algorithms) <= 6:
+                    plot    = sns.barplot(x=x, y=y, palette="rocket", ax=a)
+                else:
+                    plot    = sns.barplot(x=x, y=y, ax=a)
+
+                plot       = plot.set_title(scene + "\n"+re.sub("ps", '', pstatic) + " procent statiska" +"\n" +str(n) + " Objects")
+                a.axhline(0, color="k", clip_on=True)
                 a.set_ylabel("mean time (s)")
+      
                 for tick in a.get_xticklabels():
                     tick.set_rotation(90)
                     
                 
-        sns.despine(bottom=True)
-        plt.tight_layout(h_pad=2)
-    plt.show()
+            sns.despine(bottom=True)
+            plt.tight_layout(h_pad=2)
+            print("[Laddar] "+str(testVisade)+"/" + str(NumberOfTest))
+        print("[Visa]")
+        plt.show()
 		
 
 def plot_box(results_folder):
@@ -52,54 +73,82 @@ def plot_box(results_folder):
     scenes     = list(set(frame.index.get_level_values(0)))
     ns         = sorted(list(set(frame.index.get_level_values(2))))
     algorithms = list(set(frame.index.get_level_values(3)))
-    ps         = list(set(frame.index.get_level_values(1)))
+    ps           = sorted(list(set(frame.index.get_level_values(1))))
     
-
+    #Soretera listan i storleks ordninge, annars så sätteer den 100 efter noll
+    if len(ps) >= 2:
+        psW   = ps[1]
+        for x in range(1, len(ps)-1):
+            ps[x] = ps[x+1]
+        ps[ len(ps)-1]   = psW
+    NumberOfTest = len(scenes)*len(ns)*len(ps)
+    testVisade   = 0
     sns.set(style="whitegrid", palette="pastel")
     pal  = sns.cubehelix_palette(len(algorithms), rot=-.5, dark=.3)
-    for scene in scenes:
-        for p in ps:
-            f, axes = plt.subplots(1, len(ns), figsize=(12, 5), sharex=True, sharey=True)
-            for (n, a) in zip(ns, get_iterable(axes)):
-                subframe = frame.transpose()[scene][p][n]
-                plot     = sns.violinplot(data=subframe, ax=a)#sns.boxplot(data=subframe, ax=a)
-                plot     = plot.set_title(scene+ "\n"  +re.sub("ps", '', p) + " procent statiska"+ "\n" + str(n) + " Objects" )
+    for n in ns:
+        for s in scenes:
+            f, axes = plt.subplots(1, len(ps), figsize=(len(algorithms), 5), sharex=True, sharey=True)
+            for (p, a) in zip(ps, get_iterable(axes)):
+                subframe   = frame.transpose()[s][p][n]
+                plot       = sns.violinplot(data=subframe, ax=a, palette=pal)#sns.boxplot(data=subframe, ax=a)
+                testVisade = testVisade+1
+                plot       = plot.set_title(s+ "\n"  +re.sub("ps", '', p) + " procent statiska"+ "\n" + str(n) + " Objects" )
                 for tick in a.get_xticklabels():
                     tick.set_rotation(90)
-
-                    
-                sns.despine(bottom=True)
-                sns.despine(bottom=False)
-                plt.tight_layout(h_pad=2)
-    plt.show()
+            
+            sns.despine(bottom=False)
+            plt.tight_layout(h_pad=2)
+            print("[Laddar] "+str(testVisade)+"/" + str(NumberOfTest))
+        print("[Visa]")
+        plt.show()
 
 def plot_lines(results_folder):
-    frame = pd.read_pickle(join(results_folder, "multi_index_described_frame.pickle"))
-    scenes = list(set(frame.index.get_level_values(0)))
-    algorithms = list(set(frame.index.get_level_values(3)))
-    pstatic         = list(set(frame.index.get_level_values(1)))
+    frame        = pd.read_pickle(join(results_folder, "multi_index_described_frame.pickle"))
+    scenes       = list(set(frame.index.get_level_values(0)))
+    algorithms   = list(set(frame.index.get_level_values(3)))
+    ps           = sorted(list(set(frame.index.get_level_values(1))))
+    
+    #Soretera listan i storleks ordninge, annars så sätteer den 100 efter noll
+    if len(ps) >= 2:
+        psW   = ps[1]
+        for x in range(1, len(ps)-1):
+            ps[x] = ps[x+1]
+        ps[ len(ps)-1]   = psW
 
-    for scene in scenes:
-        f, axes = plt.subplots(1, len(pstatic), figsize=(12, 5), sharex=False, sharey=True)
-        for (p, a) in zip(pstatic, get_iterable(axes)):
-            subframe                = frame["mean"].transpose()[scene]#[wanted_algorithms]
+    NumberOfTest = len(scenes)*len(ps)
+    testVisade = 0
+
+    for s in scenes:
+        f, axes = plt.subplots(1, len(ps), figsize=(15, 7), sharex=False, sharey=True)
+        
+        curent = 0
+        for (p, a) in zip(ps, get_iterable(axes)):
+            subframe                = frame["mean"].transpose()[s][p]#[wanted_algorithms]
             subframe                = subframe.reset_index()
-            subframe.rename(columns = {'level_2':'Algorithm','level_0':'ps','level_1':'N (10³)',  'mean':'mean time'}, inplace=True)
+            subframe.rename(columns = {'level_1':'Algorithm','level_0':'N (10³)',  'mean':'mean time'}, inplace=True)
             subframe['N (10³)']     = subframe['N (10³)'] / 1000
-      
             a.axhline(0, color="k", clip_on=True)
-           
+            testVisade = testVisade+1
+
             if len(algorithms) <= 6:
                 plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', style="Algorithm",  palette="rocket", ax=a, markers=True, data=subframe)
             else:
                 plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', ax=a, markers=True, data=subframe)
-            
-            plot = plot.set_title(scene+ " \n" +re.sub("ps", '', p) + " procent statiska" )
+            plot = plot.set_title(s+ " \n" +re.sub("ps", '', p) + " procent statiska" )
+ 
             a.set_ylabel("mean time (s)")
+            
+            curent = curent+1
+            if len(ps) != curent:
+                a.legend().set_visible(False)#legend('hide')
+
             for tick in a.get_xticklabels():
                 tick.set_rotation(90)
                 
             
-            sns.despine(bottom=True)
+            sns.despine(bottom=False)
             plt.tight_layout(h_pad=2)
-    plt.show()
+            print("[Laddar] "+str(testVisade)+"/" + str(NumberOfTest))
+        print("[Visa]")
+        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        plt.show()
