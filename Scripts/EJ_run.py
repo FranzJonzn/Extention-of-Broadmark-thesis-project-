@@ -53,10 +53,7 @@ algorithms =  ["BF","BF_Parallel","BF_SSE","BF_AVX","BF_SSE_Parallel","BF_AVX_Pa
 #GPU_SAP",
 #KD",
 #BVH_SR_GENERATE" 
-#== de här under finns men är inte garanterade att fungera ==
-#BVH_SR_STATIC_MANDATORY"
-#BVH_SR_REFIT_ONLY_FRONT"   
-#BVH_SR_FRONT_GENERATE
+
 
 
 
