@@ -9,12 +9,12 @@
 // framework modules
 #include "collision\lbvh\LBvh.h"
 #include "collision\bvtt_front\BVTTFront.h"
-#include "system\Logic\BenchmarkLogic.hpp"
+//#include "system\Logic\BenchmarkLogic.hpp"
 
-#include "Frameworks\CudaProject\CudaProjectModuleRegister.h"	
+//#include "Frameworks\CudaProject\CudaProjectModuleRegister.h"	
 #include <utility\CudaHostUtils.h>
 #include "setting\BvttFrontSettings.h"
-
+#include "setting\CDBenchmarkSettings.h"
 #include <thrust/device_vector.h>
 #include "Broadphase\Algorithms\BaseAlgorithm.h"
 
@@ -49,7 +49,7 @@ private:
 
 	/// systems (initialized)
 	mn::CudaDevice*		TheCudaDevice;
-	mn::BenchmarkLogic* TheLogic;
+	//mn::BenchmarkLogic* TheLogic;
 
 	// for CD benchmark testing
 	mn::LBvhKernelRegister												_kLBvhKernelRegister;

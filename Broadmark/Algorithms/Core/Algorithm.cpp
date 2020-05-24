@@ -14,7 +14,7 @@
 #include "Broadphase/Algorithms/Misc/None.h"
 #include "Broadphase/Algorithms/Misc/Inspectors.h"
 #include "Broadphase/Algorithms/KD/KD.h"
-#include "Broadphase/Algorithms/BVH_SR/_Raper/BVH_SR_Entry.h"
+#include "Broadphase/Algorithms/BVH_SR/_Raper/BVH_SR_Entry.h"// FJ_BME: 
  
 
 
@@ -49,10 +49,10 @@ std::unique_ptr<BroadphaseInterface> Algorithms::Create(const char* algorithmNam
 	REGISTER("GPU_Grid"					, GPU_Grid);
 	REGISTER("GPU_LBVH"					, GPU_LBVH);
 	REGISTER("GPU_SAP"					, GPU_SAP);
-	REGISTER("KD"						, KD); 
+	REGISTER("KD"						, KD); // FJ_BME: 
 	//REGISTER("BVH_SR_STATIC_MANDATORY"  , BVH_SR_STATIC_MANDATORY); // << ny
 	//REGISTER("BVH_SR_REFIT_ONLY_FRONT"  , BVH_SR_REFIT_ONLY_FRONT); // << ny
-	REGISTER("BVH_SR_GENERATE"          , BVH_SR_GENERATE); // << ny
+	REGISTER("BVH_SR_GENERATE"          , BVH_SR_GENERATE); // FJ_BME: 
 	//REGISTER("BVH_SR_FRONT_GENERATE"    , BVH_SR_FRONT_GENERATE); // << ny
 
 

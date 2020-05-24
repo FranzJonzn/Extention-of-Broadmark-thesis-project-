@@ -40,11 +40,11 @@ namespace mn {
 		static const int	_maxIntFrontSize = 50000000;
 		
 		//static const int	_maxCollisionPairNum = 8388608;		//(1 << 23)
-		static const int	_maxCollisionPairNum = 1600000;
+		//static const int	_maxCollisionPairNum = 1600000; << det som var
 		//static const int	_maxCollisionPairNum = 4194304;		//(1 << 22)
 		//static const int	_maxCollisionPairNum = 2000000;
 		//static const int	_maxCollisionPairNum = 35000000;
-		//static const int	_maxCollisionPairNum = 25000000;
+		static const int	_maxCollisionPairNum = 25000000;
 
 		static const int	_mandatoryRebuildCycle = 6;
 	};

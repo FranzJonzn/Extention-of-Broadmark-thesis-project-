@@ -13,7 +13,7 @@
 
 /////////////////////
 // Validation test/////////////////////////////////////////////
-#include "BrodmarkValidation_sammanstelning.h"/////////////////
+#include "BrodmarkValidation_sammanstelning.h"// FJ_BME: 
 ///////////////////////////////////////////////////////////////
 
 // This is the main entry point of the Broadmark system
@@ -233,7 +233,7 @@ int main(int argc, char** argv) {
     // Validation test////////////////////////
 	if (argc > 2)                          ///
 	{									   ///
-		ValidationTestningen(argc, argv);  ///
+		ValidationTestningen(argc, argv);   // FJ_BME: 
 		return 0;                          ///    
 	}									   ///
 	//////////////////////////////////////////
@@ -264,7 +264,7 @@ int main(int argc, char** argv) {
 /////////////////////
 // Validation test//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+// FJ_BME: 
 // skulle kunna varit i main, men bröt ut för tydlighetens skull
 void ValidationTestningen(int argc, char** argv) 
 {

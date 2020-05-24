@@ -32,14 +32,14 @@ namespace mn {
 		BvhSettings() = delete;
 		~BvhSettings() = delete;
 		
-		static const int	_maxPrimitiveSize = 150000;				///< (1 << 19);
-		static const int	_maxExtNodeSize = 150000;				///< (1 << 19);
+		//static const int	_maxPrimitiveSize = 150000;				///< (1 << 19); det soom var
+		//static const int	_maxExtNodeSize = 150000;				///< (1 << 19); det som var
 		//static const int	_maxPrimitiveSize = 524288;				///< (1 << 19);
 		//static const int	_maxExtNodeSize = 524288;				///< (1 << 19);
 		//static const int	_maxPrimitiveSize = 4194304;			///< (1 << 22);
 		//static const int	_maxExtNodeSize = 4194304;				///< (1 << 22);
-		//static const int	_maxPrimitiveSize = 2097152;			///< (1 << 21);
-		//static const int	_maxExtNodeSize = 2097152;				///< (1 << 21);
+		static const int	_maxPrimitiveSize = 2097152;			///< (1 << 21);
+		static const int	_maxExtNodeSize = 2097152;				///< (1 << 21);
 		static const int	_maxIntNodeSize = _maxExtNodeSize - 1;	///< (1 << 19);
 
 		static const int	_mandatoryRebuildCycle = 12;
