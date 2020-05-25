@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Development.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Wizard.unity
+    guid: e086bc25f4c6d844aafe1aafe8f86b34
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/ExampleMenu.unity
+    guid: dd6c72c8f72ad81458903ed8743c21a0
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/BulletSharpDemos/ExampleRunner.unity
+    guid: ea8a7c7597437cc45b8d78941f1751c5
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/CharacterController/CharacterController.unity
+    guid: f893f688bc504d544a9051f0675c91df
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/CollisionCallbacks/CollisionCallbacks.unity
+    guid: 01415cb4be9f7ca4d87771fec245a20a
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/Constraints/Constraints.unity
+    guid: 9e748efdd52e25c45aeacea9a9471d83
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/SoftBody/RatherGoodPlayground.unity
+    guid: 9619ec6a2888f9a4cbc2c027fc588958
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/Terrain/heightfieldTest.unity
+    guid: 72562190a9e22e846a667b88a14137b6
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/Triggers/TriggerExample.unity
+    guid: b2c34493787f276458e222f78ee15dfc
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/RealtimeSimWithOfflinePrediction/RealtimeSimWithOfflinePrediction.unity
+    guid: d529b8a77f7266c4c9640fe503566ce9
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/SimpleOfflineSimulation/SimpleOfflineSimulation.unity
+    guid: 0640978e3813ea3409086a831b7a64f6
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/Ragdoll/Ragdoll.unity
+    guid: 14ff31db4e1c82d4d8f078f520a14ee5
+  - enabled: 0
+    path: Assets/BulletUnity/Examples/Scenes/Racast/Racast.unity
+    guid: 2bae7848578c75045835580b99c0315e
+  m_configObjects: {}

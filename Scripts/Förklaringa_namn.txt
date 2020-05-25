@@ -1,0 +1,3 @@
+UR_ : Ursprungliga skripten 
+EJ_ : Skripten som implementerades för exjobbet
+VA_ : Skripten som användes för validerings testnigne av Broadmark 
