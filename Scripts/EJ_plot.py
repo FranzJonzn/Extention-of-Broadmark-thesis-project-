@@ -16,6 +16,6 @@ if results_folder == '':
   #  results_folder = latest_subdir
 	results_folder = 'C:/Users/Franz/Desktop/ValideringsTest3/_Results'##"E:/BVH_SR_validering/Resultat"#"C:/Users/Franz/Desktop/simForB/_Results"#
 
-#plot_lines(results_folder)
+plot_lines(results_folder)
 plot_bars(results_folder)
 plot_box(results_folder)

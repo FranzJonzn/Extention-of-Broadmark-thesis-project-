@@ -211,11 +211,14 @@ namespace mn {
 		codes[idx]             = morton3D(offset.x / scene.width(), offset.y / scene.height(), offset.z / scene.depth());
 	}
 
-	__global__ void buildPrimitives_BroadMarkEdition(int size, BvhPrimitiveCompletePort _prims, int *_primMap, Aabb *_Aabb) {	///< update idx-th _bxs to idx-th leaf
+	__global__ void buildPrimitives_BroadMarkEdition(
+		int size, 
+		BvhPrimitiveCompletePort _prims, 
+		int *_primMap, 
+		Aabb *_Aabb) {	///< update idx-th _bxs to idx-th leaf
 		int idx = blockIdx.x * blockDim.x + threadIdx.x;
 		if (idx >= size) return;
 		int newIdx = _primMap[idx];
-		//auto v = _Aabb[idx];
 		BOX bv(_Aabb[idx]);
 		_prims.idx(newIdx) = idx;
 		_prims.type(newIdx) = static_cast<uint>(ModelType::FixedDeformableType);
