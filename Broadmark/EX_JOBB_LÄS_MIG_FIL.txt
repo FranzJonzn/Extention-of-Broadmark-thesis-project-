@@ -1,0 +1,25 @@
+(Ändingar => skripten fans antingen i Broadmark eller BVH-SR ursprungligen)
+(Adderade/adderat => helt nyt skript som adderats för exjobbet)
+
+Ändingar har gjorts i följade skripts:
+	AppMain.cpp
+	och BrodmarkValidation_sammanstelning.cpp och BrodmarkValidation_sammanstelning.h är båda addrade
+
+Nya algoritmerna är BVH_SR:
+	i vilken följande skript har ändrats
+		BVTTFront.h
+		BvttFrontLooseIntra.cu
+		BvttFrontLooseIntra.h
+		LBvh.h
+		LBvhBuildKernels.cu
+		LBvhFixedDeformable.cu
+		LBvhFixedDeformable.h
+		LBvhBuildKernels.cuh
+		LBvHRestructureKernels.cu
+		Logger.hpp
+	och alla skript i _Raper har addetats.
+
+Ny algoritm som inte är färdig implementerad är PSM_SAP:
+
+
+För information om uppsättnign av Broadmark projeketet se Broadmark_README eller https://github.com/ppgia-unifor/Broadmark

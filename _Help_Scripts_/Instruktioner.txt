@@ -1,0 +1,6 @@
+instruktionerna står i EJ_run och EJ_plot
+
+Obs notera att för linjediagrammet EJ_plot skapar så måste du klicka på inställningar 
+(i diagramfönstret är det nederst till höger bredvid sparaknappen) och minska right 
+stapeln. Information om vilka algoritmer som linjerna representerar hamnar 
+nämligen till vänster av det sista diagrammet.
