@@ -31,10 +31,10 @@ from shutil import rmtree
 
 
 broadmark_bin = "D:/SKOL_ARBETE/Kurser/ar_3/Vt/Ex_Jobb/_EX_JOBB_Broadmark_REPO/Broadmark/bin64/Broadmark_Release_x64.exe" #<= ska peka på broadmark .exe filen
-scenes_folder = "C:/Users/Franz/Desktop/simForB"                                                                          #<= ska peka på rooten av hierakin som önskas testas
-output_folder = ""                                                                                                        #<= alternativ att välja var _Results ska sparas, om lämnad blank så dumpas den i rooten av filherarkin
-algorithms =  ["BVH_SR_GENERATE","BVH_SR_FRONT_GENERATE"]
-#algorithms =  ["BF","BF_Parallel","BF_SSE","BF_AVX","BF_SSE_Parallel","BF_AVX_Parallel","SAP_Parallel","SAP_SSE","SAP_AVX_Parallel","CGAL","AxisSweep","Grid_2D","Grid_2D_SAP","Grid_2D_Parallel","Grid_2D_SAP_Parallel","Grid_3D","Grid_3D_Parallel","Grid_3D_SAP_Parallel","Tracy","Tracy_Parallel","DBVT D","DBVT F","GPU_Grid","GPU_LBVH","GPU_SAP","KD","BVH_SR_GENERATE"]
+scenes_folder = "E:/_SIMULATIONER_/_MELLAN_"                                                                          #<= ska peka på rooten av hierakin som önskas testas
+output_folder = "E:/_SIMULATIONER_/__Resultat__/_MELLAN_R/ps0"                                                                                                        #<= alternativ att välja var _Results ska sparas, om lämnad blank så dumpas den i rooten av filherarkin
+#algorithms =  ["BVH_SR_GENERATE","BVH_SR_FRONT_GENERATE"]
+algorithms =  ["BF","BF_Parallel","BF_SSE","BF_AVX","BF_SSE_Parallel","BF_AVX_Parallel","SAP_Parallel","SAP_SSE","SAP_AVX_Parallel","CGAL","AxisSweep","Grid_2D","Grid_2D_SAP","Grid_2D_Parallel","Grid_2D_SAP_Parallel","Grid_3D","Grid_3D_Parallel","Grid_3D_SAP_Parallel","Tracy","Tracy_Parallel","DBVT D","DBVT F","GPU_Grid","GPU_LBVH","GPU_SAP","KD","BVH_SR_GENERATE"]
 
 # Alla tillgängliga algoritmer
 #BF",
@@ -89,7 +89,7 @@ root = scenes_folder
 
 if(output_folder == ""):
 	output_folder = scenes_folder +"/_Results/"
-else 
+else: 
     output_folder = output_folder +"/_Results"
     
 if (exists(output_folder)):
@@ -138,21 +138,16 @@ for ps in os.listdir(root):
 							rmtree(pathRes) # in case it already existed
 						makedirs(pathRes)
 						for alg in algorithms:
-							pathalg     = pathRes + alg + '/'
+							pathalg     = pathRes + alg + '/' # är test_folder
 							pathResult  = pathalg + "results/"
 		
 							makedirs(pathalg)
 							makedirs(pathResult)
-	
-							for t in os.listdir(pathOB) :
-								if (t[0] != "_"):
-									nuvarandeTest = nuvarandeTest+1
-									pathT         = pathOB + t + '/'
-									scenes_folder = pathT + "Recordings_AABBs" + '/'	
-									test_name     = "_"+t
-									tests_folder  = EJ_generate_jsons(test_name, pathResult, pathalg, scenes_folder, alg, additionalProperty, additionaPropertyValues)
-									results_folder = EJ_run_algorithms(tests_folder, broadmark_bin,nuvarandeTest,antalTester)
-							proStat = ps.split('_')		
+							tests_folder   = pathalg
+							EJ_generate_jsons(pathResult, tests_folder, pathOB, alg, additionalProperty, additionaPropertyValues)
+							results_folder,nuvarandeTest = EJ_run_algorithms(tests_folder, broadmark_bin,nuvarandeTest,antalTester)
+							
+							proStat = ps.split('_')
 							EJ_calcAverage(pathResult, output_folder, pathalg, proStat[0])
 						
-EJ_process_results(output_folder)
+#EJ_process_results(output_folder)
