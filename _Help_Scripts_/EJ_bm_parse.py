@@ -151,6 +151,7 @@ def EJ_process_results(results_folder):
     frame = pd.DataFrame() # keeps a master dataframe to store all algorithms
     for r in results:
         with (open(join(results_folder, r), "r")) as file:
+  
             data = json.load(file)
     
             # we are interested on the scene's simple name, the algorithm and the n of objects
@@ -158,7 +159,7 @@ def EJ_process_results(results_folder):
             algorithm = data["Settings"]["m_algorithm_prettyName"]
             n         = data["Settings"]["m_numberOfObjects"]
             ps        = "ps " + str(data["Settings"]["m_procentStatic"])
-    
+            print(ps)
             # loads the data into a dataframe and store the "Total" column
             df = json_normalize(data["Frames"])
             df = pd.DataFrame(data["Frames"])
@@ -175,7 +176,7 @@ def EJ_process_results(results_folder):
     main_frame.to_csv(join(results_folder, "main_frame.csv"), sep=';')
     main_frame.to_excel(join(results_folder, "main_frame.xlsx"))
     main_frame.to_pickle(join(results_folder, "main_frame.pickle"))
-    print("main_frame written!")
+    print("_main_frame written!")
   
     
     # The master dataframe in described form
@@ -185,7 +186,7 @@ def EJ_process_results(results_folder):
     described_frame.to_csv(join(results_folder, "main_described_frame.csv"), sep=';')
     described_frame.to_excel(join(results_folder, "main_described_frame.xlsx"))
     described_frame.to_pickle(join(results_folder, "main_described_frame.pickle"))
-    print("main_described_frame written!")
+    print("_main_described_frame written!")
     
     
     # Creates a multi-indexed dataframe grouping algorithms by scene then by n
@@ -201,7 +202,7 @@ def EJ_process_results(results_folder):
     mi_frame.to_csv(join(results_folder, "multi_index_frame.csv"), sep=';')
     mi_frame.to_excel(join(results_folder, "multi_index_frame.xlsx"))
     mi_frame.to_pickle(join(results_folder, "multi_index_frame.pickle"))
-    print("multi_index_frame written!")
+    print("_multi_index_frame written!")
     
     
     # Creates a multi-indexed dataframe of described data
@@ -213,15 +214,18 @@ def EJ_process_results(results_folder):
     dmi_frame.to_csv(join(results_folder, "multi_index_described_frame.csv"), sep=';')
     dmi_frame.to_excel(join(results_folder, "multi_index_described_frame.xlsx"))
     dmi_frame.to_pickle(join(results_folder, "multi_index_described_frame.pickle"))
-    print("multi_index_described_frame written!")
+    print("_multi_index_described_frame written!")
+ 
 
 
+
+#Används inte längre ingorera
  #frame[(scene, ps, n, algorithm)] = df["Total"]
 
-    lines_frame = dmi_frame["mean"].transpose()
-    lines_frame = lines_frame.reset_index()
-    lines_frame = pd.pivot_table(lines_frame, values="mean", index=["level_2","level_1"], columns="level_3") #lines_frame = pd.pivot_table(lines_frame, values="mean", index=["level_1","level_2"], columns="level_3")
-    lines_frame.to_csv(join(results_folder, "lines_frame.csv"), sep=';')
-    lines_frame.to_excel(join(results_folder, "lines_frame.xlsx"))
-    lines_frame.to_pickle(join(results_folder, "lines_frame.pickle"))
-    print("lines_frame written!")
+  #  lines_frame = dmi_frame["mean"].transpose()
+  #  lines_frame = lines_frame.reset_index()
+  #  lines_frame = pd.pivot_table(lines_frame, values="mean", index=["level_2","level_1"], columns="level_3") #lines_frame = pd.pivot_table(lines_frame, values="mean", index=["level_1","level_2"], columns="level_3")
+  #  lines_frame.to_csv(join(results_folder, "lines_frame.csv"), sep=';')
+  #  lines_frame.to_excel(join(results_folder, "lines_frame.xlsx"))
+  #  lines_frame.to_pickle(join(results_folder, "lines_frame.pickle"))
+  #  print("lines_frame written!")

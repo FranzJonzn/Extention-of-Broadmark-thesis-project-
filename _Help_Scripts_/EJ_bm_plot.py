@@ -9,7 +9,7 @@ from UR_bm_utils import get_iterable
 from os.path import join
 from six.moves import zip
 
-
+#Används inte 
 def plot_bars(results_folder):
 
     # Reading the data
@@ -65,7 +65,7 @@ def plot_bars(results_folder):
         plt.show()
 		
 
-def plot_box(results_folder):
+def plot_box(results_folder, storaIntervallet):
     # Reading the data
     frame = pd.read_pickle(join(results_folder, "multi_index_frame.pickle"))
     
@@ -73,14 +73,23 @@ def plot_box(results_folder):
     scenes     = list(set(frame.index.get_level_values(0)))
     ns         = sorted(list(set(frame.index.get_level_values(2))))
     algorithms = list(set(frame.index.get_level_values(3)))
-    ps           = sorted(list(set(frame.index.get_level_values(1))))
+    ps         = sorted(list(set(frame.index.get_level_values(1))))
     
     #Soretera listan i storleks ordninge, annars så sätteer den 100 efter noll
-    if len(ps) >= 2:
-        psW   = ps[1]
-        for x in range(1, len(ps)-1):
-            ps[x] = ps[x+1]
-        ps[ len(ps)-1]   = psW
+    #If:en är för att hantera att stora intervallet inte börjar på 0 utan på 20
+    if(storaIntervallet):
+        if len(ps) >= 2:
+            psW   = ps[0]
+            for x in range(0, len(ps)-1):
+                ps[x] = ps[x+1]
+            ps[ len(ps)-1]   = psW
+    else:
+       if len(ps) >= 2:
+           psW   = ps[1]
+           for x in range(1, len(ps)-1):
+               ps[x] = ps[x+1]
+           ps[ len(ps)-1]   = psW
+
     NumberOfTest = len(scenes)*len(ns)*len(ps)
     testVisade   = 0
     sns.set(style="whitegrid", palette="pastel")
@@ -102,18 +111,26 @@ def plot_box(results_folder):
         print("[Visa]")
         plt.show()
 
-def plot_lines(results_folder):
+def plot_lines(results_folder, storaIntervallet):
     frame        = pd.read_pickle(join(results_folder, "multi_index_described_frame.pickle"))
     scenes       = list(set(frame.index.get_level_values(0)))
     algorithms   = list(set(frame.index.get_level_values(3)))
     ps           = sorted(list(set(frame.index.get_level_values(1))))
     
     #Soretera listan i storleks ordninge, annars så sätteer den 100 efter noll
-    if len(ps) >= 2:
-        psW   = ps[1]
-        for x in range(1, len(ps)-1):
-            ps[x] = ps[x+1]
-        ps[ len(ps)-1]   = psW
+    #If:en är för att hantera att stora intervallet inte börjar på 0 utan på 20
+    if(storaIntervallet):
+        if len(ps) >= 2:
+            psW   = ps[0]
+            for x in range(0, len(ps)-1):
+                ps[x] = ps[x+1]
+            ps[ len(ps)-1]   = psW
+    else:
+       if len(ps) >= 2:
+           psW   = ps[1]
+           for x in range(1, len(ps)-1):
+               ps[x] = ps[x+1]
+           ps[ len(ps)-1]   = psW
 
     NumberOfTest = len(scenes)*len(ps)
     testVisade = 0
@@ -133,9 +150,9 @@ def plot_lines(results_folder):
             if len(algorithms) <= 6:
                 plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', style="Algorithm",  palette="rocket", ax=a, markers=True, data=subframe)
             else:
-                plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', ax=a, markers=True, data=subframe)
+                #plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm', ax=a, markers=True, data=subframe)
+                plot = sns.lineplot(x='N (10³)', y='mean time', hue='Algorithm',dashes=False, ax=a, markers=True, data=subframe)
             plot = plot.set_title(s+ " \n" +re.sub("ps", '', p) + " procent statiska" )
- 
             a.set_ylabel("mean time (s)")
             
             curent = curent+1
@@ -151,4 +168,7 @@ def plot_lines(results_folder):
             print("[Laddar] "+str(testVisade)+"/" + str(NumberOfTest))
         print("[Visa]")
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        
+        plt.subplots_adjust( right = 0.85 )
+        
         plt.show()

@@ -1,7 +1,7 @@
 
-Scripts/__pycache__/
-Scripts/cache/
-Scripts/Tests/
+_Help_Scripts_/__pycache__/
+_Help_Scripts_/cache/
+_Help_Scripts_/Tests/
 
 .vscode/
 *.pyc

@@ -80,5 +80,6 @@ def EJ_run_algorithms(tests_folder, broadmark_bin, testNumer,numberOfTest):
         process = Popen(args)
         process.wait()
         testNumer = testNumer+1
+
     results_folder = join(tests_folder, "Results/")
     return results_folder, testNumer

@@ -6,9 +6,7 @@ from EJ_bm_plot import *
 from os.path import join, isfile
 
 
-
-results_folder = 'C:/Users/Franz/Desktop/ValideringsTest3/_Results'# <= Ska peka på en _Results fill
-
-plot_lines(results_folder)
-plot_bars(results_folder)
+plot_lines(results_folder,False)
 plot_box(results_folder)
+
+#plot_bars(results_folder)
