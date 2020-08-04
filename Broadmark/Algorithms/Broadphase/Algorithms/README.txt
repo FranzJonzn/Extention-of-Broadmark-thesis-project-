@@ -1,0 +1,5 @@
+PSM_SAP är inte färdistäld, implementatione av den har bara påbörjats men han aldrig avslutas.
+för mer ingformation om PSM_SAP se:
+Capannini, G. & Larsson, T. (2018) Adaptive Collision Culling for Massive Simulations by a Parallel and Context-Aware Sweep and Prune Algorithm. IEEE transactions on visualization and computer graphics. 24(7), ss. 2064–2077. doi: 10.1109/TVCG.2017.2709313.
+Capannini, G. & Larsson, T. (2016a) Efficient collision culling by a succinct Bi-dimensional sweep and prune algorithm. Proceedings - SCCG 2016: 32nd Spring Conference on Computer Graphics. Smolenice Castle, Slovakien, 27 April 2016 till 29 April 2016, ss. 25 – 32. doi:10.1145/2948628.2948640
+Capannini, G. & Larsson, T. (2016b) Adaptive Collision Culling for Large-Scale Simulations by a Parallel Sweep and Prune Algorithm. Proceedings of the 16th Eurographics Symposium on Parallel Graphics and Visualization EGPGV 2016, 6 juni. Groningen, Nederländerna: Eurographics Association , s. 1-10. doi: 10.2312/pgv.20161177
