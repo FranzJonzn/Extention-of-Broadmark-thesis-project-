@@ -1,12 +1,13 @@
-(Ändingar => skripten fans antingen i Broadmark eller BVH-SR ursprungligen)
-(Adderade/adderat => helt nyt skript som adderats för exjobbet)
+(Changes => the script existed original in either Broadmark or BVH-SR)
+(Added => new scripts added for the thesis project)
 
-Ändingar har gjorts i följade skripts:
+Changes has been done to following scripts:
 	AppMain.cpp
-	och BrodmarkValidation_sammanstelning.cpp och BrodmarkValidation_sammanstelning.h är båda addrade
+	and BrodmarkValidation_sammanstelning.cpp and BrodmarkValidation_sammanstelning.h are both added
 
-Nya algoritmerna är BVH_SR:
-	i vilken följande skript har ändrats
+
+New algorithm is BVH_SR:
+	In witch following scripts has been changed: 
 		BVTTFront.h
 		BvttFrontLooseIntra.cu
 		BvttFrontLooseIntra.h
@@ -17,9 +18,9 @@ Nya algoritmerna är BVH_SR:
 		LBvhBuildKernels.cuh
 		LBvHRestructureKernels.cu
 		Logger.hpp
-	och alla skript i _Raper har addetats.
+	And all scripts in _Raper is added.
 
-Ny algoritm som inte är färdig implementerad är PSM_SAP:
+New algorithm that not is not completely integrated is PSM_SAP.
 
 
-För information om uppsättnign av Broadmark projeketet se Broadmark_README eller https://github.com/ppgia-unifor/Broadmark
+For more information about the setup of the Broadmark project see the Broadmark_README or https://github.com/ppgia-unifor/Broadmark
