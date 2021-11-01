@@ -1,2 +1,1 @@
-Detta är en modifierad version av "Broadmark A Testing Framework for Broad‐Phase Collision Detection Algorithms" 
-vilket implementerades för Franz Jonzon exjobb. För mer detaljer om hur Broadmark fungerar se Broadmark_README.
+This is a modified version of the testing framework presented in “Broadmark A Testing Framework for Broad-Phase Collision Detection Algorithms” witch was implemented for Franz Jonzon thesis project. For more information about how Broadmark works se Broadmark_README.
