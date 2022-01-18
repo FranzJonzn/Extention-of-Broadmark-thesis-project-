@@ -1,0 +1,3 @@
+UR_ : Ursprungliga skripten                                        (Scripts that came with the framework)
+EJ_ : Skripten som implementerades för exjobbet                    (Scripts that was implemented for the examination essay )
+VA_ : Skripten som användes för validerings testnigne av Broadmark (Scripts that was used to validate Broadmark)
